@@ -1,0 +1,32 @@
+loadrt or2
+loadrt mux_generic config="bb4"
+
+addf or2.0 servo-thread
+addf mux-gen.00 servo-thread
+
+#M64 P2 - activate toolsetter
+#M64 P3 - activate probe
+#M65 P2 - deactivate toolsetter
+#M65 P3 - deactivate probe
+
+net in_ts 		hm2_7i76e.0.7i76.0.0.input-03-not
+net in_probe	hm2_7i76e.0.7i76.0.0.input-05-not
+
+net in_ts or2.0.in0
+net in_probe or2.0.in1
+net ts_or_probe or2.0.out
+
+net select_ts mux-gen.00.sel-bit-00 <= motion.digital-out-02
+net select_probe mux-gen.00.sel-bit-01 <= motion.digital-out-03
+setp mux-gen.00.in-bit-00 1
+net in_ts mux-gen.00.in-bit-01
+net in_probe mux-gen.00.in-bit-02
+net ts_or_probe mux-gen.00.in-bit-03
+net probe-in mux-gen.00.out-bit
+
+net probe-in motion.probe-input
+
+net tool-change-request    probe.toolchange-change    <=   iocontrol.0.tool-change
+net tool-changed           probe.toolchange-changed   =>   iocontrol.0.tool-changed
+net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
+net tool-prep-loopback     iocontrol.0.tool-prepare  =>   iocontrol.0.tool-prepared
