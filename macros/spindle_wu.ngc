@@ -1,4 +1,4 @@
-02023(Spindle Warmup);
+o<xminus> sub
 
 T01 M06
 S1000 M06
@@ -14,3 +14,5 @@ G04 X60
 S12000 M06
 G04 X60
 m30
+o<down> endsub
+M2
