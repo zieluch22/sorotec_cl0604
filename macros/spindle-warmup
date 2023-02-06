@@ -14,6 +14,7 @@ G04 P60.
 S24000
 G04 P60.
 M5
+g1 Z-5 F500
 
 o<spindle-warmup> endsub
 M2

@@ -59,7 +59,7 @@ net pdnt.axis.z.jog-vel-mode              whb.axis.z.jog-vel-mode               
 
 
 # macro buttons to MDI commands
-#net pdnt.macro-1                          whb.button.macro-1                    halui.mdi-command-01             # use MDI command from main.ini
+#net pdnt.macro-1                          whb.button.macro-1                    halui.mdi-command-01             # use MDI command from main.ini - spindle-warmup
 #net pdnt.macro-2                          whb.button.macro-2                    halui.mdi-command-02             # use MDI command from main.ini or used for Hardcoded lube on/off
 net pdnt.reserved.for.spindle+            whb.button.macro-3                                                     # Hardcoded for spindle+ whb.halui.spindle.increase
 net pdnt.reserved.for.spindle-            whb.button.macro-4                                                     # Hardcoded for spindle- whb.halui.spindle.decrease
@@ -157,5 +157,3 @@ net pdnt.axis.z.pos-feedback              halui.axis.z.pos-feedback             
 net pdnt.axis.x.pos-relative              halui.axis.x.pos-relative             whb.halui.axis.x.pos-relative
 net pdnt.axis.y.pos-relative              halui.axis.y.pos-relative             whb.halui.axis.y.pos-relative
 net pdnt.axis.z.pos-relative              halui.axis.z.pos-relative             whb.halui.axis.z.pos-relative
-
-
