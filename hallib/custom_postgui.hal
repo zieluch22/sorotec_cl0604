@@ -27,10 +27,10 @@ net      spindle-stop-btn                      halui.mdi-command-14             
 #net      touch-x-btn                           halui.mdi-command-15                pyvcp.touch-x-button
 #net      touch-y-btn                           halui.mdi-command-16                pyvcp.touch-y-button
 #net      touch-z-btn                           halui.mdi-command-17                pyvcp.touch-z-button
-#net      g54-btn                               halui.mdi-command-18                pyvcp.g54-button
-#net      g55-btn                               halui.mdi-command-19                pyvcp.g55-button
-#net      g56-btn                               halui.mdi-command-20                pyvcp.g56-button
-#net      g57-btn                               halui.mdi-command-21                pyvcp.g57-button
+net      g54-btn                               halui.mdi-command-18                pyvcp.g54-button
+net      g55-btn                               halui.mdi-command-19                pyvcp.g55-button
+net      g56-btn                               halui.mdi-command-20                pyvcp.g56-button
+net      g57-btn                               halui.mdi-command-21                pyvcp.g57-button
 
 #net      estop-ext                             pyvcp.estop-ext
 #net      estop-pneumatic                       pyvcp.estop-pneumatic

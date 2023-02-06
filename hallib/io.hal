@@ -88,10 +88,10 @@ net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-11 motion.digital-in-01
 net machine-is-enabled  =>     hm2_7i76e.0.7i76.0.0.output-00
 # --- DO-01 ---
 # --- Spindle cooling ---
-addf or.coolant servo-thread
-net coolant-flood or.coolant.in0
-net coolant-mist or.coolant.in1
-net ortriggerpump or.coolant.out =>  hm2_7i76e.0.7i76.0.0.output-01
+#addf or.coolant servo-thread
+#net coolant-flood or.coolant.in0
+#net coolant-mist or.coolant.in1
+#net ortriggerpump or.coolant.out =>  hm2_7i76e.0.7i76.0.0.output-01
 
 # --- DO-02 ---
 

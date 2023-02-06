@@ -28,10 +28,11 @@
                 <button text="24000" halpin="24000-button" />
             </hbox>
             <label text=" " />
-            <hbox>
-                <label width="20" text="Spindle inhibit" />
-                <rectled width="25" height="25" on_color="#ff3000" off_color="#80b000" halpin="spindle-inhibit" />
-            </hbox>
+<!--           <hbox>
+               <label width="20" text="Spindle inhibit" />
+                <rectled width="25" height="25" on_color="#ff3000" off_color="#80b000" halpin="spindle-enable" />
+            </hbox> 
+-->
         </vbox>
         <!-- Coordinates tab -->
         <vbox>

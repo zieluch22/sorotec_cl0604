@@ -686,23 +686,23 @@ class ProbeScreenClass:
         self.set_zerro("Z",0,0,a[2])
     # X+
     def on_xp_released(self, gtkbutton, data = None):
-        print("x+ start")
+ #       print("x+ start")
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
          # move X - xy_clearance
-         print("move X - xy_clearance")
+ #        print("move X - xy_clearance")
         s="""G91
         G1 X-%f
         G90""" % (self.spbtn1_xy_clearance.get_value())
-        print("gcode block")
+ #       print("gcode block")
         if self.gcode(s) == -1:
-            print("self.gcode = -1, Return")
+  #          print("self.gcode = -1, Return")
             return
         if self.z_clearance_down() == -1:
-            print("z_clearance_down = -1, Return")
+   #         print("z_clearance_down = -1, Return")
             return
        # Start xplus.ngc
-        print("xplus.ngc starting")
+    #    print("xplus.ngc starting")
         if self.ocode ("O<xplus> call") == -1:
             return
         a=self.probed_position_with_offsets()
