@@ -2,11 +2,11 @@ o<spindle-warmup> sub
 
 T1 M6
 S4000 M3
-G04 P60.
+G04 P120.
 S8000
-G04 P60.
+G04 P120.
 S12000
-G04 P60.
+G04 P120.
 S16000
 G04 P60.
 S20000
@@ -14,7 +14,6 @@ G04 P60.
 S24000
 G04 P60.
 M5
-g1 Z-5 F500
 
 o<spindle-warmup> endsub
 M2

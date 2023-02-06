@@ -8,7 +8,7 @@
             <label text="Spindle Speed" />
             <bar bgcolor="#e5e5e5" fillcolor="#80b000" max_="30000" halpin="spindle-rpm" />
             <label text=" " />
-            <button text="Warm-up" halpin="warmup-button" />
+            <button text="Warm-up Spindle" halpin="warmup-button" />
             <button text="Start" halpin="start-button" />
             <button text="Stop" halpin="stop-button" />
             <label text=" " />
