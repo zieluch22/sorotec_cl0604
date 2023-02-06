@@ -11,7 +11,7 @@ net      spindle-rpm                           pyvcp.spindle-rpm
 net      spindle-ntc-temp                      pyvcp.spindle-ntc-temp
 net      spindle-inhibit                       pyvcp.spindle-inhibit
 
-net      spindle-warmup-btn                    halui.mdi-command-03                pyvcp.warmup-button
+net      spindle-warmup-btn                    halui.mdi-command-01                pyvcp.warmup-button
 net      spindle-start-btn                     halui.mdi-command-04                pyvcp.start-button
 net      spindle-8000-btn                      halui.mdi-command-05                pyvcp.8000-button
 net      spindle-10000-btn                     halui.mdi-command-06                pyvcp.10000-button
