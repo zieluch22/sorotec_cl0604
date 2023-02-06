@@ -46,7 +46,7 @@ class ps_preferences(cp1):
     def __init__(self, path = None):
         cp1.__init__(self)
         if not path:
-            path = "~/.toolch_preferences"
+            path = "~/.jogch_preferences"
         self.fn = os.path.expanduser(path)
         self.read(self.fn)
 
@@ -73,7 +73,7 @@ class ProbeScreenClass:
 
     def get_preference_file_path(self):
         # we get the preference file, if there is none given in the INI
-        # we use toolchange2.pref in the config dir
+        # we use jogchange2.pref in the config dir
         temp = self.inifile.find("DISPLAY", "PREFERENCE_FILE_PATH")
         if not temp:
             machinename = self.inifile.find("EMC", "MACHINE")
@@ -92,9 +92,9 @@ class ProbeScreenClass:
             print("****  PROBE SCREEN GET INI INFO **** \n Error recognition of display type : %s" % temp)
         return temp
 
-    def add_history(self,tool_tip_text,s="",xm=0.,xc=0.,xp=0.,lx=0.,ym=0.,yc=0.,yp=0.,ly=0.,z=0.,d=0.,a=0.):
+    def add_history(self,jog_tip_text,s="",xm=0.,xc=0.,xp=0.,lx=0.,ym=0.,yc=0.,yp=0.,ly=0.,z=0.,d=0.,a=0.):
 #        c = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        c = datetime.now().strftime('%H:%M:%S  ') + '{0: <10}'.format(tool_tip_text)
+        c = datetime.now().strftime('%H:%M:%S  ') + '{0: <10}'.format(jog_tip_text)
         if "Xm" in s :
             c += "X-=%.4f "%xm
         if "Xc" in s :
@@ -176,7 +176,7 @@ class ProbeScreenClass:
                 yc = self.spbtn_offs_y.get_value()
             else :
                 self.stat.poll()
-                xc=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.tool_offset[0]
+                xc=self.stat.position[0]-self.stat.g5x_offset[0] - self.stat.g92_offset[0] - self.stat.jog_offset[0]
                 yc=self.stat.position[1]-self.stat.g5x_offset[1] - self.stat.g92_offset[1] - self.stat.tool_offset[1]
             t = math.radians(a1)
             coord[0] = (x1-xc) * math.cos(t) - (y1-yc) * math.sin(t) + xc
@@ -686,17 +686,23 @@ class ProbeScreenClass:
         self.set_zerro("Z",0,0,a[2])
     # X+
     def on_xp_released(self, gtkbutton, data = None):
+        print("x+ start")
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
          # move X - xy_clearance
+         print("move X - xy_clearance")
         s="""G91
         G1 X-%f
         G90""" % (self.spbtn1_xy_clearance.get_value())
+        print("gcode block")
         if self.gcode(s) == -1:
+            print("self.gcode = -1, Return")
             return
         if self.z_clearance_down() == -1:
+            print("z_clearance_down = -1, Return")
             return
        # Start xplus.ngc
+        print("xplus.ngc starting")
         if self.ocode ("O<xplus> call") == -1:
             return
         a=self.probed_position_with_offsets()
