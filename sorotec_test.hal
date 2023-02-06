@@ -6,7 +6,7 @@
 loadrt [KINS]KINEMATICS
 loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
 loadrt hostmot2
-loadrt hm2_eth board_ip="10.10.10.10" config=" num_encoders=1 num_pwmgens=0 num_stepgens=3 sserial_port_0=00xxxx" 
+loadrt hm2_eth board_ip="10.10.10.10" config=" num_encoders=1 num_pwmgens=0 num_stepgens=3 sserial_port_0=00xxxx"
 setp    hm2_7i76e.0.watchdog.timeout_ns 5000000
 loadrt pid names=pid.x,pid.y,pid.z,pid.s
 loadrt abs names=abs.spindle
@@ -25,14 +25,6 @@ addf hm2_7i76e.0.write         servo-thread
 setp hm2_7i76e.0.dpll.01.timer-us -50
 setp hm2_7i76e.0.stepgen.timer-number 1
 
-# external output signals
-
-# --- VFD power on relay---
-
-net machine-is-enabled  =>     hm2_7i76e.0.7i76.0.0.output-00
-
-# --- COOLANT-MIST ---
-net coolant-mist  =>     hm2_7i76e.0.7i76.0.0.output-01
 
 # external input signals
 
@@ -333,9 +325,3 @@ unlinkp iocontrol.0.tool-change
 unlinkp iocontrol.0.tool-changed
 
 #net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
-
-
-
-
-
-
