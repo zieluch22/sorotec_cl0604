@@ -1,0 +1,68 @@
+<!-- Last Edited: 21-08-19 -->
+<!-- LinuxCNC Version: 2.8 -->
+<pyvcp>
+    <tabs>
+        <names>["Spindle", "Coordinates", "E-Stop"]</names>
+        <!-- Spindle tab -->
+        <vbox>
+            <label text="VFD Temperature" />
+            <bar bgcolor="#e5e5e5" fillcolor="#00ff00" max_="100" halpin="vfd-temp">
+                <range1>0,33,"#80b000"</range1>
+                <range2>34,66,"#ffc000"</range2>
+                <range3>67,100,"#ff3000"</range3>
+            </bar>
+            <label text="Spindle Temperature" />
+            <bar bgcolor="#e5e5e5" fillcolor="#00ff00" max_="50" halpin="spindle-temp">
+                <range1>0,30,"#80b000"</range1>
+                <range2>31,40,"#ffc000"</range2>
+                <range3>41,50,"#ff3000"</range3>
+            </bar>
+            <label text="Spindle Current" />
+            <bar bgcolor="#e5e5e5" fillcolor="#00ff00" max_="10" halpin="spindle-current">
+                <range1>0,3.3,"#80b000"</range1>
+                <range2>3.4,6.6,"#ffc000"</range2>
+                <range3>6.7,10,"#ff3000"</range3>
+            </bar>
+            <label text="Spindle Speed" />
+            <bar bgcolor="#e5e5e5" fillcolor="#80b000" max_="30000" halpin="spindle-rpm" />
+            <label text=" " />
+            <button text="Warm-up" halpin="warmup-button" />
+            <button text="Start" halpin="start-button" />
+            <button text="Stop" halpin="stop-button" />
+            <label text=" " />
+            <hbox>
+                <button text=" 8000 " halpin="8000-button" />
+                <button text="10000" halpin="10000-button" />
+                <button text="12000" halpin="12000-button" />
+            </hbox>
+            <hbox>
+                <button text="14000" halpin="14000-button" />
+                <button text="16000" halpin="16000-button" />
+                <button text="18000" halpin="18000-button" />
+            </hbox>
+            <hbox>
+                <button text="20000" halpin="20000-button" />
+                <button text="22000" halpin="22000-button" />
+                <button text="24000" halpin="24000-button" />
+            </hbox>
+            <label text=" " />
+            <hbox>
+                <label width="20" text="Spindle inhibit" />
+                <rectled width="25" height="25" on_color="#ff3000" off_color="#80b000" halpin="spindle-inhibit" />
+            </hbox>
+        </vbox>
+        <!-- Coordinates tab -->
+        <vbox>
+            <hbox>
+                <button width="5" text="P0 X0" halpin="touch-x-button" />
+                <button width="5" text="P0 Y0" halpin="touch-y-button" />
+                <button width="5" text="P0 Z0" halpin="touch-z-button" />
+            </hbox>
+            <label text=" " />
+            <button text="G54" halpin="g54-button" />
+            <button text="G55" halpin="g55-button" />
+            <button text="G56" halpin="g56-button" />
+            <button text="G57" halpin="g57-button" />
+        </vbox>
+    </tabs>
+</pyvcp>

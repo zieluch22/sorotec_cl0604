@@ -1,5 +1,43 @@
 # Include your custom_postgui HAL commands here
 # This file will not be overwritten when you run PNCconf again
 
-net remote-probe-touch-in halui.mdi-command-00 <= pyvcp.probe-touch-off
+#net remote-probe-touch-in halui.mdi-command-00 <= pyvcp.probe-touch-off
 
+# ---------- PYVCP PANEL ----------
+
+net      vfd-temp                              pyvcp.vfd-temp
+net      spindle-current                       pyvcp.spindle-current
+net      spindle-rpm                           pyvcp.spindle-rpm
+net      spindle-ntc-temp                      pyvcp.spindle-ntc-temp
+net      spindle-inhibit                       pyvcp.spindle-inhibit
+
+net      spindle-warmup-btn                    halui.mdi-command-03                pyvcp.warmup-button
+net      spindle-start-btn                     halui.mdi-command-04                pyvcp.start-button
+net      spindle-8000-btn                      halui.mdi-command-05                pyvcp.8000-button
+net      spindle-10000-btn                     halui.mdi-command-06                pyvcp.10000-button
+net      spindle-12000-btn                     halui.mdi-command-07                pyvcp.12000-button
+net      spindle-14000-btn                     halui.mdi-command-08                pyvcp.14000-button
+net      spindle-16000-btn                     halui.mdi-command-09                pyvcp.16000-button
+net      spindle-18000-btn                     halui.mdi-command-10                pyvcp.18000-button
+net      spindle-20000-btn                     halui.mdi-command-11                pyvcp.20000-button
+net      spindle-22000-btn                     halui.mdi-command-12                pyvcp.22000-button
+net      spindle-24000-btn                     halui.mdi-command-13                pyvcp.24000-button
+net      spindle-stop-btn                      halui.mdi-command-14                pyvcp.stop-button
+
+net      touch-x-btn                           halui.mdi-command-15                pyvcp.touch-x-button
+net      touch-y-btn                           halui.mdi-command-16                pyvcp.touch-y-button
+net      touch-z-btn                           halui.mdi-command-17                pyvcp.touch-z-button
+net      g54-btn                               halui.mdi-command-18                pyvcp.g54-button
+net      g55-btn                               halui.mdi-command-19                pyvcp.g55-button
+net      g56-btn                               halui.mdi-command-20                pyvcp.g56-button
+net      g57-btn                               halui.mdi-command-21                pyvcp.g57-button
+
+net      estop-ext                             pyvcp.estop-ext
+net      estop-pneumatic                       pyvcp.estop-pneumatic
+net      estop-vfd-watchdog                    pyvcp.estop-vfd-watchdog
+net      estop-vfd-error                       pyvcp.estop-vfd-error
+net      estop-ntc-over-temp                   pyvcp.estop-ntc-over-temp
+
+net      amp-fault-x                           pyvcp.amp-fault-x
+net      amp-fault-y                           pyvcp.amp-fault-y
+net      amp-fault-z                           pyvcp.amp-fault-z
