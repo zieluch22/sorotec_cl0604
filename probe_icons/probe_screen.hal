@@ -1,7 +1,3 @@
-#net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
-#net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
-#net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
-
 loadrt or2
 loadrt mux_generic config="bb4"
 
@@ -34,4 +30,3 @@ net tool-change-request    probe.toolchange-change    <=   iocontrol.0.tool-chan
 net tool-changed           probe.toolchange-changed   =>   iocontrol.0.tool-changed
 net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
 net tool-prep-loopback     iocontrol.0.tool-prepare  =>   iocontrol.0.tool-prepared
-
