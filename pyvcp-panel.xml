@@ -34,3 +34,23 @@
 	<font>('fixed',10)</font>
 </button>
 </pyvcp>
+
+
+            <label text="VFD Temperature" />
+            <bar bgcolor="#e5e5e5" fillcolor="#00ff00" max_="100" halpin="vfd-temp">
+                <range1>0,33,"#80b000"</range1>
+                <range2>34,66,"#ffc000"</range2>
+                <range3>67,100,"#ff3000"</range3>
+            </bar>
+            <label text="Spindle Temperature" />
+            <bar bgcolor="#e5e5e5" fillcolor="#00ff00" max_="50" halpin="spindle-temp">
+                <range1>0,30,"#80b000"</range1>
+                <range2>31,40,"#ffc000"</range2>
+                <range3>41,50,"#ff3000"</range3>
+            </bar>
+            <label text="Spindle Current" />
+            <bar bgcolor="#e5e5e5" fillcolor="#00ff00" max_="10" halpin="spindle-current">
+                <range1>0,3.3,"#80b000"</range1>
+                <range2>3.4,6.6,"#ffc000"</range2>
+                <range3>6.7,10,"#ff3000"</range3>
+            </bar>
