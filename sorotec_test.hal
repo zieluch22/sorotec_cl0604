@@ -6,7 +6,7 @@
 loadrt [KINS]KINEMATICS
 loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
 loadrt hostmot2
-loadrt hm2_eth board_ip="10.10.10.10" config=" num_encoders=1 num_pwmgens=0 num_stepgens=3 sserial_port_0=00xxxx" 
+loadrt hm2_eth board_ip="10.10.10.10" config=" num_encoders=1 num_pwmgens=0 num_stepgens=3 sserial_port_0=00xxxx"
 setp    hm2_7i76e.0.watchdog.timeout_ns 5000000
 loadrt pid names=pid.x,pid.y,pid.z,pid.s
 loadrt abs names=abs.spindle
@@ -29,35 +29,35 @@ setp hm2_7i76e.0.stepgen.timer-number 1
 
 # --- VFD power on relay---
 
-net machine-is-enabled  =>     hm2_7i76e.0.7i76.0.0.output-00
+#net machine-is-enabled  =>     hm2_7i76e.0.7i76.0.0.output-00
 
 # --- COOLANT-MIST ---
-net coolant-mist  =>     hm2_7i76e.0.7i76.0.0.output-01
+#net coolant-mist  =>     hm2_7i76e.0.7i76.0.0.output-01
 
 # external input signals
 
 
 # --- MIN-HOME-X ---
-net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
+#net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
 #net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00
 
 # --- MIN-HOME-Y ---
-net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
+3net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
 #net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01
 # --- MAX-HOME-Z ---
-net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-02
+#net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-02
 
 # --- PROBE-IN ---
 #net probe-in motion.probe-input <=  hm2_7i76e.0.7i76.0.0.input-05-not
 #	net probe-in motion.probe-input <= parport.0.pin-02-in
 
 # --- External E-Stop ---
-loadrt estop_latch
-addf estop-latch.0 servo-thread
-net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
-net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
-net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
-net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not
+#loadrt estop_latch
+#addf estop-latch.0 servo-thread
+#net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
+#net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
+#net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
+#net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not
 
 
 #*******************
@@ -333,9 +333,3 @@ unlinkp iocontrol.0.tool-change
 unlinkp iocontrol.0.tool-changed
 
 #net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
-
-
-
-
-
-
