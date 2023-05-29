@@ -26,7 +26,9 @@ net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-04-not
 net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-05-not
 # ---DI-06 ---
 #probe and tool setter
-
+#do sprawdzenia
+#net in_ts 		hm2_7i76e.0.7i76.0.0.input-05-not
+#net in_probe	hm2_7i76e.0.7i76.0.0.input-06-not
 # ---DI-07 ---
 # --- ESTOP-EXT ---
 # Mapping PILZ PNOZ Y32 semiconductor output to DI07 (high when ok) to estop-ext
