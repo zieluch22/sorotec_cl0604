@@ -42,7 +42,7 @@ setp hm2_7i76e.0.stepgen.timer-number 1
 #net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00
 
 # --- MIN-HOME-Y ---
-3net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
+#net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
 #net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01
 # --- MAX-HOME-Z ---
 #net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-02
