@@ -1,2 +1,20 @@
 # Include your shutdown HAL commands here
 # This file will not be overwritten when you run PNCconf again
+
+#******************************
+# SET PINS ON SHUTDOWN
+#******************************
+# Set exit states for ATC valves (i.e. make sure a clamped tool remains clamped and that cone clean is off)
+
+unlinkp hm2_7i76e.0.7i76.0.0.output-03 
+unlinkp hm2_7i76e.0.7i76.0.0.output-04 
+unlinkp hm2_7i76e.0.7i76.0.0.output-05 
+
+setp hm2_7i76e.0.7i76.0.0.output-03 TRUE
+setp hm2_7i76e.0.7i76.0.0.output-04 FALSE
+setp hm2_7i76e.0.7i76.0.0.output-05 FALSE
+
+
+# Seal air off
+unlinkp hm2_7i76e.0.7i76.0.0.output-08
+setp hm2_7i76e.0.7i76.0.0.output-08 FALSE 
