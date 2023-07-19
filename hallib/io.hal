@@ -8,12 +8,12 @@
 net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
 # ---AI-01 ---
 # --- External E-Stop ---
-loadrt estop_latch
-addf estop-latch.0 servo-thread
-net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
-net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
-net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
-net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-02-not
+#loadrt estop_latch
+#addf estop-latch.0 servo-thread
+#net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
+#net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
+#net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
+#net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-02-not
 # ---AI-02 ---
 # spindle change tool manual button on side of Z axis
 net atc_manual_toogle_button     <=  hm2_7i76e.0.7i76.0.0.input-02
