@@ -78,18 +78,18 @@ net estop-signal lut5.estop.out => iocontrol.0.emc-enable-in
 # SETUP VARIOUS MESSAGES
 #******************************
 #loadrt message names=m_vfdcom,m_vfderror,m_estopext,m_drivealm,m_lowpressure messages="Vfd-Communication lost, VfD-Error (check vfd-display), External E-Stop triggered, Drive Alarm, Air pressure low"
-loadrt message names= m_drivealm,m_lowpressure messages=" External E-Stop triggered, Drive Alarm, Air pressure low"
+loadrt message names=m_estopext, m_drivealm messages=" External E-Stop triggered, Drive Alarm"
 
 
 #addf m_vfdcom servo-thread
 #addf m_vfderror servo-thread
 addf m_estopext servo-thread
 addf m_drivealm servo-thread
-addf m_lowpressure servo-thread
+#addf m_lowpressure servo-thread
 # Estop related messages
 #net estop-watchog => m_vfdcom.trigger
 #net estop-vfdalarm => m_vfderror.trigger
 net estop-ext => m_estopext.trigger
 # Send a message when air pressure alarm triggers (signal is inverted; high = ok)
-net airpressure => m_lowpressure.trigger
+#net airpressure => m_lowpressure.trigger
 net estop-drivealm => m_drivealm.trigger
