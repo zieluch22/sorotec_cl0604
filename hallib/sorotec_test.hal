@@ -291,10 +291,15 @@ net machine-is-enabled        <=  motion.motion-enabled
 
 #  ---digital in / out signals---
 
-#  ---estop signals---
 
-#net estop-out     <=  iocontrol.0.user-enable-out
-#net estop-out     =>  iocontrol.0.emc-enable-in
+# mz old Setup
+# --- External E-Stop ---
+loadrt estop_latch
+addf estop-latch.0 servo-thread
+net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
+net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
+net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
+#net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not
 
 #message in the gui
 # my message setup External E-Stop
