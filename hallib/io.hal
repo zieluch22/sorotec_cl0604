@@ -35,14 +35,14 @@ net in_probe	hm2_7i76e.0.7i76.0.0.input-07-not
 #net estop-ext     <=  hm2_7i76e.0.7i76.0.0.input-07
 # ---DI-08 ---
 # ---DI-09 ---
-# ---DI-10 ---
 # --- Jianken Spindle Sensor 1 ---
 # Mapping sensor 1 in ATC spindle: signal high = tool clamped
-net spindle_tool     <=  hm2_7i76e.0.7i76.0.0.input-10 motion.digital-in-00
+net spindle_tool     <=  hm2_7i76e.0.7i76.0.0.input-09 motion.digital-in-00
+# ---DI-10 ---
 # ---DI-11 ---
 # --- Jianken Spindle Sensor 2 ---
 # Mapping sensor 2 in ATC spindle: signal high = draw bar down (ready to receive tool)
-net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-11 motion.digital-in-01
+net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-10 motion.digital-in-01
 
 # SIGNAL TABLE
 # 11 low 22 low = drawbar closed, no tool

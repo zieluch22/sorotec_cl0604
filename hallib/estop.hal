@@ -40,7 +40,7 @@ setp lut5.servoalarm.function 0x1
 net servoalarm1     => lut5.servoalarm.in-0
 net servoalarm2     => lut5.servoalarm.in-1
 net servoalarm3     => lut5.servoalarm.in-2
-#net tsovertravel    => lut5.servoalarm.in-3
+net tsovertravel    => lut5.servoalarm.in-3
 
 # Estop lut5 (lut5.estop)
 # Load LUT5 look-up table for logic funtions; in this case LUT5 to be HIGH (=enable ok) when
