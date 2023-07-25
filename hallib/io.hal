@@ -104,6 +104,7 @@ net coolant-mist  =>     hm2_7i76e.0.7i76.0.0.output-01
 
 # --- DO-02 ---
 #Main Sindle Air valve
+net machine-is-enabled  => hm2_7i76e.0.7i76.0.0.output-02
 # --- DO-03 ---
 # Maps Valve for spindle ATC bar: depressurize = clamp
 # 5/3 valve with NC default position
