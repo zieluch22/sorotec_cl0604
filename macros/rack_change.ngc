@@ -42,7 +42,8 @@ G49
 ; First things first, rapid to safe Z
 G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
 (print, Moved safe Z)
-
+M64 P2
+M64 P3 
 ; First, get rid of the old tool
 ; check if the spindle is not empty by checking if tool_in_spindle GT 0
 O200 if [#<oldtool> EQ #<newtool>]
@@ -104,8 +105,7 @@ O200 elseif [#<oldtool> GT 0]
             ;(MSG, Please remove tool manually from spindle using release button. Afterwards press OK)
             ; Abuse M6 for a dialog with the user by briefly killing the requested tool and replacing it with T0
             T0
-M64 P2
-M64 P3
+
             M6
             T#<newtool>
             ; Turn off flush and close drawbar to eliminate noise
