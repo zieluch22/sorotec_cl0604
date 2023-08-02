@@ -66,7 +66,7 @@ addf lut5.drawbar_open servo-thread
 setp lut5.drawbar_open.function 0xE
 net signal_toogle_manualatc lut5.drawbar_open.in-0
 net signal_automatic_atc motion.digital-out-01 lut5.drawbar_open.in-1
-net spinle-running  lut5.drawbar_open.in-2
+net spindle-running  lut5.drawbar_open.in-2
 
 # 2.1 drawbar_open signal
 net drawbar_open lut5.drawbar_open.out

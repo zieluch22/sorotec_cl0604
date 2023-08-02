@@ -138,7 +138,7 @@ net dustsealair_enable hm2_7i76e.0.7i76.0.0.output-04
 # normal condition = drawbar closed ==> this pin = low
 #  signal drawbar_open is defined as: when high ==> OPEN
 # This means that this pin gets the inverted signal of drawbar_open (drawbar_open_inv) which is HIGH
-net drawbar_open  hm2_7i76e.0.7i76.0.0.output-05
+net drawbar_open_inv  hm2_7i76e.0.7i76.0.0.output-05
 
 # --- DO-07---
 #net enableservo => hm2_7i76e.0.7i76.0.0.output-07
