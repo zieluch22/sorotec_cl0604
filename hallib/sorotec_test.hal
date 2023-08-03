@@ -25,41 +25,6 @@ addf hm2_7i76e.0.write         servo-thread
 setp hm2_7i76e.0.dpll.01.timer-us -50
 setp hm2_7i76e.0.stepgen.timer-number 1
 
-# external output signals
-
-# --- VFD power on relay---
-
-#net machine-is-enabled  =>     hm2_7i76e.0.7i76.0.0.output-00
-
-# --- COOLANT-MIST ---
-#net coolant-mist  =>     hm2_7i76e.0.7i76.0.0.output-01
-
-# external input signals
-
-
-# --- MIN-HOME-X ---
-#net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
-#net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00
-
-# --- MIN-HOME-Y ---
-#net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
-#net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01
-# --- MAX-HOME-Z ---
-#net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-02
-
-# --- PROBE-IN ---
-#net probe-in motion.probe-input <=  hm2_7i76e.0.7i76.0.0.input-05-not
-#	net probe-in motion.probe-input <= parport.0.pin-02-in
-
-# --- External E-Stop ---
-#loadrt estop_latch
-#addf estop-latch.0 servo-thread
-#net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
-#net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
-#net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
-#net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not
-
-
 #*******************
 #  AXIS X JOINT 0
 #*******************
@@ -219,62 +184,6 @@ net max-home-z     =>  joint.2.home-sw-in
 net z-neg-limit     =>  joint.2.neg-lim-sw-in
 net max-home-z     =>  joint.2.pos-lim-sw-in
 
-#*******************
-#  SPINDLE
-#*******************
-
-#setp   pid.s.Pgain     [SPINDLE_0]P
-#setp   pid.s.Igain     [SPINDLE_0]I
-#setp   pid.s.Dgain     [SPINDLE_0]D
-#setp   pid.s.bias      [SPINDLE_0]BIAS
-#setp   pid.s.FF0       [SPINDLE_0]FF0
-#setp   pid.s.FF1       [SPINDLE_0]FF1
-#setp   pid.s.FF2       [SPINDLE_0]FF2
-#setp   pid.s.deadband  [SPINDLE_0]DEADBAND
-#setp   pid.s.maxoutput [SPINDLE_0]MAX_OUTPUT
-#setp   pid.s.error-previous-target true
-
-
-#net spindle-index-enable  <=> pid.s.index-enable
-#net spindle-enable         =>  pid.s.enable
-#net spindle-vel-cmd-rpm-abs     => pid.s.command
-#net spindle-vel-fb-rpm-abs      => pid.s.feedback
-#net spindle-output        <=  pid.s.output
-
-
-##################
-#pasted from linux cnc section
-
-#setp   hm2_7i76e.0.7i76.0.0.spinout-minlim    [SPINDLE_0]OUTPUT_MIN_LIMIT
-#setp   hm2_7i76e.0.7i76.0.0.spinout-maxlim    [SPINDLE_0]OUTPUT_MAX_LIMIT
-#setp   hm2_7i76e.0.7i76.0.0.spinout-scalemax  [SPINDLE_0]OUTPUT_SCALE
-
-#net spindle-vel-cmd-rpm-abs     => hm2_7i76e.0.7i76.0.0.spinout
-#net spindle-enable     => hm2_7i76e.0.7i76.0.0.spinena
-#net spindle-ccw         => hm2_7i76e.0.7i76.0.0.spindir
-#####################
-
-# ---setup spindle control signals---
-
-#net spindle-vel-cmd-rps        <=  spindle.0.speed-out-rps
-#net spindle-vel-cmd-rps-abs    <=  spindle.0.speed-out-rps-abs
-#net spindle-vel-cmd-rpm        <=  spindle.0.speed-out
-#net spindle-vel-cmd-rpm-abs    <=  spindle.0.speed-out-abs
-#net spindle-enable             <=  spindle.0.on
-#net spindle-cw                 <=  spindle.0.forward
-#net spindle-ccw                <=  spindle.0.reverse
-#net spindle-brake              <=  spindle.0.brake
-#net spindle-revs               =>  spindle.0.revs
-#net spindle-at-speed           =>  spindle.0.at-speed
-#net spindle-vel-fb-rps         =>  spindle.0.speed-in
-#net spindle-index-enable      <=>  spindle.0.index-enable
-
-
-# ---Setup spindle at speed signals---
-
-#atc addition
-#net spindle-running           <= spindle.0.at-speed
-
 #  ---coolant signals---
 
 net coolant-mist      <=  iocontrol.0.coolant-mist
@@ -300,15 +209,6 @@ net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
 net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
 net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
 #net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not
-
-#message in the gui
-# my message setup External E-Stop
-#loadrt message names=xestop messages="External E-Stop"
-#net xestop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not   	# active low, N/C=open
-
-# The next two lines are only needed if the pins had been connected before
-unlinkp iocontrol.0.tool-change
-unlinkp iocontrol.0.tool-changed
 
 
 # Load various RT Components
