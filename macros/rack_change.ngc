@@ -14,6 +14,8 @@
 
 o<rack_change> sub
 ;(auto-restore modal settings on return)
+;(debug, in change tool_in_spindle=#<tool_in_spindle> current_pocket=#<current_pocket>)
+;(debug, selected_tool=#<selected_tool> selected_pocket=#<selected_pocket>)
 M73 
 ; print to console (if available)
 (print, Storing tool and pocket information in local variables)
@@ -22,8 +24,9 @@ M73
 #<oldpocket> = #5190
 ; call upon iocontrol.0.tool-prep-pocket via M66 and have it stored in #5399
 M66 E0
-#<newpocket> = #5399
-#5190=#5399
+;#<newpocket> = #5399
+#<newpocket> = #<selected_pocket>
+;#5190=#5399
 (print, oldtool=#<oldtool> oldpocket=#<oldpocket>)
 (print, newtool=#<newtool> newpocket=#<newpocket>)
 ; we must execute this macro only in the milltask interpreter or preview will break, so test for '#<_task>' which is 1 for  the milltask interpreter and 0 in the UI's
@@ -40,7 +43,7 @@ G40
 G49
 
 ; First things first, rapid to safe Z
-G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1.0]
 (print, Moved safe Z)
 
 ; First, get rid of the old tool
@@ -217,10 +220,16 @@ O300 elseif [#<newtool> GT 0]
             G53 G0 X[#<_ini[ATC]CHANGEX>] Y[#<_ini[ATC]CHANGEY>]
             G53 G0 Z[#<_ini[ATC]CHANGEZ>]
             ; using the code being remapped here means 'use builtin behaviour' and should trigger the usual message
+            M64 P #<_ini[ATC_PINS]ATC_OPEN>
+            (print, trigger pin for ATC_OPEN )
+            M64 P#<_ini[OTHER_PINS]TS>
+            (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
             M6
             ; Check  1: the drawbar is locked LOW L4 immediately 
+            (print, check if SENSOR_DRAWBAR open)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
+            (print, SENSOR_DRAWBAR open)
             O970 IF [#5399 EQ -1]
                 (DEBUG, Error! The drawbar is still open - Aborting!)
             O970     return [999]
