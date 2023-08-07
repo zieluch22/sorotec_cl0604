@@ -45,4 +45,8 @@ unlinkp iocontrol.0.tool-changed
 #net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
 #net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
 
-#net tool-prep-loopback         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+net tool-prep-loopback         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+
+net toolnumber iocontrol.0.tool-number
+net toolprepnumber  iocontrol.0.tool-prep-number
+net toolprepnumber iocontrol.0.tool-prep-pocket

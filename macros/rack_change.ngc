@@ -220,8 +220,8 @@ O300 elseif [#<newtool> GT 0]
             G53 G0 X[#<_ini[ATC]CHANGEX>] Y[#<_ini[ATC]CHANGEY>]
             G53 G0 Z[#<_ini[ATC]CHANGEZ>]
             ; using the code being remapped here means 'use builtin behaviour' and should trigger the usual message
-            M64 P #<_ini[ATC_PINS]ATC_OPEN>
-            (print, trigger pin for ATC_OPEN )
+           ; M64 P #<_ini[ATC_PINS]ATC_OPEN>
+           ;(print, trigger pin for ATC_OPEN )
             M64 P#<_ini[OTHER_PINS]TS>
             (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
@@ -230,16 +230,19 @@ O300 elseif [#<newtool> GT 0]
             (print, check if SENSOR_DRAWBAR open)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             (print, SENSOR_DRAWBAR open)
+            (print, 233 )
             O970 IF [#5399 EQ -1]
                 (DEBUG, Error! The drawbar is still open - Aborting!)
             O970     return [999]
             O970 ENDIF  
+            (print, 238 )
             ; check 2: there is a tool in the spindle HIGH L3 immediately 
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             O980 IF [#5399 NE 1]
                 (DEBUG, Error! No tool in spindle - Aborting!)
             O980     return [999]
             O980 ENDIF  
+            (print, 233 )
             (print, A tool is manually loaded and we can continue with measurement)
         O320 ENDIF
         

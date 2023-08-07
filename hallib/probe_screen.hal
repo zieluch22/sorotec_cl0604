@@ -30,14 +30,6 @@ net probe-in mux-gen.00.out-bit
 
 net probe-in motion.probe-input
 
-#net tool-change-request    probe.toolchange-change    <=   iocontrol.0.tool-change
-#net tool-changed           probe.toolchange-changed   =>   iocontrol.0.tool-changed
-#net tool-prep-number       probe.toolchange-number    <=   iocontrol.0.tool-prep-number
-#net tool-prep-loopback     iocontrol.0.tool-prepare  =>   iocontrol.0.tool-prepared
-
-#net tool-change-confirmed  iocontrol.0.tool-changed  <= iocontrol.0.tool-change
-#net net tool-prep-loopback iocontrol.0.tool-prepare  =>   iocontrol.0.tool-prepared
-
 # Probe_screen_v2 with vers.by probe
 # The next two lines are only needed if the pins had been connected before
 unlinkp iocontrol.0.tool-change
@@ -47,4 +39,5 @@ net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-chan
 net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
 net toolprepnumber       probe.toolchange-number <=   iocontrol.0.tool-prep-number
 
+#net tool-change-confirmed  iocontrol.0.tool-changed  <= iocontrol.0.tool-change
 net tool-prep-loop        iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
