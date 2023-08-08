@@ -164,7 +164,9 @@ O300 elseif [#<newtool> GT 0]
             G4  P #<_ini[ATC]WAITSPINDLE>            (print, above  pocket #<newpocket>, opening drawbar)
             ; Open spindle
             M64 P #<_ini[ATC_PINS]ATC_OPEN>
-            g4 p0.2
+            (print, before pause)
+            g4 p1
+            (print, after pause)
              ; Check if the drawbar is open HIGH L3 within permissible time
             (print, opened ATC, picking)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
@@ -230,7 +232,6 @@ O300 elseif [#<newtool> GT 0]
             (print, check if SENSOR_DRAWBAR open)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             (print, SENSOR_DRAWBAR open)
-            (print, 233 )
             O970 IF [#5399 EQ -1]
                 (DEBUG, Error! The drawbar is still open - Aborting!)
             O970     return [999]

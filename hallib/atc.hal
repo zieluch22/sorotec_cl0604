@@ -29,7 +29,9 @@
 # corresponds to 10 = 1 --> 0x4
 addf lut5.manualatctoggle servo-thread
 setp lut5.manualatctoggle.function 0x4
-net spindle-running => lut5.manualatctoggle.in-0
+#net spindle-running => lut5.manualatctoggle.in-0
+net spindle-enable => lut5.manualatctoggle.in-0
+
 net  atc_manual_toogle_button => lut5.manualatctoggle.in-1
 
 # 1.2 use a toggle component to allow triggering of atc via pushbutton without having to hold the button
@@ -66,8 +68,8 @@ addf lut5.drawbar_open servo-thread
 setp lut5.drawbar_open.function 0xE
 net signal_toogle_manualatc lut5.drawbar_open.in-0
 net signal_automatic_atc motion.digital-out-01 lut5.drawbar_open.in-1
-net spindle-running  lut5.drawbar_open.in-2
-
+#net spindle-running  lut5.drawbar_open.in-2
+net spindle-enable  lut5.drawbar_open.in-2
 # 2.1 drawbar_open signal
 net drawbar_open lut5.drawbar_open.out
 

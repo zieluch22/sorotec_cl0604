@@ -1,7 +1,7 @@
 T0 P0 ;
 T1 P1 Z-26.197000 ;6mm flat 
-T2 P2 Z-32.806700 ;
-T3 P3 D6.000000 Z-20.984300 ;
+T2 P2 Z-14.374000 ;
+T3 P3 D6.000000 Z-14.369667 ;
 T6 P6 ;1/8 " 17mm 
 T21 P21 Z-90.391300 ;ball end mill 6mm 
 T16 P16 Z-14.375700 ;pro alu 3mm 
@@ -30,4 +30,4 @@ T50 P50 Z-25.394700 ;face 16mm 3f sorotec
 T33 P33 Z-73.355100 ;r3 ball sorotec 
 T42 P42 Z-114.861000 ;drill 2.5 
 T62 P62 Z-80.423700 ;chamfer 60 degree 
-T26 P26 D3.175000 Z-14.362000 ;foam cutter 1/8' 
+T26 P26 D3.175000 Z-12.529728 ;foam cutter 1/8' 
