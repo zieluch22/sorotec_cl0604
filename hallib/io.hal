@@ -114,6 +114,7 @@ net machine-is-enabled  => hm2_7i76e.0.7i76.0.0.output-02
 # This means that this pin gets the default signal of drawbar_open which is LOW
 net drawbar_open hm2_7i76e.0.7i76.0.0.output-03
 
+
 # Dust Removal
 # Maps Valve for ATC cone cleaning 3/2 valve, on/off High = valve open
 # air can only get thorugh the cone when the drawbar is open, we can therefore use the some signal drawbar_open to actuate this pin
@@ -123,7 +124,8 @@ net drawbar_open hm2_7i76e.0.7i76.0.0.output-03
 # --- DO-04 --- 
 # Maps 3/2 way valve 3/2-1 - used for sealair at spindle
 # Automatically start sealair when spindle is running
-net dustsealair_enable hm2_7i76e.0.7i76.0.0.output-04
+#net dustsealair_enable hm2_7i76e.0.7i76.0.0.output-04
+net machine-is-enabled hm2_7i76e.0.7i76.0.0.output-04
 
 # AT Drawbar operation
 # to OPEN the drawbar (release tool):  drawbar_open = high __> valve exit 2/output 4 = high, exit 4/output 3 = low
