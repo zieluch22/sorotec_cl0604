@@ -78,6 +78,15 @@ addf n_drawbar_open servo-thread
 net drawbar_open => n_drawbar_open.in
 net drawbar_open_inv <= n_drawbar_open.out
 
+# closing drawbar - air return high when:
+# drawbar open_inv  high
+# spindle enable  low
+# 1 0 = 0x2
+addf lut5.drawbar_close servo-thread
+setp lut5.drawbar_close.function 0x2
+net drawbar_open_inv lut5.drawbar_close.in-0
+net spindle-enable  lut5.drawbar_close.in-2
+net drawbar_open lut5.drawbar_close.out
 
 # This is a map of the pocketprepnumber to an analog pin to correctly transfer the informaton into the M6 remap as the regular handler appears to be broken
 addf s32float.tool servo-thread
