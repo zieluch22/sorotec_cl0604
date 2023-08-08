@@ -224,7 +224,6 @@ O300 elseif [#<newtool> GT 0]
             ; using the code being remapped here means 'use builtin behaviour' and should trigger the usual message
            ; M64 P #<_ini[ATC_PINS]ATC_OPEN>
            ;(print, trigger pin for ATC_OPEN )
-            M64 P#<_ini[OTHER_PINS]TS>
             (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
             M6
@@ -232,6 +231,11 @@ O300 elseif [#<newtool> GT 0]
             (print, check if SENSOR_DRAWBAR open)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             (print, SENSOR_DRAWBAR open)
+            M64  P #<_ini[ATC_PINS]ATC_CLOSE> 
+            (print, turn on drawbar close for 3s)
+            G4 P3
+            M65 P #<_ini[ATC_PINS]ATC_CLOSE> 
+            (print, drawbar close turn off)
             O970 IF [#5399 EQ -1]
                 (DEBUG, Error! The drawbar is still open - Aborting!)
             O970     return [999]
@@ -264,8 +268,6 @@ O300 elseif [#<newtool> GT 0]
         O430 if [#<_hal[probe.ps_probevel]> LE 0]
             O430 return [-2] ; indicate probevel <= 0 
         O430 endif
-
-
         
         ; Perform tool measurement in relative motion
         F #<_hal[probe.ps_searchvel]>
