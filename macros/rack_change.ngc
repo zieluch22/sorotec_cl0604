@@ -25,7 +25,7 @@ M73
 ; call upon iocontrol.0.tool-prep-pocket via M66 and have it stored in #5399
 M66 E0
 ;#<newpocket> = #5399
-#<newpocket> = #<selected_pocket>
+#<newpocket> = [#<selected_pocket> -1]
 ;#5190=#5399
 (print, oldtool=#<oldtool> oldpocket=#<oldpocket>)
 (print, newtool=#<newtool> newpocket=#<newpocket>)
@@ -186,7 +186,11 @@ O300 elseif [#<newtool> GT 0]
             M65 P #<_ini[ATC_PINS]ATC_OPEN>
             (Print, at pocket height, Now clamp the tool)
             ; a short wait seems to be required for the motions pins to update
-            g4 P0.2
+            M64 P #<_ini[ATC_PINS]ATC_CLOSE>
+            (print, close drawbar air-return for 3s)
+            g4 P3
+            M65 P #<_ini[ATC_PINS]ATC_CLOSE>
+            (print, atc_close - air return switch off)
             ; Check if the drawbar is locked (LOW) 
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             (print, check drawbar close AFTER m65 should be 0; value: #5399)
