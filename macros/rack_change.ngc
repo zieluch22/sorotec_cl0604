@@ -72,7 +72,7 @@ O200 elseif [#<oldtool> GT 0]
             G53 G01 Z[#<_ini[ATC]FIRSTPOCKET_Z>]   F#<_ini[ATC]DROPSPEEDZ>
             ; Open ATC Spindle
             M64 P #<_ini[ATC_PINS]ATC_OPEN>
-            G4 P0.2
+            G4 P0.5
             ;Check if Release was ok by watching pin to turn high (L3)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             O900 IF [#5399 NE 1]
@@ -90,6 +90,11 @@ O200 elseif [#<oldtool> GT 0]
             ; Close spindle
             M65 P #<_ini[ATC_PINS]ATC_OPEN>
              (print, Drawbar closed, Flush off off) 
+            M64 P #<_ini[ATC_PINS]ATC_CLOSE>
+            ( print, Air return on 3s)
+            G4 P3
+            M65 P #<_ini[ATC_PINS]ATC_CLOSE>
+            (print, air return switch offed)
             G53 G01 Z #<_ini[ATC]SAFE_Z> F#<_ini[ATC]DROPSPEEDRAPID> 
             ; Now carefully escape from rack forks
             ; first move X
@@ -113,7 +118,7 @@ O200 elseif [#<oldtool> GT 0]
             ; clamp tool
             ; TOOL_CLAMP 1; TOOL_RELEASE 0; FLUSH_OFF1; FLUSH_ON 0
             M65 P #<_ini[ATC_PINS]ATC_OPEN>
-            G4 P0.2
+            G4 P0.5
             ; Check if the tool is really gone (LOW)
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             ;4 Q1
