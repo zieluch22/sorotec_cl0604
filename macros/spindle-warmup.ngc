@@ -1,5 +1,6 @@
 o<spindle-warmup> sub
 
+M6 T1
 S2000 M3
 G04 P600.
 S4000 M3
