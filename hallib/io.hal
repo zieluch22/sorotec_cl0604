@@ -1,30 +1,47 @@
-# all IO components
 # All hal commans for IO ontrol
 
 #*******************
 #  IO - INPUTS
 #*******************
 # ---AI-00 ---
+# X-ref
+net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
 # ---AI-01 ---
+# --- External E-Stop ---
+loadrt estop_latch
+addf estop-latch.0 servo-thread
+net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
+net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
+net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
+net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-01-not
 # ---AI-02 ---
+# spindle change tool manual button on side of Z axis
+#net atc_manual_toogle_button     <=  hm2_7i76e.0.7i76.0.0.input-02
 # ---AI-03 ---
 # ---DI-04 ---
+# Y-ref
+net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-04-not
 # ---DI-05 ---
+#Z-ref
+net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-05-not
 # ---DI-06 ---
+#probe and tool setter
+net in_ts 		hm2_7i76e.0.7i76.0.0.input-06
 # ---DI-07 ---
+net in_probe	hm2_7i76e.0.7i76.0.0.input-07-not
 # --- ESTOP-EXT ---
 # Mapping PILZ PNOZ Y32 semiconductor output to DI07 (high when ok) to estop-ext
 #net estop-ext     <=  hm2_7i76e.0.7i76.0.0.input-07
 # ---DI-08 ---
 # ---DI-09 ---
-# ---DI-10 ---
 # --- Jianken Spindle Sensor 1 ---
 # Mapping sensor 1 in ATC spindle: signal high = tool clamped
-#net spindle_tool     <=  hm2_7i76e.0.7i76.0.0.input-10 motion.digital-in-00
+#net spindle_tool     <=  hm2_7i76e.0.7i76.0.0.input-09 motion.digital-in-00
+# ---DI-10 ---
 # ---DI-11 ---
 # --- Jianken Spindle Sensor 2 ---
 # Mapping sensor 2 in ATC spindle: signal high = draw bar down (ready to receive tool)
-net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-11 motion.digital-in-01
+#net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-10 motion.digital-in-01
 
 # SIGNAL TABLE
 # 11 low 22 low = drawbar closed, no tool
@@ -33,34 +50,22 @@ net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-11 motion.digital-in-01
 
 # ---DI-12 ---
 # ---DI-13 ---
-# --- HOME-X ---
-#net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-13
-#net neg-lim-x     <=  hm2_7i76e.0.7i76.0.0.input-13-not
 # ---DI-14 ---
-# --- HOME-Y ---
-#net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-14
-#net neg-lim-y     <=  hm2_7i76e.0.7i76.0.0.input-14-not
 # ---DI-15 ---
-# --- HOME-Z ---
-#net min-home-z     <=  hm2_7i76e.0.7i76.0.0.input-15
-#net neg-lim-z     <=  hm2_7i76e.0.7i76.0.0.input-15-not
 # ---DI-16 ---
+# Connect JMC IHSV/IHSS alarm signal X
+#net servoalarm1   <=  hm2_7i76e.0.7i76.0.0.input-16
 # ---DI-17 ---
-# Mapping input from a toggle button at Z axis to DI 17
-#net atc_manual_toogle_button     <=  hm2_7i76e.0.7i76.0.0.input-17
+# Connect JMC IHSV/IHSS alarm signal Y
+#net servoalarm2   <=  hm2_7i76e.0.7i76.0.0.input-17
 # ---DI-18 ---
+# Connect JMC IHSV/IHSS alarm signal Z
+#net servoalarm3   <=  hm2_7i76e.0.7i76.0.0.input-18
 # ---DI-19 ---
 # ---DI-20 ---
-
 # ---DI-21 ---
-# Connect JMC IHSV/IHSS alarm signal X
-#net servoalarm1   <=  hm2_7i76e.0.7i76.0.0.input-21
 # ---DI-22 ---
-# Connect JMC IHSV/IHSS alarm signal Y
-#net servoalarm2   <=  hm2_7i76e.0.7i76.0.0.input-22
 # ---DI-23 ---
-# Connect JMC IHSV/IHSS alarm signal Z
-#net servoalarm3   <=  hm2_7i76e.0.7i76.0.0.input-23
 # ---DI-24 ---
 # --- AIR PRESSURE SENSOR 6 bar ---
 # Mapping Festo 527467 sensor in 6bar airline to input 16 (high when ok; invert to deal with message)
@@ -83,53 +88,63 @@ net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-11 motion.digital-in-01
 #*******************
 #  IO - OUTPUTS
 #*******************
-# --- DO-00 ---
-# --- VFD power on relay---
+# ---DO-00 ---
+#spindle power
 net machine-is-enabled  =>     hm2_7i76e.0.7i76.0.0.output-00
-# --- DO-01 ---
-# --- Spindle cooling ---
+
+# Start spindle water pump
+net machine-is-enabled   =>  hm2_7i76e.0.7i76.0.0.output-01
+# ---DO-01 ---
+#net coolant-mist  =>     hm2_7i76e.0.7i76.0.0.output-01
 #addf or.coolant servo-thread
 #net coolant-flood or.coolant.in0
 #net coolant-mist or.coolant.in1
 #net ortriggerpump or.coolant.out =>  hm2_7i76e.0.7i76.0.0.output-01
 
 # --- DO-02 ---
-
-# --- DO-03 ---
+#Main Spindle Air valve
+#net machine-is-enabled  => hm2_7i76e.0.7i76.0.0.output-02
+# --- DO-03 --- 
 # Maps Valve for spindle ATC bar: depressurize = clamp
 # 5/3 valve with NC default position
 # valve exit 4 (top)
-# when high this valve is open
+# when high this valve is open 
 # normal condition = drawbar closed ==> this pin = high
 #  signal drawbar_open is defined as: when high ==> OPEN
 # This means that this pin gets the default signal of drawbar_open which is LOW
+#net drawbar_open hm2_7i76e.0.7i76.0.0.output-03
+
+
+# Dust Removal
+# Maps Valve for ATC cone cleaning 3/2 valve, on/off High = valve open
+# air can only get thorugh the cone when the drawbar is open, we can therefore use the some signal drawbar_open to actuate this pin
+# default state of this pin is LOW which is == drawbar_open
 #net drawbar_open_inv hm2_7i76e.0.7i76.0.0.output-03
 
-# --- DO-04 ---
-# Maps Valve for spindle ATC bar: pressurize = release
-# valve exit 2 (bottom)
-# when high this valve is open
-# normal condition = drawbar closed ==> this pin = low
-#  signal drawbar_open is defined as: when high ==> OPEN
-# This means that this pin gets the inverted signal of drawbar_open (drawbar_open_inv) which is HIGH
-#net drawbar_open  hm2_7i76e.0.7i76.0.0.output-04
+# --- DO-04 --- 
+# Maps 3/2 way valve 3/2-1 - used for sealair at spindle
+# Automatically start sealair when spindle is running
+#net dustsealair_enable hm2_7i76e.0.7i76.0.0.output-04
+#net machine-is-enabled hm2_7i76e.0.7i76.0.0.output-04
 
 # AT Drawbar operation
 # to OPEN the drawbar (release tool):  drawbar_open = high __> valve exit 2/output 4 = high, exit 4/output 3 = low
 # to LOCK the drawbardefault state (clamp tool): drawbar_open = low __> valve exit 2/output 4= low, exit 4/output 3 = high
 
-# --- DO-05 ---
-# Maps Valve for ATC cone cleaning 3/2 valve, on/off High = valve open
-# air can only get thorugh the cone when the drawbar is open, we can therefore use the some signal drawbar_open to actuate this pin
-# default state of this pin is LOW which is == drawbar_open
-#net drawbar_open hm2_7i76e.0.7i76.0.0.output-05
+# --- DO-05 --- 
+# Air Return
+# Maps Valve for spindle ATC bar: pressurize = release
+# valve exit 2 (bottom)
+# when high this valve is open 
+# normal condition = drawbar closed ==> this pin = low
+#  signal drawbar_open is defined as: when high ==> OPEN
+# This means that this pin gets the inverted signal of drawbar_open (drawbar_open_inv) which is HIGH
+#net drawbar_close  hm2_7i76e.0.7i76.0.0.output-05 motion.digital-out-00
 
 # --- DO-07---
 #net enableservo => hm2_7i76e.0.7i76.0.0.output-07
 # --- DO-08 ---
-# Maps 3/2 way valve 3/2-1 - used for sealair at spindle
-# Automatically start sealair when spindle is running
-#net dustsealair_enable hm2_7i76e.0.7i76.0.0.output-08
+
 # --- DO-09---
 # --- DO-10 ---
 # --- DO-11 ---

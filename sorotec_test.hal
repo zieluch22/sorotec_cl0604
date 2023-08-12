@@ -30,26 +30,18 @@ setp hm2_7i76e.0.stepgen.timer-number 1
 
 
 # --- MIN-HOME-X ---
-net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
-#net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00
+#net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
 
 # --- MIN-HOME-Y ---
-net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
-#net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01
+#net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-01-not
 # --- MAX-HOME-Z ---
-net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-02
+#net max-home-z     <=  hm2_7i76e.0.7i76.0.0.input-02
 
 # --- PROBE-IN ---
 #net probe-in motion.probe-input <=  hm2_7i76e.0.7i76.0.0.input-05-not
 #	net probe-in motion.probe-input <= parport.0.pin-02-in
 
-# --- External E-Stop ---
-loadrt estop_latch
-addf estop-latch.0 servo-thread
-net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
-net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
-net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
-net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-04-not
+
 
 
 #*******************

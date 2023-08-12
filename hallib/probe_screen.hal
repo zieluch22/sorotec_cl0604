@@ -9,8 +9,8 @@ addf mux-gen.00 servo-thread
 #M65 P2 - deactivate toolsetter
 #M65 P3 - deactivate probe
 
-net in_ts 		hm2_7i76e.0.7i76.0.0.input-05-not
-net in_probe	hm2_7i76e.0.7i76.0.0.input-06-not
+#net in_ts 		hm2_7i76e.0.7i76.0.0.input-05-not
+#net in_probe	hm2_7i76e.0.7i76.0.0.input-06-not
 
 net in_ts or2.0.in0
 net in_probe or2.0.in1

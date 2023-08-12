@@ -28,7 +28,6 @@ G49
 ; using the code being remapped here means 'use builtin behaviour'
 M6
 M64 P2
-M64 P3
 O200 if [#<_hal[probe.use_toolmeasurement]> EQ 0]
 O200 return [3] ; indicate no tool measurement 
 O200 endif
@@ -73,7 +72,7 @@ G43
 ;G10 L1 P#<tool> Z#<touch_result>
 ;G10 L2 P0 Z[#<workpieceheight> + #<probeheight> + #<touch_result>]
 M65 P2
-M65 P3
+
 ; signal success be returning a value > 0:
 o<manual_change> endsub [1]
 m2
