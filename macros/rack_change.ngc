@@ -183,6 +183,7 @@ O300 elseif [#<newtool> GT 0]
             ; a short wait seems to be required for the motions pins to update
             M64 P #<_ini[ATC_PINS]ATC_CLOSE>
             (print, close drawbar -open air-return)
+            G4 P1
             ; Check if the drawbar is locked (LOW) 
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             (print, check drawbar close AFTER m65 should be 0; value: #5399)
