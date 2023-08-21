@@ -1,5 +1,5 @@
 T0 P0 ;
-T1 P1 Z-15.726237 ;6mm flat 
+T1 P1 Z+2.753083 ;6mm flat 
 T2 P2 Z-21.641083 ;
 T3 P3 D6.000000 Z-32.525667 ;
 T6 P6 ;1/8 " 17mm 
@@ -11,7 +11,7 @@ T99 P99 Z-45.089900 ;probe
 T9 P9 Z-86.946600 ;2mm flat 
 T25 P25 Z-12.533667 ;facemill 18mm 
 T18 P18 Z-48.079000 ;3mm flat sorotec 
-T4 P4 D6.000000 Z-31.343000 ;sorotec_3mm ball 
+T4 P4 D6.000000 Z+8.648083 ;sorotec_3mm ball 
 T8 P8 D6.000000 Z-35.772400 ;chamfer sorotec 6mm 4f 
 T11 P11 D5.000000 Z-31.292700 ;5mm 4f china 
 T12 P12 Z-36.478700 ;sor_flat_2mm_8mm 
@@ -20,7 +20,7 @@ T22 P22 Z-66.332900 ;3f 4mm
 T7 P7 Z-72.296600 ;1f 6mm sorotec 25mm 
 T23 P23 Z-90.136800 ;3f 6mm l25 coated china 
 T60 P60 Z-37.411300 ;3f 90deg 6mm chamfer 
-T24 P24 Z-32.538583 ;2f 6mm flat coated china 
+T24 P24 Z+2.666000 ;2f 6mm flat coated china 
 T41 P41 Z-98.956200 ;drill 5mm sorotec 
 T90 P90 Z-57.628500 ;thread m4-m8 sorotec 
 T32 P32 Z-61.609000 ;ball 6mm china 

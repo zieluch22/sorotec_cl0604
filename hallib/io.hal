@@ -18,6 +18,9 @@ net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-01-not
 # spindle change tool manual button on side of Z axis
 net atc_manual_toogle_button     <=  hm2_7i76e.0.7i76.0.0.input-02
 # ---AI-03 ---
+# --- AIR PRESSURE SENSOR 6 bar ---
+# Mapping Festo 527467 sensor in 6bar airline to input 16 (high when ok; invert to deal with message)
+net airpressure    <=  hm2_7i76e.0.7i76.0.0.input-03-not
 # ---DI-04 ---
 # Y-ref
 net min-home-y     <=  hm2_7i76e.0.7i76.0.0.input-04-not
