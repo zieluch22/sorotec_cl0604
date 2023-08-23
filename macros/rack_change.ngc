@@ -22,6 +22,8 @@ M73
 #<newtool> = #<selected_tool>
 #<oldtool> = #<tool_in_spindle>
 #<oldpocket> = #5190
+
+
 ; call upon iocontrol.0.tool-prep-pocket via M66 and have it stored in #5399
 M66 E0
 #<newpocket> = #5399
@@ -244,17 +246,16 @@ O300 elseif [#<newtool> GT 0]
                 (DEBUG, Error! The drawbar is still open - Aborting!)
             O970     return [999]
             O970 ENDIF  
-            (print, 238 )
             ; check 2: there is a tool in the spindle HIGH L3 immediately 
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             O980 IF [#5399 NE 1]
                 (DEBUG, Error! No tool in spindle - Aborting!)
             O980     return [999]
             O980 ENDIF  
-            (print, 233 )
             (print, A tool is manually loaded and we can continue with measurement)
         O320 ENDIF
-        
+        #<tool_diameter> = #5410
+        (print, tool diameter #<tool_diameter>)
         M64 P#<_ini[OTHER_PINS]TS>
         ; M64 P#<ini[OTHER_PINS]PROBE>
         ; Perform tool measurement - first rapid to toolsensorposition
@@ -262,9 +263,14 @@ O300 elseif [#<newtool> GT 0]
         G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
         ; Turn on airblast to clean tool length sensor
         ;M64 P #<_ini[ATC_PINS]CLEAN_TS>
-        G53 G01 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>] F#<_ini[ATC]DROPSPEEDRAPID>
+        (print, check what is tool diameter #<tool_diameter> is greater than tool setter #<_ini[TOOLSENSOR]TS_DIAMETER> )
+        O410 if [ #<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER> ] 
+			(print, tool diameter grater than #<_ini[TOOLSENSOR]TS_DIAMETER>, offset X by half tool size forward to not crash with toolholders)
+			G53 G01 X[#<_ini[TOOLSENSOR]X> + #<tool_diameter> / 2]  Y#<_ini[TOOLSENSOR]Y>  F[#<_ini[ATC]DROPSPEEDRAPID> /2]
+		O410 else 
+			G53 G01 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>] F#<_ini[ATC]DROPSPEEDRAPID>
+        O410 endif  
         G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
-
         ; Check certain inputs in probe_screen
         O420 if [#<_hal[probe.ps_searchvel]> LE 0]
             O420 return [-1] ; indicate searchvel <= 0 
