@@ -35,9 +35,9 @@ net probe-in motion.probe-input
 unlinkp iocontrol.0.tool-change
 unlinkp iocontrol.0.tool-changed
 
-net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
-net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
-net toolprepnumber       probe.toolchange-number <=   iocontrol.0.tool-prep-number
+net tool-change    probe.toolchange-change  <= iocontrol.0.tool-change 
+net tool-changed   probe.toolchange-changed <= iocontrol.0.tool-changed
+net toolprepnumber probe.toolchange-number  <= iocontrol.0.tool-prep-number
+net tool-prep-loop iocontrol.0.tool-prepare <= iocontrol.0.tool-prepared
 
-#net tool-change-confirmed  iocontrol.0.tool-changed  <= iocontrol.0.tool-change
-net tool-prep-loop        iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+

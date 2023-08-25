@@ -14,7 +14,7 @@ ps_offs_x = 0.0
 ps_offs_y = 0.0
 ps_offs_z = 0.0
 ps_offs_angle = 0.0
-probeheight = -40.0951250315
+probeheight = 0.0
 blockheight = 0.0
 ps_edge_length = 5.0
 

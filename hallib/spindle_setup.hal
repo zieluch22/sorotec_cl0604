@@ -55,5 +55,7 @@ net spindle-index-enable      <=>  spindle.0.index-enable
 net spindle-running           <= spindle.0.at-speed
 #net  spindle-running 		   <= spindle.0.on
 
+
+net toolnumber  iocontrol.0.tool-number 
 net toolprepnumber iocontrol.0.tool-prep-number  
-net pocketprepnumer iocontrol.0.tool-prep-pocket 
+net pocketprepnumer iocontrol.0.tool-prep-pocket
