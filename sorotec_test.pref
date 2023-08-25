@@ -8,13 +8,13 @@ ps_z_clearance = 3.0
 ps_probe_max = 15.0
 ps_probe_latch = 1.0
 ps_probe_diam = 2.0
-ps_xy_clearance = 2.0
-ps_edge_lenght = 10.0
+ps_xy_clearance = 10.0
+ps_edge_lenght = 4.0
 ps_offs_x = 0.0
 ps_offs_y = 0.0
 ps_offs_z = 0.0
 ps_offs_angle = 0.0
-probeheight = -73.6344999313
+probeheight = 0.0
 blockheight = 0.0
 ps_edge_length = 5.0
 
