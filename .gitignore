@@ -4,3 +4,5 @@ sorotec_test.ini.expanded
 python/probe_screen.pyc
 python/remap.pyc
 python/stdglue.pyc
+tool.tbl.bal
+
