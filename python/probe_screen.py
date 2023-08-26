@@ -379,32 +379,31 @@ class ProbeScreenClass:
             value = 0.2
         else:
             value = 1
-
-        velocity = float(self.inifile.find("TRAJ", "DEFAULT_VELOCITY"))
-
+        velocity = int(self.inifile.find("TRAJ", "DEFAULT_LINEAR_VELOCITY"))
         dir = widget.get_label()[1]
         if dir == "+":
             direction = 1
         else:
             direction = -1
-
+        jjogmode=True
+        self.command.teleop_enable(0) 
         if self.distance <> 0:  # incremental jogging
-            self.command.jog( linuxcnc.JOG_INCREMENT, axisnumber, direction * velocity, self.distance )
+            self.command.jog( linuxcnc.JOG_INCREMENT , jjogmode , axisnumber , direction * velocity , self.distance )
         else:  # continuous jogging
-            self.command.jog( linuxcnc.JOG_CONTINUOUS, axisnumber, direction * velocity )
+            self.command.jog( linuxcnc.JOG_CONTINUOUS , jjogmode, axisnumber , direction * velocity )
 
     def on_btn_jog_released( self, widget, data = None ):
         axisletter = widget.get_label()[0]
         if not axisletter.lower() in "xyzabcuvw":
             print ( "unknown axis %s" % axisletter )
             return
-
-        axis = "xyzabcuvw".index( axisletter.lower() )
-
+        jjogmode=True
+        axisnumber = "xyzabcuvw".index( axisletter.lower() )
+        self.command.teleop_enable(0)
         if self.distance <> 0:
             pass
         else:
-            self.command.jog( linuxcnc.JOG_STOP, axis )
+            self.command.jog( linuxcnc.JOG_STOP, jjogmode, axisnumber )
 
 
     # Spin  buttons
@@ -2015,7 +2014,7 @@ class ProbeScreenClass:
             self.warning_dialog( self, _( "Conversion error in btn_block_height!" ),
                                    _( "Please enter only numerical values\nValues have not been applied" ) )
         # set koordinate system to new origin
-        origin = float(self.inifile.find("AXIS_2", "MIN_LIMIT")) + blockheight
+        origin = float(self.inifile.find("AXIS_Z", "MIN_LIMIT")) + blockheight
         self.command.mode( linuxcnc.MODE_MDI )
         self.command.wait_complete()
         self.command.mdi( "G10 L2 P0 Z%s" % origin )
