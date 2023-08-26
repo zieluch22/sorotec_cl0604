@@ -33,9 +33,9 @@ net probe-in motion.probe-input
 # Probe_screen_v2 with vers.by probe
 # The next two lines are only needed if the pins had been connected before
 
-net tool-change    probe.toolchange-change  <= iocontrol.0.tool-change 
-net tool-changed   probe.toolchange-changed <= iocontrol.0.tool-changed
-net toolprepnumber probe.toolchange-number  <= iocontrol.0.tool-prep-number
+#net tool-change    probe.toolchange-change  <= iocontrol.0.tool-change 
+#net tool-changed   probe.toolchange-changed <= iocontrol.0.tool-changed
+#net toolprepnumber probe.toolchange-number  <= iocontrol.0.tool-prep-number
 
 
 
