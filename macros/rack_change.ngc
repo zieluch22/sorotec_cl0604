@@ -260,7 +260,7 @@ O300 elseif [#<newtool> GT 0]
         ; Perform tool measurement - first rapid to toolsensorposition
         G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
         G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
-        (print, check what is tool diameter #<tool_diameter> is greater than tool setter #<_ini[TOOLSENSOR]TS_DIAMETER> )
+        (print, check what is tool diameter #<tool_diameter> )
         O410 if [ #<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER> ] 
 			(print, tool diameter grater than #<_ini[TOOLSENSOR]TS_DIAMETER>, offset X by half tool size forward to not crash with toolholders)
 			G53 G01 X[#<_ini[TOOLSENSOR]X> + #<tool_diameter> / 2]  Y#<_ini[TOOLSENSOR]Y>  F[#<_ini[ATC]DROPSPEEDRAPID> /2]
@@ -293,10 +293,11 @@ O300 elseif [#<newtool> GT 0]
         G53 G0 Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
         (print, moving away from ts)
         #<touch_result> = #5063
-        #<setterheight> = #<_hal[probe.setterheight]> 
+        #<probeheight> = #<_hal[probe.probeheight]> 
         #<blockheight> = #<_hal[probe.blockheight]>
-        (print, #<touch_result>  #<setterheight>  #<blockheight>)
-        G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[probe.setterheight]> + #<_hal[probe.blockheight]>]
+        (print, tool #<newtool>)
+        (print, #<touch_result>  #<probeheight>  #<blockheight>)
+        G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[probe.probeheight]> + #<_hal[probe.blockheight]>]
         G43
     O310 endif
 O300 endif
