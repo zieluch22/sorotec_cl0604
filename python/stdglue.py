@@ -124,7 +124,7 @@ def prepare_epilog(self, **words):
             if self.return_value > 0:
                 self.selected_tool = int(self.params["tool"])
                 self.selected_pocket = int(self.params["pocket"])
-                emccanon.SELECT_TOOL(self.selected_tool)
+                emccanon.SELECT_POCKET(self.selected_pocket, self.selected_tool)
                 return INTERP_OK
             else:
                 self.set_errormsg("T%d: aborted (return code %.1f)" % (int(self.params["tool"]),self.return_value))
