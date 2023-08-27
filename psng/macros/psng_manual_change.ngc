@@ -7,7 +7,7 @@ M73 ; Save and autorestore model states. This will be used only in case of error
 o<_psng_modal_save> call
 o<_psng_hook> call [1]
 ; END PSNG PREAMBLE
-
+M64 P#<_ini[OTHER_PINS]TS>
 ;(debug, in change tool_in_spindle=#<tool_in_spindle> current_pocket=#<current_pocket>)
 ;(debug, selected_tool=#<selected_tool> selected_pocket=#<selected_pocket>)
 
@@ -26,7 +26,8 @@ O100 endif
 
 ; Ensure we're in G90 / absolute mode
 G90
-
+; Cutter comp off, otherwise G53 might go wrong
+G40
 ; First go up & then move to tool sensor position
 G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
 G53 G0 X[#<_ini[CHANGE_POSITION]X>] Y[#<_ini[CHANGE_POSITION]Y>]
@@ -68,7 +69,7 @@ G53 G1 Z[#<_ini[TOOLSENSOR]Z>]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
 
 G10 L1 P#<tool> Z[#<touch_result> - #<_hal[probe.setterheight]> + #<_hal[probe.blockheight]>]
 G43
-
+M65 P#<_ini[OTHER_PINS]TS>
 ; BEGIN PSNG POSTAMBLE
 M71 ; Invalidate Modal Autorestore
 o<_psng_modal_restore> call

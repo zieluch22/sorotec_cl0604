@@ -74,7 +74,7 @@ O200 elseif [#<oldtool> GT 0]
             G53 G01 Z[#<_ini[ATC]FIRSTPOCKET_Z>]   F#<_ini[ATC]DROPSPEEDZ>
             ; Open ATC Spindle
             M64 P #<_ini[ATC_PINS]ATC_OPEN>
-            G4 P0.2
+            G4 P0.4
             ;Check if Release was ok by watching pin to turn high (L3)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             O900 IF [#5399 NE 1]
