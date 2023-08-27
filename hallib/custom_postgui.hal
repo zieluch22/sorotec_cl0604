@@ -45,8 +45,5 @@ net      spindle-stop-btn                      halui.mdi-command-14             
 unlinkp iocontrol.0.tool-change
 unlinkp iocontrol.0.tool-changed
 
-
-#net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
-#net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
-#net toolprepnumber         probe.toolchange-number <=   iocontrol.0.tool-prep-number
-net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+net tool-prep-loopback         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+#net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
