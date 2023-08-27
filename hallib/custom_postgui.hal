@@ -42,8 +42,8 @@ net      spindle-stop-btn                      halui.mdi-command-14             
 #net      amp-fault-y                           pyvcp.amp-fault-y
 #net      amp-fault-z                           pyvcp.amp-fault-z
 
-unlinkp iocontrol.0.tool-change
-unlinkp iocontrol.0.tool-changed
+#unlinkp iocontrol.0.tool-change
+#unlinkp iocontrol.0.tool-changed
 
-net tool-prep-loopback         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+#net tool-prep-loopback         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
 #net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared

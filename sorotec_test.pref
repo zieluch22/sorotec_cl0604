@@ -1,5 +1,5 @@
 [DEFAULT]
-use_toolmeasurement = False
+use_toolmeasurement = True
 chk_set_zero = False
 chk_auto_rott = False
 ps_searchvel = 300.0
