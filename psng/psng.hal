@@ -13,10 +13,14 @@ unlinkp iocontrol.0.tool-prepared
 #net tool-prep-number       probe.toolchange-prep-number <=   iocontrol.0.tool-prep-number
 #net tool-prep-loopback     iocontrol.0.tool-prepare     <=   iocontrol.0.tool-prepared
 
-net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
-net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
+net tool-change-confirmed   iocontrol.0.tool-changed      <=  iocontrol.0.tool-change
+net tool-prepare-loopback   iocontrol.0.tool-prepare      =>  iocontrol.0.tool-prepared
+
+#Guio
+#net tool-change            probe.toolchange-change    <=   iocontrol.0.tool-change 
+#net tool-changed           probe.toolchange-changed   <=   iocontrol.0.tool-changed
 net toolprepnumber       probe.toolchange-number <=   iocontrol.0.tool-prep-number
-net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
+#net tool-prep-loop         iocontrol.0.tool-prepare      <=   iocontrol.0.tool-prepared
 
 # Tool Information
 net toolnumber  iocontrol.0.tool-number 
