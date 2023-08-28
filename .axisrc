@@ -17,7 +17,6 @@
 # gmocappy.error pin's behaviour for AXIS.
 root_window.tk.call("wm","geometry",".","1280x1024")
 #root_window.attributes("-fullscreen",1)
-
 root_window.tk.call('.pane.top.tabs','configure','-width',20)
 root_window.tk.call('.pane.top.feedoverride','configure','-width',20)
 root_window.tk.call('.pane.top.rapidoverride','configure','-width',20)
