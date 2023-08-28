@@ -4,5 +4,5 @@ sorotec_test.ini.expanded
 python/probe_screen.pyc
 python/remap.pyc
 python/stdglue.pyc
-tool.tbl.bal
-
+tool.tbl.bak
+linuxcnc.var.bak
