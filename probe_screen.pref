@@ -1,8 +1,8 @@
 [DEFAULT]
 chk_signal_delay = False
 ps_signal_delay = 0
-chk_use_fine = False
-chk_error_signal = False
+chk_use_fine = True
+chk_error_signal = True
 chk_auto_rott = False
 ps_offs_angle = 0.0
 chk_set_zero = False
@@ -21,6 +21,6 @@ ps_offs_y = 0.0
 ps_offs_z = 0.0
 ps_arm_delta_x = 0.0
 ps_arm_delta_y = 0.0
-setterheight = 0.0
+setterheight = -45.0
 blockheight = 0.0
 
