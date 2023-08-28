@@ -303,6 +303,11 @@ O300 elseif [#<newtool> GT 0]
 O300 endif
 ;Turn off tool setter
 M65 P#<_ini[OTHER_PINS]TS>
+; BEGIN PSNG POSTAMBLE
+M71 ; Invalidate Modal Autorestore
+o<_psng_modal_restore> call
+; END PSNG POSTAMBLE
+
 (print, End of Program)
 o<rack_change> endsub [1]
 
