@@ -26,6 +26,7 @@ M73
 
 ; call upon iocontrol.0.tool-prep-pocket via M66 and have it stored in #5399
 M66 E0
+(print, selected pocket #<selected_pocket> , newpocket=#<newpocket>)
 #<newpocket> = #5399
 #5190=#5399
 (print, oldtool=#<oldtool> oldpocket=#<oldpocket>)

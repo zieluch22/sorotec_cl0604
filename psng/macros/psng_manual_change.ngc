@@ -1,19 +1,22 @@
 ; Manual toolchange with automatic tool length measurement
 
 o<psng_manual_change> sub
-
+(print, start)
 ; BEGIN PSNG PREAMBLE
 M73 ; Save and autorestore model states. This will be used only in case of error, otherwise we will invalidate it.
 o<_psng_modal_save> call
+(print, after modal save)
 o<_psng_hook> call [1]
 ; END PSNG PREAMBLE
-M64 P#<_ini[OTHER_PINS]TS>
-;(debug, in change tool_in_spindle=#<tool_in_spindle> current_pocket=#<current_pocket>)
-;(debug, selected_tool=#<selected_tool> selected_pocket=#<selected_pocket>)
-
+(print, END PSNG PREAMBLE)
+(debug, in change tool_in_spindle=#<tool_in_spindle> current_pocket=#<current_pocket>)
+(debug, selected_tool=#<selected_tool> selected_pocket=#<selected_pocket>)
+(print in change tool_in_spindle=#<tool_in_spindle> current_pocket=#<current_pocket>)
+(print, selected_tool=#<selected_tool> selected_pocket=#<selected_pocket>)
 ; Save some info, otherwise after the M6 this information is gone!
 #<tool> = #<selected_tool>
 #<pocket> = #<selected_pocket>
+(print; tool #<selected_tool> , pocket #<selected_pocket> )
 
 ; We must execute this only in the milltask interpreter
 ; or preview will break, so test for '#<_task>' which is 1 for
@@ -26,27 +29,33 @@ O100 endif
 
 ; Ensure we're in G90 / absolute mode
 G90
+(print, G90)
 ; Cutter comp off, otherwise G53 might go wrong
 G40
-; First go up & then move to tool sensor position
-G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
-G53 G0 X[#<_ini[CHANGE_POSITION]X>] Y[#<_ini[CHANGE_POSITION]Y>]
-G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
-
-
+(print, G40)
 ; Cancel tool offset
+
+
+; First go up & then move to tool sensor position
+G53 G0 Z [#<_ini[AXIS_Z]MAX_LIMIT>-1.0]
+(print, z max done)
+G53 G0 X #<_ini[ATC]CHANGEX> Y #<_ini[ATC]CHANGEY>
+(print, xy done)
+G53 G0 Z -5.0
+(print, g53 Z -5 done )
 G49
+(print, after g49) 
 
 ; using the code being remapped here means 'use builtin behaviour'
 M6
-
+(print , m6 done )
 
 ; First go up & then move to tool sensor position
-G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
+G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1.0]
 G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>]
 G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
 
-
+M64 P#<_ini[OTHER_PINS]TS>
 ; Measure Tool
 o<_psng_probe_tool> call [#<_ini[TOOLSENSOR]MAXPROBE>]
 O1 if [#<_value> EQ -1]
