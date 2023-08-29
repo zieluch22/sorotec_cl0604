@@ -1,13 +1,13 @@
 T0 P0 ;
-T1 P1 D6.000000 Z+85.240197 ;6mm flat 
-T2 P2 D6.000000 Z-26.518400 ;
-T3 P3 D6.000000 Z+94.674530 ;
+T1 P1 D6.000000 Z-35.697322 ;6mm flat 
+T2 P2 D6.000000 Z-31.231562 ;
+T3 P3 D6.000000 Z+8.947445 ;
 T6 P6 ;1/8 " 17mm 
 T21 P21 Z-90.391300 ;ball end mill 6mm 
 T16 P16 Z-14.375700 ;pro alu 3mm 
 T13 P13 D6.000000 Z-41.843300 ;flat/ 6mm pro alu 26mm 
 T19 P19 D2.000000 Z-17.651200 ;flat_por alu 2mm 
-T99 P99 Z+0.025000 ;probe 
+T99 P99 Z+18.550166 ;probe 
 T9 P9 Z-86.946600 ;2mm flat 
 T25 P25 Z-12.533700 ;facemill 18mm 
 T18 P18 Z-48.079000 ;3mm flat sorotec 
@@ -20,7 +20,7 @@ T22 P22 Z-66.332900 ;3f 4mm
 T7 P7 Z-36.661100 ;1f 6mm sorotec 25mm 
 T23 P23 Z-32.346400 ;3f 6mm l25 coated china 
 T60 P60 Z-37.411300 ;3f 90deg 6mm chamfer 
-T24 P24 Z+3.396130 ;2f 6mm flat coated china 
+T24 P24 Z-26.316062 ;2f 6mm flat coated china 
 T41 P41 Z-98.956200 ;drill 5mm sorotec 
 T90 P90 Z-57.628500 ;thread m4-m8 sorotec 
 T32 P32 Z-61.609000 ;ball 6mm china 

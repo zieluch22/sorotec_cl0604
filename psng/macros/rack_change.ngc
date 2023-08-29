@@ -218,6 +218,7 @@ O300 elseif [#<newtool> GT 0]
             ; Load tool number
             (print, Moving finished, tool loaded, now tell linucnc about the toolchange using M61)
             M61 Q#<newtool>
+            ;G43 T#<newtool>
             ; Rapid to safe Z
             (print, tool change done, rapid to z0)
             G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
@@ -234,7 +235,8 @@ O300 elseif [#<newtool> GT 0]
            ;(print, trigger pin for ATC_OPEN )
             (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
-            M6 G43
+            M6 
+            ;G43 T#<newtool>
             ; Check  1: the drawbar is locked LOW L4 immediately 
             (print, check if SENSOR_DRAWBAR open)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0

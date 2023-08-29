@@ -6,3 +6,4 @@ python/remap.pyc
 python/stdglue.pyc
 tool.tbl.bak
 linuxcnc.var.bak
+hallib/linuxcnc.var.bak

@@ -10,7 +10,7 @@ M73
 #<search_distance> = #1
 #<search_axis> = #2
 
-
+M64 P#<_ini[OTHER_PINS]PROBE>
 ; Determine the Search Direction
 O1 if [#<search_distance> GE 0]
     ; Searching in the positive direction
@@ -164,6 +164,6 @@ O7 if [#<_hal[probe.chk_use_fine]> GT 0]
     O82 while [#<count> LT #<repeat_loop_times>]
 
 O7 endif
-
+M65 P#<_ini[OTHER_PINS]PROBE>
 o<_psng_probe> endsub [0]
 M2
