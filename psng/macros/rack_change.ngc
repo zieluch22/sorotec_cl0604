@@ -234,7 +234,7 @@ O300 elseif [#<newtool> GT 0]
            ;(print, trigger pin for ATC_OPEN )
             (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
-            M6
+            M6 G43
             ; Check  1: the drawbar is locked LOW L4 immediately 
             (print, check if SENSOR_DRAWBAR open)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0

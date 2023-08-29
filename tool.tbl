@@ -1,13 +1,13 @@
 T0 P0 ;
-T1 P1 D6.000000 Z-35.737333 ;6mm flat 
+T1 P1 D6.000000 Z+85.240197 ;6mm flat 
 T2 P2 D6.000000 Z-26.518400 ;
-T3 P3 D6.000000 Z-26.310433 ;
+T3 P3 D6.000000 Z+94.674530 ;
 T6 P6 ;1/8 " 17mm 
 T21 P21 Z-90.391300 ;ball end mill 6mm 
 T16 P16 Z-14.375700 ;pro alu 3mm 
 T13 P13 D6.000000 Z-41.843300 ;flat/ 6mm pro alu 26mm 
 T19 P19 D2.000000 Z-17.651200 ;flat_por alu 2mm 
-T99 P99 Z+0.001667 ;probe 
+T99 P99 Z+0.025000 ;probe 
 T9 P9 Z-86.946600 ;2mm flat 
 T25 P25 Z-12.533700 ;facemill 18mm 
 T18 P18 Z-48.079000 ;3mm flat sorotec 
@@ -32,4 +32,4 @@ T42 P42 Z-114.861000 ;drill 2.5
 T62 P62 Z-80.423700 ;chamfer 60 degree 
 T26 P26 D3.175000 Z-12.536000 ;foam cutter 1/8' 
 T51 P51 D50.000000 Z+24.630400 ;facemill 50mm 
-T5 P5 Z-38.696100 ;tool 
+T5 P5 Z-37.080305 ;tool 
