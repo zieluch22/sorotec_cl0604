@@ -1,0 +1,10 @@
+# These files are loaded post GUI, in the order they appear
+
+#source hallib/pyvcp_options.hal
+#source hallib/custom_postgui.hal
+net probe-in     =>  motion.probe-input  qtdragon.led-probe
+
+net tool-change             hal_manualtoolchange.change   <=  iocontrol.0.tool-change
+net tool-changed            hal_manualtoolchange.changed  <=  iocontrol.0.tool-changed
+net tool-prep-number        hal_manualtoolchange.number   <=  iocontrol.0.tool-prep-number
+net tool-prepare-loopback   iocontrol.0.tool-prepare      =>  iocontrol.0.tool-prepared

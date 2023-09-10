@@ -1,0 +1,59 @@
+m64 p2
+m64 p3
+m64 p2
+m64p3
+m64 p3
+m64 p2
+m6 t1
+m6 t99
+m6 t1
+m64 p2
+m64 p3
+m6 t1
+m6 t23
+m6 t1
+m6 t23
+m6 t1
+m66 p0
+m6 t2
+m6 t23
+m6 t1
+m6 t2
+m66 p0
+m66 e0
+m6 t1
+g43
+m6 t23
+m3 s6000
+m6 t99
+m64 p0
+m64 p1
+m65 p1
+m65 p0
+m6 t99
+m64 p3
+m64 p2
+m6 t99
+g43
+m64 p2
+m64 p3
+m6 t99
+m64 p3
+m64 p2
+m6 t99
+m64 p3
+m64 p2
+m6 t2
+g43
+m6 t99
+g1 x0 y0 f3000
+g43
+m6 t1
+g1 x0 y0 f3000
+m6 t2
+g1 x0 y0 z2 f3000
+m6 t99
+m6 t2
+g43
+m6 t1
+g43

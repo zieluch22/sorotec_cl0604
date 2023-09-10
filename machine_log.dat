@@ -1,0 +1,17 @@
+--- QtVCP Screen Started on: Sun, Sep 10 2023 21:34:04 ---
+Sun10 21:34: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+Sun10 21:34: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+Sun10 21:34: Machine OFF
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Tool 0: No Tool
+Sun10 21:34: Machine ON
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Hard limits tripped
+Sun10 21:34: Tool 1: 6mm flat 
+Sun10 21:34: Tool 1: 6mm flat 
