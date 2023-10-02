@@ -1,2 +1,2 @@
-2023-09-10 21:34:05,813 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
-2023-09-10 21:34:05,816 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
+2023-10-02 10:17:32,840 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
+2023-10-02 10:17:32,843 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc

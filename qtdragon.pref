@@ -5,6 +5,7 @@ ToolChangeDialog-geometry = 910 539 340 237
 VersaHelpDialog-geometry = 660 254 600 600
 _CALCULATOR = 910 539 472 376
 CalculatorDialog-geometry = 910 539 472 376
+RunFromLineDialog-geometry = default
 
 [DIALOG_OPTIONS]
 EntryDialog_play_sound = True
@@ -22,9 +23,10 @@ RunFromLineDialog_play_sound = True
 RunFromLineDialog_sound_type = READY
 
 [BOOK_KEEPING]
-last_loaded_directory = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
-last_loaded_file = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+last_loaded_directory = /home/zieluch/linuxcnc/nc_files/spaqcer_lem_op1
+last_loaded_file = /home/zieluch/linuxcnc/nc_files/spaqcer_lem_op1/spacer_t21.ngc
 style_QSS_Path = DEFAULT
+RecentPath_0 = /home/zieluch/linuxcnc/nc_files/spaqcer_lem_op1/spacer_t21.ngc
 
 [ORIGINOFFSET_SYSTEM_NAMES]
 __dialogOffsetViewWidget-G54 = User System 1
@@ -90,7 +92,7 @@ gcodegraphics-user-lat = 0.0
 gcodegraphics-user-lon = 0.0
 
 [CUSTOM_FORM_ENTRIES]
-Tool to load = 1
+Tool to load = 0
 Laser X = 100.0
 Laser Y = -20.0
 Sensor X = 154.77
@@ -120,20 +122,20 @@ Use tool touchplate = False
 
 [VERSA_PROBE_OPTIONS]
 ps_searchvel = 300.0
-ps_probevel = 10.0
-ps_z_clearance = 3.0
-ps_probe_max = 20.0
+ps_probevel = 20.0
+ps_z_clearance = 5.0
+ps_probe_max = 30.0
 ps_probe_max_z_travel = 35.0
 ps_probe_latch = 1.0
-ps_probe_diam = 2.0
-ps_xy_clearance = 30.0
+ps_probe_diam = 1.3
+ps_xy_clearance = 5.0
 ps_side_edge_length = 5.0
-ps_probe_height = -39.464
-ps_block_height = -7.634
+ps_probe_height = -41.076
+ps_block_height = -11.058
 use_tool_measurement = True
 ps_offs_x = 0.0
 ps_offs_y = 0.0
 ps_offs_z = 0.0
 ps_offs_angle = 0.0
-ps_probe_rapid_vel = 60.0
+ps_probe_rapid_vel = 1000.0
 
