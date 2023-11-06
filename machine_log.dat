@@ -1,14 +1,22 @@
---- QtVCP Screen Started on: Mon, Oct 02 2023 10:17:31 ---
-Mon02 10:17: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
-Mon02 10:17: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
-Mon02 10:17: Machine OFF
-Mon02 10:17: Hard limits tripped
-Mon02 10:17: Tool 0: No Tool
-Mon02 10:17: Machine ON
-Mon02 10:17: Hard limits tripped
-Mon02 10:17: Hard limits tripped
-Mon02 10:19: Machine OFF
-Mon02 10:20: Machine ON
-Mon02 10:23: Machine OFF
-Mon02 10:23: Machine ON
-Mon02 10:23: Machine OFF
+--- QtVCP Screen Started on: Mon, Nov 06 2023 23:29:09 ---
+Mon06 23:29: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+Mon06 23:29: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+Mon06 23:29: Machine OFF
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Tool 0: No Tool
+Mon06 23:29: Machine ON
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Hard limits tripped
+Mon06 23:29: Tool 99: probe 
+Mon06 23:29: Tool 99: probe 
+Mon06 23:31: Cannot switch pages while in AUTO mode
+Mon06 23:32: HISTORY Inside Hole  Xm[-2.558] Xc[0.020] Xp[2.598] Lx[5.156] Ym[-2.508] Yc[0.040] Yp[2.589] Ly[5.097] D[5.126]
+Mon06 23:32: HISTORY Inside Hole  Xm[-2.586] Xc[-0.004] Xp[2.577] Lx[5.163] Ym[-2.551] Yc[-0.001] Yp[2.550] Ly[5.101] D[5.132]
+Mon06 23:32: HISTORY Inside Hole  Xm[-2.585] Xc[-0.004] Xp[2.577] Lx[5.162] Ym[-2.553] Yc[-0.002] Yp[2.550] Ly[5.103] D[5.132]
+Mon06 23:33: HISTORY Inside Hole  Xm[-2.586] Xc[-0.005] Xp[2.577] Lx[5.163] Ym[-2.554] Yc[-0.002] Yp[2.551] Ly[5.105] D[5.134]
+Mon06 23:39: HISTORY Inside Hole  Xm[-2.586] Xc[-0.008] Xp[2.569] Lx[5.155] Ym[-2.550] Yc[0.002] Yp[2.554] Ly[5.104] D[5.129]
+Mon06 23:39: Machine OFF

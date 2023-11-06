@@ -271,7 +271,8 @@ O300 elseif [#<newtool> GT 0]
 		O410 else 
 			G53 G01 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>] F#<_ini[ATC]DROPSPEEDRAPID>
         O410 endif  
-        G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
+        ;G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
+        G53 G0 Z-25
         ; Check certain inputs in probe_screen
         ;O420 if [#<_hal[probe.ps_searchvel]> LE 0]
         ;    O420 return [-1] ; indicate searchvel <= 0 
@@ -312,7 +313,6 @@ O300 elseif [#<newtool> GT 0]
 O300 endif
 ;Turn off tool setter
 M65 P#<_ini[OTHER_PINS]TS>
-G43
 (print, End of Program)
 o<rack_change> endsub [1]
 

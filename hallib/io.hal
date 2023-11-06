@@ -115,7 +115,7 @@ net machine-is-enabled  => hm2_7i76e.0.7i76.0.0.output-02
 # normal condition = drawbar closed ==> this pin = high
 #  signal drawbar_open is defined as: when high ==> OPEN
 # This means that this pin gets the default signal of drawbar_open which is LOW
-net drawbar_open hm2_7i76e.0.7i76.0.0.output-03
+net drawbar_open hm2_7i76e.0.7i76.0.0.output-06
 
 
 # Dust Removal
