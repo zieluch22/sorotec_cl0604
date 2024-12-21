@@ -12,16 +12,11 @@
 ; Valve actuation is done using a single singal pin via M64 and M65 
 ; Coding of Valves is done in HAl config with LUT5 logic
 
-o<rack_change> sub
-
-M73 ; Save and autorestore model states. This will be used only in case of error, otherwise we will invalidate it.
-o<_psng_modal_save> call
-o<_psng_hook> call [1]
-; END PSNG PREAMBLE
-
+o<tool_change_new> sub
 ;(auto-restore modal settings on return)
 ;(debug, in change tool_in_spindle=#<tool_in_spindle> current_pocket=#<current_pocket>)
 ;(debug, selected_tool=#<selected_tool> selected_pocket=#<selected_pocket>)
+;M73 
 ; print to console (if available)
 (print, Storing tool and pocket information in local variables)
 #<newtool> = #<selected_tool>
@@ -29,9 +24,9 @@ o<_psng_hook> call [1]
 #<oldpocket> = #5190
 (print, after pockets)
 
-
 ; call upon iocontrol.0.tool-prep-pocket via M66 and have it stored in #5399
 M66 E0
+;M61 #5399	
 (print, selected pocket #<selected_pocket> , newpocket=#<newpocket>)
 #<newpocket> = #5399
 #5190=#5399
@@ -43,13 +38,12 @@ O100 if [#<_task> EQ 0]
 O100     return [999]
 O100 endif
 
-; Ensure everything that we do is done in absolute coordinates
-G90
+;G90
 (print,g90 commented )
 ; Cutter comp off, otherwise G53 might go wrong
-G40
+;G40
 ; Cancel tool offset (not needed until the end)
-G49
+;G49
 
 ; First things first, rapid to safe Z
 G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1.0]
@@ -57,11 +51,11 @@ G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1.0]
 
 ; First, get rid of the old tool
 ; check if the spindle is not empty by checking if tool_in_spindle GT 0
-O150 if [#<oldtool> NE #<newtool>]
+O200 if [#<oldtool> EQ #<newtool>]
     ; This is a special case in which no tool needs to be dropped off. This assumes that the user has the tool table under control. further down, during pick up of newtool a message will be brought forward to GUI
     (print, do absolutly nothing)
-
-O200 if [#<oldtool> GT 0]
+O200 elseif [#<oldtool> GT 0]
+    ; Ensure everything that we do is done in absolute coordinates
     (print, Tool No  #<oldtool> is in the spindle - we need to put it away)
     ; Check if oldpocket is within range
     O210 if [#<oldpocket> GT 0]
@@ -88,7 +82,6 @@ O200 if [#<oldtool> GT 0]
             O900 IF [#5399 NE 1]
                  (DEBUG, Timeout! Drawbar did not unlock - Aborting!)
                  M2
-                 m71
             O900 ENDIF   
             ; Move back to safe Z above the oldpocket
             G53 G01 Z #<_ini[ATC]OFF_HEIGHT_Z> F#<_ini[ATC]DROPSPEEDZ> 
@@ -137,16 +130,22 @@ O200 if [#<oldtool> GT 0]
         o220 endif
     (print,  We are now without a tool at some position either safely above pocket or the manual change position)
 
-    O210 endif    
+    O210 endif
+O200 else
+    ; There is nothing to do here but end the conditional
+    (print, There is no tool in the spindle - No action required at this time)
 O200 endif
 (print, Reached end of drop off without error)
 ;For reasons of being paranoid: go to safe Z 
-G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
-
-(print, After going to zsafe )
+G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1] 
 ; Second Step, get new tool
-
-O300 if [#<newtool> GT 0]
+; Check if the new tool number is EQ 0
+o300 if [#<oldtool> EQ #<newtool>]
+    ; This is to check if the requested tool is already in the spindle. If so, all other steps are skipped an a message is displayed to the user using EBUG
+    (DEBUG, Attention - No tool change required. Not doing anything, check if tool offset remains valid)
+    M2
+O300 elseif [#<newtool> GT 0]
+;O300 if [#<newtool> GT 0]
     ; Tool is GT 0 and we thus need to get a tool from somewhere
     (print, New tool: #<newtool> needs to be picked up)
     ; Again, check if #newpocket is within range of the tool rack, otherwise pick at manual change position and measure
@@ -189,7 +188,7 @@ O300 if [#<newtool> GT 0]
             ; a short wait seems to be required for the motions pins to update
             M64 P #<_ini[ATC_PINS]ATC_CLOSE>
             (print, close drawbar -open air-return)
-            G4 P0.3
+            G4 P1
             ; Check if the drawbar is locked (LOW) 
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
             (print, check drawbar close AFTER m65 should be 0; value: #5399)
@@ -237,7 +236,6 @@ O300 if [#<newtool> GT 0]
            ;(print, trigger pin for ATC_OPEN )
             (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
-           ; M6 G43
             M6
             ;G43 T#<newtool>
             ; Check  1: the drawbar is locked LOW L4 immediately 
@@ -251,22 +249,16 @@ O300 if [#<newtool> GT 0]
             (print, drawbar close turn off)
             O970 IF [#5399 EQ -1]
                 (DEBUG, Error! The drawbar is still open - Aborting!)
-            M72
             O970     return [999]
-            
             O970 ENDIF  
             ; check 2: there is a tool in the spindle HIGH L3 immediately 
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             O980 IF [#5399 NE 1]
                 (DEBUG, Error! No tool in spindle - Aborting!)
-                M72
             O980     return [999]
             O980 ENDIF  
             (print, A tool is manually loaded and we can continue with measurement)
         O320 ENDIF
-    O310 ENDIF
-O300 ENDIF
-        
         #<tool_diameter> = #5410
         (print, tool diameter #<tool_diameter>)
         ; Perform tool measurement - first rapid to toolsensorposition
@@ -279,55 +271,51 @@ O300 ENDIF
 		O410 else 
 			G53 G01 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>] F#<_ini[ATC]DROPSPEEDRAPID>
         O410 endif  
-        G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
+        ;G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
+        G53 G0 Z-25
         ; Check certain inputs in probe_screen
-        O420 if [#<_hal[qtversaprobe.searchvel]> LE 0]
-            O420 return [-1] ; indicate searchvel <= 0 
-        O420 endif
-        O430 if [#<_hal[qtversaprobe.probevel]> LE 0]
-            O430 return [-2] ; indicate probevel <= 0 
-        O430 endif
+        ;O420 if [#<_hal[probe.ps_searchvel]> LE 0]
+        ;    O420 return [-1] ; indicate searchvel <= 0 
+        ;O420 endif
+        ;O430 if [#<_hal[probe.ps_probevel]> LE 0]
+        ;    O430 return [-2] ; indicate probevel <= 0 
+        ;O430 endif
         M64 P#<_ini[OTHER_PINS]TS>
-        ; Measure Tool
-o<_psng_probe_tool> call [#<_ini[TOOLSENSOR]MAXPROBE>]
-;(debug, return value =#<_value>)
-O1 if [#<_value> EQ -1]
-    M72 ; Restore modal state
-    O1 return [-3] ; indicate probe already tripped to epilog
-O1 else if [#<_value> EQ -2]
-    M72 ; Restore modal state
-    O1 return [-4] ; indicate probe contact failure to epilog
-        O1 else if [#<_value> EQ -3]
-    M72 ; Restore modal state
-    (ABORT, Probe failed to make contact without ERR signal)
-O1 endif
+          ; Perform tool measurement in relative motion
+        ;F #<_hal[probe.ps_searchvel]>
+         F #<_hal[qtversaprobe.searchvel]>
+        G91
+        G38.2 Z #<_ini[TOOLSENSOR]MAXPROBE>
+        G38.4 Z2
+        ;F #<_hal[probe.ps_probevel]>
+        F #<_hal[qtversaprobe.probevel]>
+        ;F30
+        G38.2 Z-2
+        O440 if [#5070 EQ 0]
+            G90
+            O440 return [-3] ; indicate probe contact failure to epilog
+        O440 endif
 
-    ; Move off the Tool Sensor
-    G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
-
-    #<touch_result> = #5063
-    #<setterheight> = #<_hal[qtversaprobe.probeheight]>
-    #<blockheight> = #<_hal[qtversaprobe.blockheight]>
-    (print, #<touch_result>  #<setterheight>  #<blockheight>)
-    ;(DEBUG, %fTouch Result: #<touch_result>)
-    ;(DEBUG, %fProbe Height: #<_hal[qtversaprobe.probeheight]>)
-    ;(DEBUG, %fBlock Height: #<_hal[qtversaprobe.blockheight]>)
-    ;(DEBUG, %fnewtool: [#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>])
-
-    G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
-    G43
-
+        G90
+        G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+        G53 G0 Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
+        (print, moving away from ts)
+        #<touch_result> = #5063
+        ;#<setterheight> = #<_hal[probe.setterheight]> 
+       ;#<blockheight> = #<_hal[probe.blockheight]>
+        #<setterheight> = #<_hal[qtversaprobe.probeheight]> 
+        #<blockheight> = #<_hal[qtversaprobe.blockheight]>
+        (print, #<touch_result>  #<setterheight>  #<blockheight>)
+        G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
+       
+       (print, before g43)
+       G43
+       (print, after g43)
+    O310 endif
+O300 endif
 ;Turn off tool setter
 M65 P#<_ini[OTHER_PINS]TS>
- O150 else
- ;Modal autorestore all the offsets , no tool change 
-      M72 
-O150 endif
 (print, End of Program)
-M71 ; Invalidate Modal Autorestore
-o<_psng_modal_restore> call
-; END PSNG POSTAMBLE
-o<rack_change> endsub [1]
-
+o<tool_change_new> endsub [1]
 M2
-%
+

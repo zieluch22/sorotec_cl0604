@@ -26,13 +26,13 @@
 # output of lut5.manualatctoggle high, when
 # in0 (spindle-enable) low 0
 # in1 (atc_toogle_button) high 1
-# corresponds to 10 = 1 --> 0x4
+# corresponds to 00110 =  --> 0x40
 addf lut5.manualatctoggle servo-thread
 setp lut5.manualatctoggle.function 0x4
 #net spindle-running => lut5.manualatctoggle.in-0
-net spindle-enable => lut5.manualatctoggle.in-0
+net spindle-enable           => lut5.manualatctoggle.in-0
+net atc_manual_toogle_button => lut5.manualatctoggle.in-1
 
-net  atc_manual_toogle_button => lut5.manualatctoggle.in-1
 
 # 1.2 use a toggle component to allow triggering of atc via pushbutton without having to hold the button
 # signal lut5.manualatctoggle = trigger signal for manual control 
@@ -64,7 +64,7 @@ addf lut5.drawbar_open servo-thread
 # in0 signal_toogle_manualatc = HIGH 
 # in1 motion.digital-out-01 = HIGH (or signal_toogle_manualatc; both ok too)
 # in2 spindle-running = LOW
-# corresponds to 1110 = hex E 
+# corresponds to 1110 = hex E lub 0x4 
 setp lut5.drawbar_open.function 0xE
 net signal_toogle_manualatc lut5.drawbar_open.in-0
 net signal_automatic_atc motion.digital-out-01 lut5.drawbar_open.in-1

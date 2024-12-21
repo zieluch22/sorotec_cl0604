@@ -4,7 +4,22 @@
 #source hallib/custom_postgui.hal
 net probe-in     =>  motion.probe-input  qtdragon.led-probe
 
-net tool-change             hal_manualtoolchange.change   <=  iocontrol.0.tool-change
-net tool-changed            hal_manualtoolchange.changed  <=  iocontrol.0.tool-changed
-net tool-prep-number        hal_manualtoolchange.number   <=  iocontrol.0.tool-prep-number
-net tool-prepare-loopback   iocontrol.0.tool-prepare      =>  iocontrol.0.tool-prepared
+#net tool-change             hal_manualtoolchange.change   <=  iocontrol.0.tool-change
+#net tool-changed            hal_manualtoolchange.changed  <=  iocontrol.0.tool-changed
+#net tool-prep-number        hal_manualtoolchange.number   <=  iocontrol.0.tool-prep-number
+
+#net pocketprepnumer         iocontrol.0.tool-prep-pocket 
+
+
+# Tool Information
+#net toolnumber  iocontrol.0.tool-number 
+#net toolprepnumber iocontrol.0.tool-prep-number  
+#net pocketprepnumer iocontrol.0.tool-prep-pocket 
+
+
+net tool-change         hal_manualtoolchange.change             <=  iocontrol.0.tool-change 
+net tool-changed        hal_manualtoolchange.changed            <=  iocontrol.0.tool-changed
+net tool-prep-number    hal_manualtoolchange.number             <=  iocontrol.0.tool-prep-number
+#net tool-number         hal_manualtoolchange.toolchange-number  <=   iocontrol.0.tool-number
+net tool-prep-loopback  iocontrol.0.tool-prepare                <=   iocontrol.0.tool-prepared
+net pocketprepnumer     iocontrol.0.tool-prep-pocket 

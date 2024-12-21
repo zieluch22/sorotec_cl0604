@@ -237,8 +237,7 @@ O300 if [#<newtool> GT 0]
            ;(print, trigger pin for ATC_OPEN )
             (print, tool setter turn on )
             (print, Now trigger M6 to tell the user which tool to pick)
-           ; M6 G43
-            M6
+            M6 G43
             ;G43 T#<newtool>
             ; Check  1: the drawbar is locked LOW L4 immediately 
             (print, check if SENSOR_DRAWBAR open)
@@ -264,31 +263,25 @@ O300 if [#<newtool> GT 0]
             O980 ENDIF  
             (print, A tool is manually loaded and we can continue with measurement)
         O320 ENDIF
-    O310 ENDIF
-O300 ENDIF
-        
-        #<tool_diameter> = #5410
+;        #<tool_diameter> = #5410
         (print, tool diameter #<tool_diameter>)
         ; Perform tool measurement - first rapid to toolsensorposition
-        G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
-        G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
-        (print, check what is tool diameter #<tool_diameter> is greater than tool setter #<_ini[TOOLSENSOR]TS_DIAMETER> )
-        O410 if [ #<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER> ] 
+;       G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+;        G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
+       (print, check what is tool diameter #<tool_diameter> is greater than tool setter #<_ini[TOOLSENSOR]TS_DIAMETER> )
+;        O410 if [ #<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER> ] 
 			(print, tool diameter grater than #<_ini[TOOLSENSOR]TS_DIAMETER>, offset X by half tool size forward to not crash with toolholders)
-			G53 G01 X[#<_ini[TOOLSENSOR]X> + #<tool_diameter> / 2]  Y#<_ini[TOOLSENSOR]Y>  F[#<_ini[ATC]DROPSPEEDRAPID> /2]
-		O410 else 
-			G53 G01 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>] F#<_ini[ATC]DROPSPEEDRAPID>
-        O410 endif  
-        G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
-        ; Check certain inputs in probe_screen
-        O420 if [#<_hal[qtversaprobe.searchvel]> LE 0]
-            O420 return [-1] ; indicate searchvel <= 0 
-        O420 endif
-        O430 if [#<_hal[qtversaprobe.probevel]> LE 0]
-            O430 return [-2] ; indicate probevel <= 0 
-        O430 endif
-        M64 P#<_ini[OTHER_PINS]TS>
-        ; Measure Tool
+;			G53 G01 X[#<_ini[TOOLSENSOR]X> + #<tool_diameter> / 2]  Y#<_ini[TOOLSENSOR]Y>  F[#<_ini[ATC]DROPSPEEDRAPID> /2]
+;		O410 else 
+;			G53 G01 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>] F#<_ini[ATC]DROPSPEEDRAPID>
+ ;       O410 endif  
+        ; First go up & then move to tool sensor position
+G53 G0 Z[#<_ini[CHANGE_POSITION]Z>]
+G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y>]
+G53 G0 Z[#<_ini[TOOLSENSOR]Z>]
+
+M64 P#<_ini[OTHER_PINS]TS>
+; Measure Tool
 o<_psng_probe_tool> call [#<_ini[TOOLSENSOR]MAXPROBE>]
 ;(debug, return value =#<_value>)
 O1 if [#<_value> EQ -1]
@@ -297,28 +290,29 @@ O1 if [#<_value> EQ -1]
 O1 else if [#<_value> EQ -2]
     M72 ; Restore modal state
     O1 return [-4] ; indicate probe contact failure to epilog
-        O1 else if [#<_value> EQ -3]
+O1 else if [#<_value> EQ -3]
     M72 ; Restore modal state
     (ABORT, Probe failed to make contact without ERR signal)
 O1 endif
 
-    ; Move off the Tool Sensor
-    G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
+; Move off the Tool Sensor
+G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
 
-    #<touch_result> = #5063
-    #<setterheight> = #<_hal[qtversaprobe.probeheight]>
-    #<blockheight> = #<_hal[qtversaprobe.blockheight]>
-    (print, #<touch_result>  #<setterheight>  #<blockheight>)
-    ;(DEBUG, %fTouch Result: #<touch_result>)
-    ;(DEBUG, %fProbe Height: #<_hal[qtversaprobe.probeheight]>)
-    ;(DEBUG, %fBlock Height: #<_hal[qtversaprobe.blockheight]>)
-    ;(DEBUG, %fnewtool: [#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>])
+#<touch_result> = #5063
+#<setterheight> = #<_hal[qtversaprobe.probeheight]>
+#<blockheight> = #<_hal[qtversaprobe.blockheight]>
+(print, #<touch_result>  #<setterheight>  #<blockheight>)
+(DEBUG, %fTouch Result: #<touch_result>)
+(DEBUG, %fProbe Height: #<_hal[qtversaprobe.probeheight]>)
+(DEBUG, %fBlock Height: #<_hal[qtversaprobe.blockheight]>)
+(DEBUG, %fnewtool: [#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>])
 
-    G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
-    G43
+G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
+G43
 
 ;Turn off tool setter
 M65 P#<_ini[OTHER_PINS]TS>
+    O310 endif
  O150 else
  ;Modal autorestore all the offsets , no tool change 
       M72 

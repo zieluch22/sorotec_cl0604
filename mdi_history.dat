@@ -1,0 +1,715 @@
+m65 p1
+m65 p2
+g1 x240 f590
+g1 x0 f500
+g1 x95 f500
+g1x0 f500
+g1 x95 f500
+m6 t1
+g43
+m6 t2
+m6 t99
+m6 t1
+m61 q4
+g43
+m61 q4
+g43
+m6 t4
+g1 z20 f1000
+m6 t99
+g55
+g54
+m6 t1
+g55
+g54
+m6 t1
+m6 t2
+m6 t1
+m6 t99
+m6 t2
+g55
+m6 t1
+g55
+m6 t5
+g43
+m6 t3
+m6 t4
+g43
+m6 t5
+m6 t2
+m6 t2; g1 x100 f500
+m6 t2
+m3 s8000
+s12000
+m6 t2
+g43
+m6 t1
+m6 t2
+m6 t1
+g55
+m6 t2
+g43
+m6 t5
+G55
+m6 t5
+g55
+m6 t5
+g43
+m6 t5
+m61 q0
+m61 q4
+m61 q0
+m6 t5
+m6 t4
+g55
+g1 y 0.15 f300
+g55
+m6 t52
+m6 t51
+m6 t52
+m6 t51
+m6 t52
+m6 t51
+m6 t52
+m6 t51
+m6 t52
+m6 t2
+m6 t52
+m3 s12000
+m6 t52
+m3 s8000
+m6 t52
+m6 t99
+m6 t52
+m3 s12000
+m6 t52
+m3 s7000
+g1 x0 y130 f1000
+m6 t2
+m6 t52
+g43
+m6 t52
+m6 t51
+m3 s12000
+m3 s16000
+s20000
+s24000
+s28000
+s30000
+s28000
+s24000
+s20000
+s16000
+s12000
+s16000
+s20000
+s24000
+s12000
+m6 t1
+m6 t2
+m3 s12000
+s20000
+s12000
+m6 t2
+m6 t3
+g1z 0.2 f100
+m6t2
+m6 t3
+m3 s12000
+m6 t1
+m6 t4
+m6 t3
+m6 t4
+m6 t1
+m6 t4
+m6 t5
+m3 s12000
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t3
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t3
+m3 s12000
+m6 t2
+m3 s4000
+s6000
+s8000
+s12000
+m6 t1
+m6 t99
+m6 t5
+m3 s8000
+m6 t5
+m6 t51
+g1 z0 f1000
+m6 t51
+m3 s12000
+m6 t1
+m6 t51
+g43
+m6 t24
+m6 t51
+m6 t1
+m6 t3
+m6 t1
+G55
+M6 T3
+M6 T50
+M6 T51
+M6 T1
+M6 T51
+G55
+G1 Z50 F100
+m6 t3
+m3 s8000
+s12000
+m5
+m6 t51
+m6 t1
+m6 t4
+m6 t51
+m6 t1
+m6 t3
+g55
+m6 t51
+m6 t3
+m3 s8000
+g1 z38 f100
+m6 t5
+m61 q2
+m65 p2
+m65 p1
+m6 t5
+m6 t1
+m6 t99
+m6 t5
+m6 t3
+m6 t99
+m6 t1
+m6 t99
+m6 t50
+g1 z7.1 f1000
+m3 s7000
+g1 x-100 f500
+g1 x-200 f500
+m6 t51
+g1 z1.05  f100
+m3 s7000
+g1 x-200 f500
+g1 x60 f500
+g1 x-160 f500
+g1 x60 f500
+m6 t1
+g1 x 45 f1000
+m6 t1
+m3 f6000
+m3 f7000
+g1 z9.5 f100
+g1 z 19.5
+g1 z10 f1000
+m3 f7000
+g1 z19.5 f1000
+g1 x-80 f 500
+m5
+m6 t1
+g1 x0.5 f100
+g1 z 0.5 f100
+m6 t1
+m6 t2
+g55
+g54
+m6 t2
+m6 t1
+m6 t2
+m6 t3
+g55
+g54
+m6 t2
+m6 t3
+m6 t2
+m6 t3
+m6 t2
+m6 t3
+m6 t2
+m6 t3
+m6 t2
+m6 t3
+m6 t1
+m6 t2
+m6 t3
+g1 z0 f1000
+g55
+m6 t2
+g55
+m6 t2
+m6 t1
+g55
+g55g1 z0 f1000
+g1 z -9.5 f100
+g55
+m6 t2
+g55
+m6 t1
+g55
+m6 t5
+m3 s6000
+s8000
+m6 t2
+g55
+m6 t3
+m6 t2
+m61 q0
+m6 t3
+g55
+m6 t2
+g55
+m6 t2
+g1 z5 f1000
+m6 t2
+m6 t5
+m6 t1
+g1 x-60 f1000
+m6 t1
+g1 x60 f1000
+g1 x-122 f1000
+g1 z0 f500
+g1 y-4.5 f100
+m6 t2
+g1 y0 f1000
+g1 y0 f100
+g1 z0 f1000
+m6 t1
+m6 t2
+g1 x0 f200
+m6 t2
+m3 s12000
+g1 z0 f100
+g1 y30 f600
+g1 x0 y0 f300
+g1 x0.5 f1000
+g1 y50 f600
+g1 y0 f600
+g1 y0 f1000
+g1 z0 f 500
+m3 s12000
+m6 t50
+m3 s6000
+g1 x-180 f400
+m3 s6000
+g1 x0 f500
+g1 z0 f500
+m3 s6000
+g1 x20 f500
+g1 x-170 f500
+g1 x15 f500
+g1 z-2 f500
+m3 s600
+m3 s6000
+g1 x15f500
+m6 t2
+g1 z0 f100
+g1 y0 f100
+m6 t25
+g1 y0 f200
+m6 t25
+m3 s600
+m3 s12000
+m3 s 16000
+s20000
+s24000
+s30000
+s24000
+s20000
+m3 s12000
+m6 t9
+g1 x400 f500
+g1 x 300 f500
+g1 y 350 f500
+g1 y0 f 1000
+g1 y 320 f500
+g1 y0 f 1000
+g1 y 320 f500
+g1 y0 f 1000
+m6 t1
+g1 x0 y0 f 3000
+m6 t1
+m6 t99
+g1 x10 y 40 f3000
+m6 t1
+m6 t2
+g1 x0 y0 f3000
+m6 t3
+g1 x0 y0 f5000
+m6 t1
+g1 x0 y0 f5000
+m6 t99
+g1 x0 y0 f5000
+g43
+g1 x0 y0 z11 f5000
+m6 t1
+g1 x0 y0 f5000
+m6 t2
+m6 t51
+m6 t1
+m6 t51
+G53 Z-1 F2000
+g43
+m6 t99
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t3
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+g1 x0 f3000
+m6 t1
+m6 t2
+g1 x0 f3000
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t8
+m6 t99
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t8
+m6 t9
+m6 t1
+m6 t50
+m6 t51
+m6 t1
+m6 t2
+m65 p3
+m65 p4
+m65 p2
+m6 t2
+m6 t1
+m6 t2
+m6 t4
+m6 t2
+m6 t3
+m6 t51
+m6 t1
+m6 t2
+m6 t1
+m6 t99
+m6 t1
+m6 t2
+g43
+m6 t2
+m6 t1
+m6 t2
+M6 t99
+m6 t1
+g43
+m6 t1
+m6 t2
+m6 t99
+m6 t2
+g92.1
+g49
+G10 L20 P0 Z-20.647
+G10 L20 P0 Z--15.642
+g90
+G10 L20 P0 Z-15.642
+g90
+g1 z0.2 f100
+m6 t2
+g43
+g49
+g1 z0 f100
+m6 t2
+m6 t3
+m6 t2
+m6 t1
+g1 z10 f500
+m6 t1
+m6 t2
+m6 t8
+m6 t1
+m6 t2
+g1 z40.85 f100
+g1 z40.85 f1000
+g1 z94.8 f100
+m6 t4
+m6 t3
+m6 t4
+m6 t2
+M6 T1
+M6 T2
+G1 Z -39.5 F300
+m6 t1
+g1 z-2 f1000
+g1 z-2 f500
+m6 t4
+m6 t3
+m6 t4
+m6 t3
+m3 s12000
+g1 z100 f1000
+m6 t99
+m6t8
+M6 T99
+M6 T8
+M6 T99
+m6 t1
+m6 t8
+m6 t23
+m6 t8
+m6 t23
+m6 t8
+m6 t23
+m6 t8
+m6 t2
+G43
+m6 t2
+m6 t8
+m6 t2
+g1 x0 y0 f1000
+m6 t4
+g1 x0 y0 f1000
+m6 t2
+m3 s12000
+m6 t2
+m3 s12000
+m6 t1
+m6 t15
+m6 t2
+m3 s12000
+m6 t4
+g1 z0 f1000
+m6 t4
+m6 t51
+g1 z0 f1000
+m6 t2
+m6 t1
+m6 t3
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t4
+m6 t2
+m6 t4
+m6 t3
+m6 t1
+m6 t3
+m3 s12000
+m6 t1
+m6 t4
+m6 t5
+m6 t3
+m6 t1
+m6 t5
+m6t5
+m6 t2
+m6 t4
+m6 t3
+x1 24.883 f1000
+x 24.883 f1000
+g1 x25 f1000
+m6 t25
+g1 x -0.025 y 0.035 f100
+m6 t3
+m3 s12000
+m6 t4
+m6 t3
+m6 t4
+m6 t1
+m6 t2
+m6 t3
+m6 t2
+m6m65 p1
+m6 t3
+m6 t5
+m6 t1
+m6 t5
+m6 t1
+g1 z0 f100
+m6 t2
+g1 z0 f100
+m6 t5
+g1 z0 f100
+m6 t1
+m3 s12000
+m65 p3
+m65 p2
+m65 p1
+m6 t1
+m6 t51
+g55
+g54
+m6 t51
+m6 t1
+g1 x0 y0 f1000
+m6 t1
+m6 t2
+m6 t3
+m6 t1
+m6 t2
+m6 t6
+m6 t3
+m6 t62
+m6 t61
+m6 t1
+m6 t61
+m6 t1
+m6 t61
+m6 t5
+m6 t3
+m6 t1
+m6 t2
+m6 t1
+n6 t2
+m6 t2
+m6 t4
+m6 t5
+m6 t4
+m6 t5
+m6 t3
+m6 t1
+m6 t3
+g1 z-3 f300
+m6 t5
+g1 z0 f100
+g1 z3 f100
+m6 t3
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t6
+m6 t14
+m6 t61
+m6 t62
+m6 t5
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+g1 z80 f100
+g1 z10 f100
+m6 t2
+g1 z0.3 f100
+m6 t1
+m6 t5
+m6 t1
+m3 s8000
+m6 t2
+m6 t5
+m3 s12000
+m6 t1
+m6 t8
+m6 t1
+m6 t14
+m6 t6
+m6 t5
+m6 t1
+m6 t5
+m6 t1
+m6 t2
+m6 t1
+m6 t5
+m6 t1
+m6 t8
+m6 t61
+m6 t8
+m6 t61
+m6 t5
+g43
+m6 t61
+m6 t99
+m6 t61
+m6 t99
+m6 t61
+m6 t99
+m6 t61
+m6 t1
+m6 t99
+g43
+m6 t1
+m6 t99
+m6 t1
+m6 t99
+m6 t1
+m6 t99
+m6 t1
+m6 t99
+m6 t1
+m6 t99
+m6 t1
+m6 t99
+m6 t1
+m6 t99
+m6 t1
+m6 t2
+m6 t7
+m6 t17
+m6 t7
+m6 t18
+m6 t1
+m6 t30
+m6 t99
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t3
+m6 t2
+m6 t1
+g1 x0 y0 f1000
+m6 t1
+m6 t2
+m6 t1
+m6 t2
+m6 t1
+g1 x0 f1000
+m6 t1

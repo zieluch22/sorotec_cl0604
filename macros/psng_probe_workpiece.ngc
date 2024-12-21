@@ -1,0 +1,30 @@
+o<psng_probe_workpiece> sub
+M73
+M64 P#<_ini[OTHER_PINS]PROBE> 
+
+(cancel all Z offsets)
+G49
+G92.1
+G10 L20 P0  Z[#<_hal[axis.z.pos-cmd]>]
+(print,absolute z  #<_abs_z> )
+#<z> = #<_z>
+G91
+F 1000
+G38.2 Z-30
+G1 Z1 F300
+F 500
+G4 P0.5
+G38.2 Z#<z>
+(G1 Z[#<_hal[probe.ps_probe_max]>] F#<_ini[TOOLSENSOR]RAPID_SPEED>)
+
+(hardcode distance must not be the same)
+o11 if [#<_metric>]
+	G1 Z4 F#<_ini[TOOLSENSOR]RAPID_SPEED>
+o11 else
+	G1 Z0.2 F#<_ini[TOOLSENSOR]RAPID_SPEED>
+o11 endif
+
+G90
+M65 P#<_ini[OTHER_PINS]PROBE> 
+o<psng_probe_workpiece> endsub
+M2

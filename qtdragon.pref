@@ -4,8 +4,9 @@ LncMessage-geometry = 910 539 280 118
 ToolChangeDialog-geometry = 910 539 340 237
 VersaHelpDialog-geometry = 660 254 600 600
 _CALCULATOR = 910 539 472 376
-CalculatorDialog-geometry = 910 539 472 376
+CalculatorDialog-geometry = 928 490 472 376
 RunFromLineDialog-geometry = default
+axisToolButtonDialog_ENTRY = 910 514 300 150
 
 [DIALOG_OPTIONS]
 EntryDialog_play_sound = True
@@ -23,10 +24,10 @@ RunFromLineDialog_play_sound = True
 RunFromLineDialog_sound_type = READY
 
 [BOOK_KEEPING]
-last_loaded_directory = /home/zieluch/linuxcnc/nc_files/mounting_plate
-last_loaded_file = /home/zieluch/linuxcnc/nc_files/mounting_plate/gwintownik_2.ngc
+last_loaded_directory = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
+last_loaded_file = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
 style_QSS_Path = DEFAULT
-RecentPath_0 = /home/zieluch/linuxcnc/nc_files/mounting_plate/top/thread_2rows.ngc
+RecentPath_0 = /home/zieluch/linuxcnc/nc_files/new_z/bearing_plate/thread_last.ngc
 
 [ORIGINOFFSET_SYSTEM_NAMES]
 __dialogOffsetViewWidget-G54 = User System 1
@@ -92,20 +93,20 @@ gcodegraphics-user-lat = 0.0
 gcodegraphics-user-lon = 0.0
 
 [CUSTOM_FORM_ENTRIES]
-Tool to load = 99
+Tool to load = 1
 Laser X = 100.0
 Laser Y = -20.0
 Sensor X = 154.77
 Sensor Y = 42.55
 Camera X = 10.0
 Camera Y = 10.0
-Work Height = 20.0
-Touch Height = 40.0
-Sensor Height = -38.464
+Work Height = 0.0
+Touch Height = 0.0
+Sensor Height = 0.0
 Search Velocity = 300.0
-Probe Velocity = 10.0
+Probe Velocity = 30.0
 Max Probe = 10.0
-Retract Distance = 10.0
+Retract Distance = 5.0
 Z Safe Travel = -2.0
 Eoffset count = 0
 External offsets = False
@@ -114,28 +115,31 @@ Reload tool = False
 Use keyboard = False
 Run from line = False
 Use virtual keyboard = False
-Use tool sensor = False
+Use tool sensor = True
 Use camera = False
-Use alpha display mode = False
+Use alpha display mode = True
 Inhibit display mouse selection = True
-Use tool touchplate = False
+Use tool touchplate = True
+Camview xscale = 100
+Camview yscale = 100
+Camview cam number = 0
 
 [VERSA_PROBE_OPTIONS]
 ps_searchvel = 300.0
-ps_probevel = 20.0
-ps_z_clearance = 6.0
-ps_probe_max = 30.0
-ps_probe_max_z_travel = 35.0
+ps_probevel = 30.0
+ps_z_clearance = 5.0
+ps_probe_max = 60.0
+ps_probe_max_z_travel = 5.0
 ps_probe_latch = 1.0
 ps_probe_diam = 2.0
-ps_xy_clearance = 2.0
-ps_side_edge_length = 2.0
-ps_probe_height = -40.661
-ps_block_height = -80.643
+ps_xy_clearance = 60.0
+ps_side_edge_length = 20.0
+ps_probe_height = -43.639
+ps_block_height = -46.109
 use_tool_measurement = True
 ps_offs_x = 0.0
 ps_offs_y = 0.0
 ps_offs_z = 0.0
 ps_offs_angle = 0.0
-ps_probe_rapid_vel = 1000.0
+ps_probe_rapid_vel = 3000.0
 

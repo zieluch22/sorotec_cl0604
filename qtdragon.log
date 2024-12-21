@@ -1,86 +1,108 @@
-2023-11-06 23:39:08,082 - DEFAULT - INFO - Logging to: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.log
-2023-11-06 23:39:08,090 - DEFAULT.QTVCP.QT_ISTAT - DEBUG - Machine is METRIC based. unit Conversion constant=0.03937007874015748
-2023-11-06 23:39:08,091 - DEFAULT.QTVCP.QT_ISTAT - DEBUG - TRAJ COORDINATES: XYZ
-2023-11-06 23:39:08,098 - DEFAULT.QTVCP.QT_ISTAT - DEBUG - DEFAULT_LINEAR_VELOCITY = 4080.0
-2023-11-06 23:39:08,107 - DEFAULT.QTVCP.QT_ISTAT - DEBUG - MIN_LINEAR_VELOCITY = 30.0
-2023-11-06 23:39:08,108 - DEFAULT.QTVCP.QT_ISTAT - DEBUG - MAX_LINEAR_VELOCITY = 9000.0
-2023-11-06 23:39:08,264 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: M70
-2023-11-06 23:39:08,285 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-        G1 F1000.0 Z-6.0
-        G90, maxt = 30
-2023-11-06 23:39:08,286 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:08,327 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G1 F1000.0 Z-6.0
-2023-11-06 23:39:08,763 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G90
-2023-11-06 23:39:08,805 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-        G38.2 X-30.0 F300.0, maxt = 30
-2023-11-06 23:39:08,805 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:08,848 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 X-30.0 F300.0
-2023-11-06 23:39:09,215 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 X1.0 F1000.0, maxt = 30
-2023-11-06 23:39:09,216 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 X1.0 F1000.0
-2023-11-06 23:39:09,353 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G4 P0.5
-        G38.2 X-1.2 F20.0, maxt = 30
-2023-11-06 23:39:09,354 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G4 P0.5
-2023-11-06 23:39:09,881 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 X-1.2 F20.0
-2023-11-06 23:39:12,754 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 X1.0 F1000.0, maxt = 30
-2023-11-06 23:39:12,754 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 X1.0 F1000.0
-2023-11-06 23:39:12,815 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-            G1 F1000.0 X1.000000
-            G90, maxt = 30
-2023-11-06 23:39:12,818 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:12,859 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:             G1 F1000.0 X1.000000
-2023-11-06 23:39:12,992 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:             G90
-2023-11-06 23:39:13,033 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-        G38.2 X30.0 F300.0, maxt = 30
-2023-11-06 23:39:13,033 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:13,075 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 X30.0 F300.0
-2023-11-06 23:39:13,369 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 X-1.0 F1000.0, maxt = 30
-2023-11-06 23:39:13,370 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 X-1.0 F1000.0
-2023-11-06 23:39:13,513 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G4 P0.5
-        G38.2 X1.2 F20.0, maxt = 30
-2023-11-06 23:39:13,514 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G4 P0.5
-2023-11-06 23:39:14,041 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 X1.2 F20.0
-2023-11-06 23:39:16,973 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 X-1.0 F1000.0, maxt = 30
-2023-11-06 23:39:16,976 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 X-1.0 F1000.0
-2023-11-06 23:39:17,110 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G90
-        G1 F1000.0 X-0.008292, maxt = 30
-2023-11-06 23:39:17,111 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G90
-2023-11-06 23:39:17,152 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G1 F1000.0 X-0.008292
-2023-11-06 23:39:17,254 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-        G38.2 Y-30.0 F300.0, maxt = 30
-2023-11-06 23:39:17,254 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:17,296 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 Y-30.0 F300.0
-2023-11-06 23:39:17,681 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 Y1.0 F1000.0, maxt = 30
-2023-11-06 23:39:17,681 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 Y1.0 F1000.0
-2023-11-06 23:39:17,816 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G4 P0.5
-        G38.2 Y-1.2 F20.0, maxt = 30
-2023-11-06 23:39:17,816 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G4 P0.5
-2023-11-06 23:39:18,352 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 Y-1.2 F20.0
-2023-11-06 23:39:21,269 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 Y1.0 F1000.0, maxt = 30
-2023-11-06 23:39:21,270 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 Y1.0 F1000.0
-2023-11-06 23:39:21,403 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-            G1 F1000.0 Y1.000000
-            G90, maxt = 30
-2023-11-06 23:39:21,404 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:21,447 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:             G1 F1000.0 Y1.000000
-2023-11-06 23:39:21,579 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:             G90
-2023-11-06 23:39:21,620 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-        G38.2 Y30.0 F300.0, maxt = 30
-2023-11-06 23:39:21,622 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:21,663 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 Y30.0 F300.0
-2023-11-06 23:39:21,948 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 Y-1.0 F1000.0, maxt = 30
-2023-11-06 23:39:21,948 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 Y-1.0 F1000.0
-2023-11-06 23:39:22,080 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G4 P0.5
-        G38.2 Y1.2 F20.0, maxt = 30
-2023-11-06 23:39:22,080 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G4 P0.5
-2023-11-06 23:39:22,605 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G38.2 Y1.2 F20.0
-2023-11-06 23:39:25,531 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 Y-1.0 F1000.0, maxt = 30
-2023-11-06 23:39:25,532 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 Y-1.0 F1000.0
-2023-11-06 23:39:25,665 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G91
-        G1 F1000.0 Z6.0
-        G90, maxt = 30
-2023-11-06 23:39:25,666 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G91
-2023-11-06 23:39:25,708 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G1 F1000.0 Z6.0
-2023-11-06 23:39:26,154 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command:         G90
-2023-11-06 23:39:26,195 - DEFAULT.QTVCP.WIDGETS.PROBE_ROUTINES - DEBUG - MDI_WAIT_COMMAND= G1 F1000.0 Y0.001667, maxt = 30
-2023-11-06 23:39:26,196 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: G1 F1000.0 Y0.001667
-2023-11-06 23:39:26,299 - DEFAULT.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: M72
+2024-12-21 15:20:13,761 - QTvcp - DEBUG - DEBUGGING logging on
+2024-12-21 15:20:13,845 - QTvcp.QTVCP.QT_ISTAT - DEBUG - Machine is METRIC based. unit Conversion constant=0.03937007874015748
+2024-12-21 15:20:13,845 - QTvcp.QTVCP.QT_ISTAT - DEBUG - TRAJ COORDINATES: XYZ
+2024-12-21 15:20:13,847 - QTvcp.QTVCP.QT_ISTAT - DEBUG - DEFAULT_LINEAR_VELOCITY = 4080.0
+2024-12-21 15:20:13,848 - QTvcp.QTVCP.QT_ISTAT - DEBUG - MIN_LINEAR_VELOCITY = 30.0
+2024-12-21 15:20:13,848 - QTvcp.QTVCP.QT_ISTAT - DEBUG - MAX_LINEAR_VELOCITY = 7200.0
+2024-12-21 15:20:14,641 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Passed name=qtdragon_hd, BASENAME=qtdragon_hd BASEPATH=qtdragon_hd
+2024-12-21 15:20:14,641 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd_handler.py
+2024-12-21 15:20:14,642 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_handler.py
+2024-12-21 15:20:14,642 - QTvcp.QTVCP.QT_PSTAT - INFO - Using LOCAL handler file path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_handler.py
+2024-12-21 15:20:14,643 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.ui
+2024-12-21 15:20:14,643 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
+2024-12-21 15:20:14,644 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.ui
+2024-12-21 15:20:14,644 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
+2024-12-21 15:20:14,645 - QTvcp.QTVCP.QT_PSTAT - INFO - Using DEFAULT ui file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
+2024-12-21 15:20:14,646 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.qss
+2024-12-21 15:20:14,646 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
+2024-12-21 15:20:14,647 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.qss
+2024-12-21 15:20:14,647 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
+2024-12-21 15:20:14,647 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT qss file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
+2024-12-21 15:20:14,648 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.qrc
+2024-12-21 15:20:14,648 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2024-12-21 15:20:14,649 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.qrc
+2024-12-21 15:20:14,649 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2024-12-21 15:20:14,650 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT qrc file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2024-12-21 15:20:14,650 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for resources.py in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
+2024-12-21 15:20:14,651 - QTvcp.QTVCP.QT_PSTAT - INFO - Using LOCAL resources.py file from: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
+2024-12-21 15:20:14,652 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2024-12-21 15:20:14,653 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/languages/qtdragon_hd_C.qm
+2024-12-21 15:20:14,654 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /usr/share/qtvcp/screens/qtdragon_hd/languages/qtdragon_hd_C.qm
+2024-12-21 15:20:14,654 - QTvcp.QTVCP.QT_PSTAT - INFO - Using no translations, default system locale is: C
+2024-12-21 15:20:14,655 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for LOCAL about file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd_ABOUT
+2024-12-21 15:20:14,656 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for LOCAL about file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
+2024-12-21 15:20:14,657 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for DEFAULT about file in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
+2024-12-21 15:20:14,657 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT about file path: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
+2024-12-21 15:20:14,658 - QTvcp - INFO - Building A LinuxCNC Main Screen with: Python 3
+2024-12-21 15:20:14,658 - QTvcp - INFO - No handler file specified on command line.
+2024-12-21 15:20:14,659 - QTvcp - INFO - No HAL component base name specified on command line using: qtdragon_hd
+2024-12-21 15:20:14,661 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Qsettings file path: /home/zieluch/.config/QtVcp/qtdragon_hd.conf
+2024-12-21 15:20:14,661 - QTvcp - DEBUG - Loading the handler file.
+2024-12-21 15:20:14,662 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Adding import dir: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd
+2024-12-21 15:20:14,884 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Module 'qtdragon_hd_handler' imported OK
+2024-12-21 15:20:14,884 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Module 'qtdragon_hd_handler' : 'get_handlers' function found.
+2024-12-21 15:20:14,911 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Registering handlers in module qtdragon_hd_handler object <qtdragon_hd_handler.HandlerClass object at 0x7f94a10e6290>
+2024-12-21 15:20:14,913 - QTvcp - DEBUG - Adding the key events filter.
+2024-12-21 15:20:14,918 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Imported resources.py filed: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
+2024-12-21 15:20:19,843 - QTvcp.QTVCP.QT_MAKEPINS - INFO - Changed HAL Component basename to qtdragon, as specified in screenOptions: 
+2024-12-21 15:20:19,844 - QTvcp.QTVCP.WIDGETS.SCREEN_OPTIONS - DEBUG - Preference File Path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.pref
+2024-12-21 15:20:19,849 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - QTVCP: Parsing for HAL widgets.
+2024-12-21 15:20:20,399 - QTvcp.QTVCP.WIDGETS.FILE_MANAGER - DEBUG - lAST FILE PATH: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
+2024-12-21 15:20:20,403 - QTvcp.QTVCP.WIDGETS.FILE_MANAGER - DEBUG - lAST FILE PATH: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
+2024-12-21 15:20:20,429 - QTvcp.QTVCP.WIDGETS.DRO_WIDGET - DEBUG - axis number 3 not found in available-axis to joint conversion dict {0: 0, 1: 1, 2: 2} of widget: dro_axis_4
+2024-12-21 15:20:20,429 - QTvcp.QTVCP.WIDGETS.DRO_WIDGET - DEBUG - axis number 4 not found in available-axis to joint conversion dict {0: 0, 1: 1, 2: 2} of widget: dro_axis_5
+2024-12-21 15:20:20,449 - QTvcp.QTVCP.WIDGETS.JOG_INCREMENTS - DEBUG - Linear Current index: 0 Increment: 0 , selection changed Continuous
+2024-12-21 15:20:20,451 - QTvcp.QTVCP.WIDGETS.JOG_INCREMENTS - DEBUG - Angular Current index: 0 Increment: 0 , selection changed Continuous
+2024-12-21 15:20:20,454 - QTvcp - DEBUG - Calling the handler file's initialized__ function
+2024-12-21 15:20:20,758 - QTvcp.QTDRAGON_HD_HANDLER - INFO - Using Versa Probe
+2024-12-21 15:20:21,471 - QTvcp.QTDRAGON_HD_HANDLER - INFO - Using NGCGUI utility
+2024-12-21 15:20:21,475 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - UI Filename: /usr/lib/python3/dist-packages/qtvcp/lib/qt_ngcgui/ngcgui.ui
+2024-12-21 15:20:21,627 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Path to NGCGUI files:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib
+2024-12-21 15:20:21,631 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Found the following ngc_sub: ['slot.ngc', 'qpocket.ngc']
+2024-12-21 15:20:21,632 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Adding NGCGUI:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
+2024-12-21 15:20:21,645 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
+2024-12-21 15:20:21,645 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Adding NGCGUI:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
+2024-12-21 15:20:21,651 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
+2024-12-21 15:20:21,799 - QTvcp.QTVCP.QT_MAKEGUI - INFO - No Handler Override file at: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/.qtdragon_hdrc
+2024-12-21 15:20:22,022 - QTvcp - DEBUG - Set HAL ready.
+2024-12-21 15:20:22,948 - QTvcp - DEBUG - Show window.
+2024-12-21 15:20:22,949 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Calculating geometry of main window using natural placement: 0 27 1920 1080
+2024-12-21 15:20:23,671 - QTvcp - INFO - Postgui filename: ['hallib/postgui_call_list.hal']
+2024-12-21 15:20:23,725 - QTvcp - INFO - Postgui commands: None
+2024-12-21 15:20:23,726 - QTvcp - INFO - Preference path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.pref
+2024-12-21 15:20:28,587 - QTvcp.QTVCP.QT_ACTION - INFO - Homing Joint: -1
+2024-12-21 15:20:40,680 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: , mdi_history.dat
+2024-12-21 15:20:43,553 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: m6 t1
+
+2024-12-21 15:20:43,744 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: , mdi_history.dat
+2024-12-21 15:20:43,757 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 144
+2024-12-21 15:20:43,758 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 144
+2024-12-21 15:20:43,857 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 233
+2024-12-21 15:20:43,857 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 233
+2024-12-21 15:20:46,173 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 234
+2024-12-21 15:20:46,176 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 234
+2024-12-21 15:20:47,934 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Button pressed is: &OK
+2024-12-21 15:20:47,937 - QTvcp.QTVCP.WIDGETS.DIALOGMIXIN - DEBUG - Saving ToolChangeDialog-geometry data from widget  to file.
+2024-12-21 15:20:47,941 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Button pressed is: &OK
+2024-12-21 15:20:47,943 - QTvcp.QTVCP.WIDGETS.DIALOGMIXIN - DEBUG - Saving ToolChangeDialog-geometry data from widget  to file.
+2024-12-21 15:20:51,073 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 273
+2024-12-21 15:20:51,075 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 273
+2024-12-21 15:20:51,274 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 274
+2024-12-21 15:20:51,274 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 274
+2024-12-21 15:20:53,287 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 282
+2024-12-21 15:20:53,287 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 282
+2024-12-21 15:20:54,092 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 43
+2024-12-21 15:20:54,093 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 43
+2024-12-21 15:21:01,236 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 54
+2024-12-21 15:21:01,237 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 54
+2024-12-21 15:21:01,942 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 78
+2024-12-21 15:21:01,945 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 78
+2024-12-21 15:21:03,858 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 306
+2024-12-21 15:21:03,859 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 306
+2024-12-21 15:21:18,268 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: m6 t1
+
+2024-12-21 15:21:18,566 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 55
+2024-12-21 15:21:18,568 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 55
+2024-12-21 15:21:21,678 - QTvcp.QTVCP.WIDGETS.ACTION_BUTTON - DEBUG - INI MDI COMMAND #: 1
+2024-12-21 15:21:21,681 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_INI_MDI command:G1 X0 Y0 F3000
+2024-12-21 15:21:21,704 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_INI_MDI command:

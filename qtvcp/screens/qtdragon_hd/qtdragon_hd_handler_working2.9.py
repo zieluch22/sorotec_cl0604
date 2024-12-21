@@ -55,14 +55,10 @@ TAB_USER = 10
 PAGE_UNCHANGED = -1
 PAGE_GCODE = 0
 PAGE_NGCGUI = 1
-MACRO = True
-NO_MACRO = False
 
 DEFAULT = 0
 WARNING = 1
 CRITICAL = 2
-
-VERSION ='1.5'
 
 class HandlerClass:
     def __init__(self, halcomp, widgets, paths):
@@ -72,7 +68,6 @@ class HandlerClass:
         # This validator precludes using comma as a decimal
         self.valid = QtGui.QRegExpValidator(QtCore.QRegExp('-?[0-9]{0,6}[.][0-9]{0,3}'))
         self.styleeditor = SSE(widgets, paths)
-        self.KEYBIND = KEYBIND
         KEYBIND.add_call('Key_F4', 'on_keycall_F4')
         KEYBIND.add_call('Key_F12','on_keycall_F12')
         KEYBIND.add_call('Key_Pause', 'on_keycall_PAUSE')
@@ -162,6 +157,7 @@ class HandlerClass:
 
         # override NGCGui path check
         NgcGui.check_linuxcnc_paths_fail = self.check_linuxcnc_paths_fail_override
+
        # class patch VersaProbe function
         self.super_vp_start_probe = VP.start_probe
         VP.start_probe = self.start_probe
@@ -257,10 +253,6 @@ class HandlerClass:
         if flag:
             self.w.frame_macro_buttons.hide()
 
-        message = "--- QtDragon_hd Version {} on Linuxcnc {} ---".format(
-            VERSION, STATUS.get_linuxcnc_version())
-        STATUS.emit('update-machine-log', message, None)
-
     #############################
     # SPECIAL FUNCTIONS SECTION #
     #############################
@@ -299,7 +291,6 @@ class HandlerClass:
         pin = QHAL.newpin("eoffset-zlevel-count", QHAL.HAL_S32, QHAL.HAL_IN)
         pin.value_changed.connect(self.comp_count_changed)
         QHAL.newpin("comp-on", Qhal.HAL_BIT, Qhal.HAL_OUT)
-        QHAL.newpin("spindle-lift-on", Qhal.HAL_BIT, Qhal.HAL_OUT)
 
     def init_preferences(self):
         if not self.w.PREFS_:
@@ -333,9 +324,6 @@ class HandlerClass:
         self.w.chk_use_camera.setChecked(self.w.PREFS_.getpref('Use camera', False, bool, 'CUSTOM_FORM_ENTRIES'))
         self.w.chk_alpha_mode.setChecked(self.w.PREFS_.getpref('Use alpha display mode', False, bool, 'CUSTOM_FORM_ENTRIES'))
         self.w.chk_inhibit_selection.setChecked(self.w.PREFS_.getpref('Inhibit display mouse selection', True, bool, 'CUSTOM_FORM_ENTRIES'))
-        self.cam_xscale_changed(self.w.PREFS_.getpref('Camview xscale', 100, int, 'CUSTOM_FORM_ENTRIES'))
-        self.cam_yscale_changed(self.w.PREFS_.getpref('Camview yscale', 100, int, 'CUSTOM_FORM_ENTRIES'))
-        self.w.camview._camNum = self.w.PREFS_.getpref('Camview cam number', 0, int, 'CUSTOM_FORM_ENTRIES')
 
     def closing_cleanup__(self):
         if not self.w.PREFS_: return
@@ -369,9 +357,6 @@ class HandlerClass:
         self.w.PREFS_.putpref('Use camera', self.w.chk_use_camera.isChecked(), bool, 'CUSTOM_FORM_ENTRIES')
         self.w.PREFS_.putpref('Use alpha display mode', self.w.chk_alpha_mode.isChecked(), bool, 'CUSTOM_FORM_ENTRIES')
         self.w.PREFS_.putpref('Inhibit display mouse selection', self.w.chk_inhibit_selection.isChecked(), bool, 'CUSTOM_FORM_ENTRIES')
-        self.w.PREFS_.putpref('Camview xscale', self.cam_xscale_percent(), int, 'CUSTOM_FORM_ENTRIES')
-        self.w.PREFS_.putpref('Camview yscale', self.cam_yscale_percent(), int, 'CUSTOM_FORM_ENTRIES')
-        self.w.PREFS_.putpref('Camview cam number', self.w.camview._camNum, int, 'CUSTOM_FORM_ENTRIES')
 
     def init_widgets(self):
         self.w.stackedWidget_mainTab.setCurrentIndex(0)
@@ -391,7 +376,8 @@ class HandlerClass:
         self.w.tooloffsetview.setShowGrid(False)
         self.w.offset_table.setShowGrid(False)
         self.w.divider_line.hide()
-
+        # move clock to statusbar
+        self.w.statusbar.addPermanentWidget(self.w.lbl_clock)
         #set up gcode list
         self.gcodes.setup_list()
 
@@ -409,33 +395,30 @@ class HandlerClass:
                 self.zoomBtn.setIcon(QtGui.QIcon(QtGui.QPixmap(':/buttons/images/zoom.png')))
                 self.zoomBtn.clicked.connect(self.zoomWeb)
                 self.toolBar.addWidget(self.zoomBtn)
-    
+
                 self.homeBtn = QtWidgets.QPushButton(self.w)
                 self.homeBtn.setEnabled(True)
-                self.homeBtn.setMinimumSize(64, 40)
-                self.homeBtn.setIconSize(QtCore.QSize(38, 38))
+                self.homeBtn.setIconSize(QtCore.QSize(48, 38))
                 self.homeBtn.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/up-32.png'))
                 self.homeBtn.clicked.connect(self.homeWeb)
                 self.toolBar.addWidget(self.homeBtn)
 
                 self.backBtn = QtWidgets.QPushButton(self.w)
                 self.backBtn.setEnabled(True)
-                self.backBtn.setMinimumSize(64, 40)
-                self.backBtn.setIconSize(QtCore.QSize(38, 38))
+                self.backBtn.setIconSize(QtCore.QSize(48, 38))
                 self.backBtn.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/left-32.png'))
                 self.backBtn.clicked.connect(self.back)
                 self.toolBar.addWidget(self.backBtn)
 
                 self.forBtn = QtWidgets.QPushButton(self.w)
                 self.forBtn.setEnabled(True)
-                self.forBtn.setMinimumSize(64, 40)
-                self.forBtn.setIconSize(QtCore.QSize(38, 38))
+                self.forBtn.setIconSize(QtCore.QSize(48, 38))
                 self.forBtn.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/right-32.png'))
                 self.forBtn.clicked.connect(self.forward)
                 self.toolBar.addWidget(self.forBtn)
 
                 self.writeBtn = QtWidgets.QPushButton('SetUp\n Writer',self.w)
-                self.writeBtn.setMinimumSize(64, 40)
+                self.writeBtn.setMinimumSize(48,38)
                 self.writeBtn.setEnabled(True)
                 self.writeBtn.clicked.connect(self.writer)
                 self.toolBar.addWidget(self.writeBtn)
@@ -627,7 +610,7 @@ class HandlerClass:
         elif sensor_code and name == 'MESSAGE' and rtn is True:
             self.touchoff('sensor')
         elif wait_code and name == 'MESSAGE':
-            self.h['spindle-lift-on'] = False
+            self.h['eoffset-clear'] = True
             self.h['eoffset-spindle-count'] = 0
             self.w.spindle_eoffset_value.setText('0')
             self.add_status('Spindle lowered')
@@ -784,7 +767,6 @@ class HandlerClass:
         self.w.action_step.setEnabled(not state)
         if state:
         # set external offsets to lift spindle
-            self.h['spindle-lift-on'] = True
             self.h['eoffset-clear'] = False
             self.h['eoffset-enable'] = self.w.chk_eoffsets.isChecked()
             fval = int(self.w.lineEdit_eoffset_count.text())
@@ -825,7 +807,6 @@ class HandlerClass:
                 self.w.btn_enable_comp.setChecked(False)
                 return
             self.h['comp-on'] = True
-            self.h['eoffset-clear'] = False
             self.add_status("Z level compensation ON")
         else:
             if not QHAL.hal.component_exists("z_level_compensation"):
@@ -847,13 +828,6 @@ class HandlerClass:
         else:
             return
 
-        if STATUS.is_metric_mode():
-            x = INFO.convert_machine_to_metric(x)
-            y = INFO.convert_machine_to_metric(y)
-        else:
-            x = INFO.convert_machine_to_imperial(x)
-            y = INFO.convert_machine_to_imperial(y)
-
         ACTION.CALL_MDI("G90")
         ACTION.CALL_MDI_WAIT("G53 G0 Z0")
         command = "G53 G0 X{:3.4f} Y{:3.4f}".format(x, y)
@@ -862,14 +836,9 @@ class HandlerClass:
     def btn_ref_laser_clicked(self):
         x = float(self.w.lineEdit_laser_x.text())
         y = float(self.w.lineEdit_laser_y.text())
-
-        if STATUS.is_metric_mode():
-            x = INFO.convert_machine_to_metric(x)
-            y = INFO.convert_machine_to_metric(y)
-        else:
-            x = INFO.convert_machine_to_imperial(x)
-            y = INFO.convert_machine_to_imperial(y)
-
+        if not STATUS.is_metric_mode():
+            x = x / 25.4
+            y = y / 25.4
         self.add_status("Laser offsets set")
         command = "G10 L20 P0 X{:3.4f} Y{:3.4f}".format(x, y)
         ACTION.CALL_MDI(command)
@@ -877,14 +846,9 @@ class HandlerClass:
     def btn_ref_camera_clicked(self):
         x = float(self.w.lineEdit_camera_x.text())
         y = float(self.w.lineEdit_camera_y.text())
-
-        if STATUS.is_metric_mode():
-            x = INFO.convert_machine_to_metric(x)
-            y = INFO.convert_machine_to_metric(y)
-        else:
-            x = INFO.convert_machine_to_imperial(x)
-            y = INFO.convert_machine_to_imperial(y)
-
+        if not STATUS.is_metric_mode():
+            x = x / 25.4
+            y = y / 25.4
         self.add_status("Camera offsets set")
         command = "G10 L20 P0 X{:3.4f} Y{:3.4f}".format(x, y)
         ACTION.CALL_MDI(command)
@@ -1036,17 +1000,6 @@ class HandlerClass:
     def cam_rot_changed(self, value):
         self.w.camview.rotation = float(value) / 10
 
-    # scaling of the camera image for size aspect corrections
-    # set from preference file
-    def cam_xscale_changed(self, value):
-        self.w.camview.scaleX  = float(value/100)
-    def cam_xscale_percent(self):
-        return self.w.camview.scaleX * 100
-    def cam_yscale_changed(self, value):
-        self.w.camview.scaleY  = float(value/100)
-    def cam_yscale_percent(self):
-        return self.w.camview.scaleY * 100
-
     # settings tab
 
     def chk_override_limits_checked(self, state):
@@ -1089,7 +1042,7 @@ class HandlerClass:
 
     def chk_use_virtual_changed(self, state):
         codestring = "CALCULATOR" if state else "ENTRY"
-        for i in ("x", "y", "z", "4", "5"):
+        for i in ("x", "y", "z", "a"):
             self.w["axistoolbutton_" + i].set_dialog_code(codestring)
         if self.probe:
             self.probe.dialog_code = codestring
@@ -1108,8 +1061,6 @@ class HandlerClass:
         AUX_PRGM.load_gcode_ripper()
 
     def btn_about_clicked(self):
-        self.add_status("QtDragon_hd Version {} on Linuxcnc {} ".format(
-            VERSION, STATUS.get_linuxcnc_version()), CRITICAL)
         info = ACTION.GET_ABOUT_INFO()
         self.w.aboutDialog_.showdialog()
 
@@ -1125,7 +1076,7 @@ class HandlerClass:
         else:
             fval += 1
         self.w.lineEdit_eoffset_count.setText(str(fval))
-        if self.h['spindle-lift-on'] == True:
+        if self.h['eoffset-clear'] != True:
             self.h['eoffset-spindle-count'] = int(fval)
 
     def btn_spindle_z_down_clicked(self):
@@ -1136,7 +1087,7 @@ class HandlerClass:
             fval -= 1
         if fval <0: fval = 0
         self.w.lineEdit_eoffset_count.setText(str(fval))
-        if self.h['spindle-lift-on'] == True:
+        if self.h['eoffset-clear'] != True:
             self.h['eoffset-spindle-count'] = int(fval)
 
     def btn_pause_clicked(self):
@@ -1299,7 +1250,7 @@ class HandlerClass:
             self.set_style_warning()
         else:
             self.set_style_critical()
-        self.w.statusbar.setText(message)
+        self.w.statusbar.showMessage(message)
         STATUS.emit('update-machine-log', message, 'TIME')
 
     def enable_auto(self, state):
@@ -1345,9 +1296,10 @@ class HandlerClass:
         # if waiting and up to speed, lower spindle
         if self._spindle_wait:
             if bool(self.h.hal.get_value('spindle.0.at-speed')):
-                self.h['spindle-lift-on'] = False
                 self.h['eoffset-spindle-count'] = 0
+                self.h['eoffset-clear'] = True
                 self.add_status('Spindle lowered')
+                self.h['eoffset-clear'] = False
                 self._spindle_wait = False
 
         self.update_runtimer()
@@ -1450,7 +1402,7 @@ class HandlerClass:
 
     def clear_status_bar(self):
         self.set_style_default()
-        self.w.statusbar.setText('')
+        self.w.statusbar.showMessage('')
 
     # change Status bar text color
     def set_style_default(self):
@@ -1470,31 +1422,31 @@ class HandlerClass:
         SHOW_DRO = 0
         mode = STATUS.get_current_mode()
         if mode == STATUS.AUTO:
-            seq = {TAB_MAIN: (TAB_MAIN,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_FILE: (TAB_MAIN,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_OFFSETS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_TOOL: (TAB_MAIN,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_STATUS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_PROBE: (TAB_MAIN,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_CAMVIEW: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_GCODES: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_SETUP: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_SETTINGS: (requestedIndex,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_UTILS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_USER: (requestedIndex,PAGE_UNCHANGED,IGNORE,NO_MACRO) }
+            seq = {TAB_MAIN: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_FILE: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_OFFSETS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_TOOL: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_STATUS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_PROBE: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_CAMVIEW: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_GCODES: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_SETUP: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_SETTINGS: (requestedIndex,PAGE_GCODE,SHOW_DRO),
+                    TAB_UTILS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_USER: (requestedIndex,PAGE_UNCHANGED,IGNORE) }
         else:
-            seq = {TAB_MAIN: (requestedIndex,PAGE_GCODE,SHOW_DRO,MACRO),
-                    TAB_FILE: (requestedIndex,PAGE_GCODE,IGNORE,NO_MACRO),
-                    TAB_OFFSETS: (requestedIndex,PAGE_GCODE,IGNORE,NO_MACRO),
-                    TAB_TOOL: (requestedIndex,PAGE_GCODE,IGNORE,NO_MACRO),
-                    TAB_STATUS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_PROBE: (requestedIndex,PAGE_GCODE,SHOW_DRO,NO_MACRO),
-                    TAB_CAMVIEW: (requestedIndex,PAGE_UNCHANGED,IGNORE,MACRO),
-                    TAB_GCODES: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_SETUP: (requestedIndex,PAGE_UNCHANGED,IGNORE,NO_MACRO),
-                    TAB_SETTINGS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_UTILS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO,NO_MACRO),
-                    TAB_USER: (requestedIndex,PAGE_UNCHANGED,IGNORE,MACRO) }
+            seq = {TAB_MAIN: (requestedIndex,PAGE_GCODE,SHOW_DRO),
+                    TAB_FILE: (requestedIndex,PAGE_GCODE,IGNORE),
+                    TAB_OFFSETS: (requestedIndex,PAGE_GCODE,IGNORE),
+                    TAB_TOOL: (requestedIndex,PAGE_GCODE,IGNORE),
+                    TAB_STATUS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_PROBE: (requestedIndex,PAGE_GCODE,SHOW_DRO),
+                    TAB_CAMVIEW: (requestedIndex,PAGE_UNCHANGED,IGNORE),
+                    TAB_GCODES: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_SETUP: (requestedIndex,PAGE_UNCHANGED,IGNORE),
+                    TAB_SETTINGS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_UTILS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_USER: (requestedIndex,PAGE_UNCHANGED,IGNORE) }
 
         rtn =  seq.get(requestedIndex)
 
@@ -1503,9 +1455,8 @@ class HandlerClass:
             main_index = requestedIndex
             stacked_index = 0
             show_dro = 0
-            show_macro = True
         else:
-            main_index,stacked_index,show_dro,show_macro = rtn
+            main_index,stacked_index,show_dro = rtn
 
         # prpbe widget in not a separate tab
         if main_index == TAB_PROBE:
@@ -1519,12 +1470,6 @@ class HandlerClass:
         # show DRO rather then keyboard.
         if show_dro > IGNORE:
             self.w.stackedWidget_dro.setCurrentIndex(0)
-
-        # macros can only be run in manual or mdi mode
-        if show_macro:
-            self.w.frame_macro_buttons.show()
-        else:
-            self.w.frame_macro_buttons.hide()
 
         # show ngcgui info tab if utilities tab is selected
         # but only if the utilities tab has ngcgui selected
