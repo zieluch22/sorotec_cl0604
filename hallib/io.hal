@@ -134,6 +134,9 @@ net spindle-enable hm2_7i76e.0.7i76.0.0.output-04
 # to OPEN the drawbar (release tool):  drawbar_open = high __> valve exit 2/output 4 = high, exit 4/output 3 = low
 # to LOCK the drawbardefault state (clamp tool): drawbar_open = low __> valve exit 2/output 4= low, exit 4/output 3 = high
 
+#Z servo brake release 
+net machine-is-enabled  => hm2_7i76e.0.7i76.0.0.output-07
+
 # --- DO-05 --- 
 # Air Return
 # Maps Valve for spindle ATC bar: pressurize = release

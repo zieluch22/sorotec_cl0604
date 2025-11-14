@@ -52,7 +52,7 @@ G40
 G49
 
 ; First things first, rapid to safe Z
-G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1.0]
+G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-2.0]
 (print, Moved safe Z)
 
 ; First, get rid of the old tool
@@ -108,7 +108,7 @@ O200 if [#<oldtool> GT 0]
             G53 G01 X[#<_ini[ATC]FIRSTPOCKET_X> + [#<oldpocket> -1] * #<_ini[ATC]DELTA_X> - #<_ini[ATC]SAFE_X>]  F#<_ini[ATC]DROPSPEEDXY>
             ; second move Y
             G53 G01 Y[#<_ini[ATC]FIRSTPOCKET_Y> + [#<oldpocket> -1] * #<_ini[ATC]DELTA_Y> - #<_ini[ATC]SAFE_Y>]  F#<_ini[ATC]DROPSPEEDXY>
-            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
             (print, Tool released and spindle cleared to Z0)
         O220 else
             ; The tool's pocket number is not within the range of the rack and the tool needs to be removed manually
@@ -141,7 +141,7 @@ O200 if [#<oldtool> GT 0]
 O200 endif
 (print, Reached end of drop off without error)
 ;For reasons of being paranoid: go to safe Z 
-G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
 
 (print, After going to zsafe )
 ; Second Step, get new tool
@@ -157,7 +157,7 @@ O300 if [#<newtool> GT 0]
             (print, Getting tool #<newtool> from rack at pocket #<newpocket>)
             ; Assuming that the pockets are populated; rapid  move above selected_pocket at z0
             (print, Moving to safe preposition at z0)
-            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
             G53 G0 X[#<_ini[ATC]FIRSTPOCKET_X> + [#<newpocket> -1] * #<_ini[ATC]DELTA_X> - #<_ini[ATC]SAFE_X>] Y[#<_ini[ATC]FIRSTPOCKET_Y> + [#<newpocket> -1] * #<_ini[ATC]DELTA_Y> - #<_ini[ATC]SAFE_Y>] 
             ; Now put the tool down gently 
             ; first move X
@@ -223,13 +223,13 @@ O300 if [#<newtool> GT 0]
             ;G43 T#<newtool>
             ; Rapid to safe Z
             (print, tool change done, rapid to z0)
-            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
             (print, Tool loaded from rack, ready to measure)           
         O320 else 
             ; The tool's pocket number is not within the range of the rack and the tool needs to picked up at the manual change position
             (print, Selected pocket is not within range, moving to manual pick up)
             ; rapid move to manual pick up position
-            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+            G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
             G53 G0 X[#<_ini[ATC]CHANGEX>] Y[#<_ini[ATC]CHANGEY>]
             G53 G0 Z[#<_ini[ATC]CHANGEZ>]
             ; using the code being remapped here means 'use builtin behaviour' and should trigger the usual message
@@ -270,7 +270,7 @@ O300 ENDIF
         #<tool_diameter> = #5410
         (print, tool diameter #<tool_diameter>)
         ; Perform tool measurement - first rapid to toolsensorposition
-        G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]
+        G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
         G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
         (print, check what is tool diameter #<tool_diameter> is greater than tool setter #<_ini[TOOLSENSOR]TS_DIAMETER> )
         O410 if [ #<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER> ] 
@@ -303,7 +303,7 @@ O1 else if [#<_value> EQ -2]
 O1 endif
 
     ; Move off the Tool Sensor
-    G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-0.1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
+    G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
 
     #<touch_result> = #5063
     #<setterheight> = #<_hal[qtversaprobe.probeheight]>

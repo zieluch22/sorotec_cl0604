@@ -25,9 +25,9 @@ RunFromLineDialog_sound_type = READY
 
 [BOOK_KEEPING]
 last_loaded_directory = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
-last_loaded_file = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+last_loaded_file = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/spindle-warmup.ngc
 style_QSS_Path = DEFAULT
-RecentPath_0 = /home/zieluch/linuxcnc/nc_files/new_z/bearing_plate/thread_last.ngc
+RecentPath_0 = /home/zieluch/linuxcnc/nc_files/pad_extensions/op2_t2_face.ngc
 
 [ORIGINOFFSET_SYSTEM_NAMES]
 __dialogOffsetViewWidget-G54 = User System 1
@@ -93,7 +93,7 @@ gcodegraphics-user-lat = 0.0
 gcodegraphics-user-lon = 0.0
 
 [CUSTOM_FORM_ENTRIES]
-Tool to load = 1
+Tool to load = 0
 Laser X = 100.0
 Laser Y = -20.0
 Sensor X = 154.77
@@ -133,9 +133,9 @@ ps_probe_max_z_travel = 5.0
 ps_probe_latch = 1.0
 ps_probe_diam = 2.0
 ps_xy_clearance = 60.0
-ps_side_edge_length = 20.0
-ps_probe_height = -43.639
-ps_block_height = -46.109
+ps_side_edge_length = 15.0
+ps_probe_height = -87.948
+ps_block_height = -57.809
 use_tool_measurement = True
 ps_offs_x = 0.0
 ps_offs_y = 0.0
