@@ -15,7 +15,7 @@ T60  P60  ;3f 90deg 6mm chamfer
 T18  P18  Z+124.451370 ;3mm flat sorotec 
 T11  P11  D+5.000000 Z-31.292700 ;5mm 4f china 
 T14  P14  ;6mm 2f china col 
-T1   P1   D+6.000000 Z+137.073875 ;6mm flat 
+T1   P1   D+6.000000 Z+137.070375 ;6mm flat 
 T52  P52  D+35.000000 Z+131.503670 ;Face 35 wood 
 T61  P4   D+4.000000 Z+133.294375 ;thred m5-m8 sorotec 
 T30  P30  Z+113.245740 ;ball 6mm 2f china 

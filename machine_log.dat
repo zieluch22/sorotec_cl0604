@@ -1,15 +1,16 @@
---- QtVCP Screen Started on: Sun, Nov 09 2025 17:12:32 ---
-Sun09 17:12: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
-Sun09 17:12: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+--- QtVCP Screen Started on: Wed, Nov 19 2025 13:32:22 ---
+Wed19 13:32: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+Wed19 13:32: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
 --- QtDragon_hd Version 1.5 on Linuxcnc 2.9.3-90-g86cdee2be8 ---
-Sun09 17:12: Machine OFF
-Sun09 17:12: Hard limits tripped
-Sun09 17:12: Tool 0: No Tool
-Sun09 17:12: Machine ON
-Sun09 17:12: Hard limits tripped
-Sun09 17:12: Hard limits tripped
-Sun09 17:12: Hard limits tripped
-Sun09 17:12: Hard limits tripped
-Sun09 17:12: Hard limits tripped
-Sun09 17:12: Hard limits tripped
-Sun09 17:13: Machine OFF
+Wed19 13:32: Machine OFF
+Wed19 13:32: Hard limits tripped
+Wed19 13:32: Tool 0: No Tool
+Wed19 13:32: Machine ON
+Wed19 13:32: Hard limits tripped
+Wed19 13:32: Hard limits tripped
+Wed19 13:32: Hard limits tripped
+Wed19 13:32: Hard limits tripped
+Wed19 13:32: Hard limits tripped
+Wed19 13:33: Hard limits tripped
+Wed19 13:33: Tool 1: 6mm flat 
+Wed19 13:33: Tool 1: 6mm flat 

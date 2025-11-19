@@ -8,3 +8,6 @@ mdi_history.dat
 qtdragon.log
 hallib/linuxcnc.var.bak
 hallib/linuxcnc.var
+machine_log.dat
+qtdragon.log
+tool.tbl
