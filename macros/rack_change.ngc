@@ -266,12 +266,15 @@ O300 if [#<newtool> GT 0]
         O320 ENDIF
     O310 ENDIF
 O300 ENDIF
-        
+o400 if [#<_hal[qtversaprobe.use_tool_measurement]> ]
+
         #<tool_diameter> = #5410
         (print, tool diameter #<tool_diameter>)
         ; Perform tool measurement - first rapid to toolsensorposition
         G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]
-        G53 G0 X[#<_ini[TOOLSENSOR]X>] Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
+        ;first mow Y axis to not crash into holders 
+        G53 G0 Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
+        G53 G0 X[#<_ini[TOOLSENSOR]X>]
         (print, check what is tool diameter #<tool_diameter> is greater than tool setter #<_ini[TOOLSENSOR]TS_DIAMETER> )
         O410 if [ #<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER> ] 
 			(print, tool diameter grater than #<_ini[TOOLSENSOR]TS_DIAMETER>, offset X by half tool size forward to not crash with toolholders)
@@ -304,6 +307,9 @@ O1 endif
 
     ; Move off the Tool Sensor
     G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
+    
+    ;Turn off tool setter
+    M65 P#<_ini[OTHER_PINS]TS>
 
     #<touch_result> = #5063
     #<setterheight> = #<_hal[qtversaprobe.probeheight]>
@@ -316,9 +322,12 @@ O1 endif
 
     G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
     G43
+; no tool messurement    
+o400 end if
+G10 L0 P#<newtool>  
 
-;Turn off tool setter
-M65 P#<_ini[OTHER_PINS]TS>
+
+
  O150 else
  ;Modal autorestore all the offsets , no tool change 
       M72 
