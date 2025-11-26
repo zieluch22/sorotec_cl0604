@@ -999,3 +999,13 @@ m6 t52
 g1 z0 f1000
 g1 z70 f100
 m6 t52
+m6 t1
+m6 t2
+m6 t1
+m6 t5
+g1 x0 y0 f3000
+m61 q0
+m6 t5
+m6 t1
+m6 t3
+m6 t51

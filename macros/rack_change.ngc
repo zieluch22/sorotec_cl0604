@@ -318,6 +318,9 @@ O1 endif
 
     G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
     G43
+o400 else
+    G43 H#<newtool>
+
 o400 end if    
 
 ;Turn off tool setter

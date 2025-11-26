@@ -11,3 +11,6 @@ hallib/linuxcnc.var
 machine_log.dat
 qtdragon.log
 tool.tbl
+machine_log.dat
+mdi_history.dat
+qtdragon.log
