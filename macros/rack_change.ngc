@@ -306,6 +306,9 @@ O1 endif
 
     ; Move off the Tool Sensor
     G53 G1 Z[#<_ini[AXIS_Z]MAX_LIMIT>-1]  F#<_ini[TOOLSENSOR]RAPID_SPEED>
+    
+    ;Turn off tool setter
+    M65 P#<_ini[OTHER_PINS]TS>
 
     #<touch_result> = #5063
     #<setterheight> = #<_hal[qtversaprobe.probeheight]>
@@ -323,8 +326,6 @@ o400 else
 
 o400 end if    
 
-;Turn off tool setter
-M65 P#<_ini[OTHER_PINS]TS>
  O150 else
  ;Modal autorestore all the offsets , no tool change 
       M72 
