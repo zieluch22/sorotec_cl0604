@@ -1,11 +1,10 @@
-T8   P3   D+4.000000 Z+132.430370 ;4mm 1F 
 T63  P63  D+4.850000 Z+110.099870 ;thread m6 4.85 china 
 T0   P0   ; 
-T2   P2   D+6.000000 Z+128.823875 ; 
-T3   P3   D+6.000000 Z+135.122380 ; 
+T2   P2   D+6.000000 Z+149.467875 ; 
+T3   P3   D+6.000000 Z+132.703875 ; 
 T6   P6   Z+128.890870 ;1/8 " 17mm 
 T17  P3   D+4.000000 Z+109.858390 ;1F 4mm 15mm 
-T7   P7   Z+129.101375 ;1f 6mm sorotec 25mm 
+T7   P7   Z+129.101370 ;1f 6mm sorotec 25mm 
 T25  P25  Z+170.564630 ;2f 10mm 
 T24  P24  Z-56.789630 ;2f 6mm flat coated china 
 T9   P9   Z-55.227130 ;2mm flat 
@@ -15,14 +14,13 @@ T60  P60  ;3f 90deg 6mm chamfer
 T18  P18  Z+124.451370 ;3mm flat sorotec 
 T11  P11  D+5.000000 Z-31.292700 ;5mm 4f china 
 T14  P14  ;6mm 2f china col 
-T1   P1   D+6.000000 Z+137.070375 ;6mm flat 
-T52  P52  D+35.000000 Z+131.503670 ;Face 35 wood 
-T61  P4   D+4.000000 Z+133.294375 ;thred m5-m8 sorotec 
+T1   P1   D+6.000000 Z+117.021573 ;6mm flat 
+T52  P52  D+35.000000 Z+147.241025 ;Face 35 wood 
+T61  P4   D+4.000000 Z+133.294380 ;thred m5-m8 sorotec 
 T30  P30  Z+113.245740 ;ball 6mm 2f china 
 T32  P32  Z-61.609000 ;ball 6mm china 
 T21  P21  Z-90.663970 ;ball end mill 6mm 
-T62  P4   Z+130.889870 ;chamfer 60 degree 
-T8   P3   D+4.000000 Z+132.337120 ;chamfer sorotec 6mm 4f 
+T62  P62  Z+130.740380 ;chamfer 60 degree 
 T42  P42  Z-114.861000 ;drill 2.5 
 T41  P41  Z-98.956200 ;drill 5mm sorotec 
 T50  P50  D+50.000000 Z+156.564600 ;face 50mm china 
@@ -33,10 +31,10 @@ T13  P13  D+6.000000 Z-41.843300 ;flat/ 6mm pro alu 26mm
 T19  P19  D+2.000000 Z-17.651200 ;flat_por alu 2mm 
 T26  P26  D+3.175000 Z+117.475220 ;foam cutter 1/8' 
 T16  P16  Z+123.373690 ;pro alu 3mm 
-T99  P99  D+2.000000 Z+165.131875 ;probe 
+T99  P99  D+2.000000 Z+170.539375 ;probe 
 T33  P33  Z-73.355100 ;r3 ball sorotec 
 T12  P12  Z-36.478700 ;sor_flat_2mm_8mm 
-T4   P4   D+6.000000 Z+138.366870 ;sorotec_3mm ball 
+T4   P4   D+6.000000 Z+142.738375 ;sorotec_3mm ball 
 T91  P91  Z-118.472000 ;thread m2-m4 sorotec 
 T90  P90  ;thread m4-m8 sorotec 
-T5   P5   Z+129.889375 ;tool 
+T5   P5   Z+129.806375 ;tool 
