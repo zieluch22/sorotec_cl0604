@@ -1,0 +1,18 @@
+;change all tool from magazine
+
+o<tool_magazine> sub
+o100 if [#<_hal[qtversaprobe.enable]> eq 1] 
+m6 t1
+m6 t2
+m6 t3
+m6 t4
+m6 t5
+
+o100 else 
+          (print, turn on tool messurment, under probe tab)
+o100     return [999]
+o100 end if
+o<tool_magazine> endsub [1]
+
+M2
+%
