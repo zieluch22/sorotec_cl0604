@@ -1,88 +1,132 @@
-2026-10-27 20:42:27,743 - QTvcp - DEBUG - DEBUGGING logging on
-2026-10-27 20:42:28,077 - QTvcp.QTVCP.QT_ISTAT - DEBUG - Machine is METRIC based. unit Conversion constant=0.03937007874015748
-2026-10-27 20:42:28,078 - QTvcp.QTVCP.QT_ISTAT - DEBUG - TRAJ COORDINATES: XYZ
-2026-10-27 20:42:28,083 - QTvcp.QTVCP.QT_ISTAT - DEBUG - DEFAULT_LINEAR_VELOCITY = 4080.0
-2026-10-27 20:42:28,136 - QTvcp.QTVCP.QT_ISTAT - DEBUG - MIN_LINEAR_VELOCITY = 30.0
-2026-10-27 20:42:28,146 - QTvcp.QTVCP.QT_ISTAT - DEBUG - MAX_LINEAR_VELOCITY = 7200.0
-2026-10-27 20:42:31,574 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Passed name=qtdragon_hd, BASENAME=qtdragon_hd BASEPATH=qtdragon_hd
-2026-10-27 20:42:31,574 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd_handler.py
-2026-10-27 20:42:31,575 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_handler.py
-2026-10-27 20:42:31,581 - QTvcp.QTVCP.QT_PSTAT - INFO - Using LOCAL handler file path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_handler.py
-2026-10-27 20:42:31,582 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.ui
-2026-10-27 20:42:31,585 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
-2026-10-27 20:42:31,588 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.ui
-2026-10-27 20:42:31,589 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
-2026-10-27 20:42:31,597 - QTvcp.QTVCP.QT_PSTAT - INFO - Using DEFAULT ui file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
-2026-10-27 20:42:31,598 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.qss
-2026-10-27 20:42:31,600 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
-2026-10-27 20:42:31,600 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.qss
-2026-10-27 20:42:31,601 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
-2026-10-27 20:42:31,601 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT qss file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
-2026-10-27 20:42:31,601 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.qrc
-2026-10-27 20:42:31,602 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
-2026-10-27 20:42:31,602 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.qrc
-2026-10-27 20:42:31,602 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
-2026-10-27 20:42:31,603 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT qrc file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
-2026-10-27 20:42:31,603 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for resources.py in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
-2026-10-27 20:42:31,623 - QTvcp.QTVCP.QT_PSTAT - INFO - Using LOCAL resources.py file from: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
-2026-10-27 20:42:31,635 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
-2026-10-27 20:42:31,637 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/languages/qtdragon_hd_C.qm
-2026-10-27 20:42:31,637 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /usr/share/qtvcp/screens/qtdragon_hd/languages/qtdragon_hd_C.qm
-2026-10-27 20:42:31,637 - QTvcp.QTVCP.QT_PSTAT - INFO - Using no translations, default system locale is: C
-2026-10-27 20:42:31,638 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for LOCAL about file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd_ABOUT
-2026-10-27 20:42:31,638 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for LOCAL about file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
-2026-10-27 20:42:31,638 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for DEFAULT about file in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
-2026-10-27 20:42:31,639 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT about file path: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
-2026-10-27 20:42:31,639 - QTvcp - INFO - Building A LinuxCNC Main Screen with: Python 3
-2026-10-27 20:42:31,649 - QTvcp - INFO - No handler file specified on command line.
-2026-10-27 20:42:31,649 - QTvcp - INFO - No HAL component base name specified on command line using: qtdragon_hd
-2026-10-27 20:42:31,685 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Qsettings file path: /home/zieluch/.config/QtVcp/qtdragon_hd.conf
-2026-10-27 20:42:31,685 - QTvcp - DEBUG - Loading the handler file.
-2026-10-27 20:42:31,686 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Adding import dir: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd
-2026-10-27 20:42:33,039 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Module 'qtdragon_hd_handler' imported OK
-2026-10-27 20:42:33,040 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Module 'qtdragon_hd_handler' : 'get_handlers' function found.
-2026-10-27 20:42:33,185 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Registering handlers in module qtdragon_hd_handler object <qtdragon_hd_handler.HandlerClass object at 0x7f6633ae1010>
-2026-10-27 20:42:33,237 - QTvcp - DEBUG - Adding the key events filter.
-2026-10-27 20:42:33,271 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Imported resources.py filed: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
-2026-10-27 20:42:59,989 - QTvcp.QTVCP.QT_MAKEPINS - INFO - Changed HAL Component basename to qtdragon, as specified in screenOptions: 
-2026-10-27 20:42:59,992 - QTvcp.QTVCP.WIDGETS.SCREEN_OPTIONS - DEBUG - Preference File Path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.pref
-2026-10-27 20:43:00,002 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - QTVCP: Parsing for HAL widgets.
-2026-10-27 20:43:01,948 - QTvcp.QTVCP.WIDGETS.FILE_MANAGER - DEBUG - lAST FILE PATH: /home/zieluch/linuxcnc/nc_files/wood
-2026-10-27 20:43:01,961 - QTvcp.QTVCP.WIDGETS.FILE_MANAGER - DEBUG - lAST FILE PATH: /home/zieluch/linuxcnc/nc_files/wood
-2026-10-27 20:43:02,012 - QTvcp.QTVCP.WIDGETS.DRO_WIDGET - DEBUG - axis number 3 not found in available-axis to joint conversion dict {0: 0, 1: 1, 2: 2} of widget: dro_axis_4
-2026-10-27 20:43:02,014 - QTvcp.QTVCP.WIDGETS.DRO_WIDGET - DEBUG - axis number 4 not found in available-axis to joint conversion dict {0: 0, 1: 1, 2: 2} of widget: dro_axis_5
-2026-10-27 20:43:02,039 - QTvcp.QTVCP.WIDGETS.JOG_INCREMENTS - DEBUG - Linear Current index: 0 Increment: 0 , selection changed Continuous
-2026-10-27 20:43:02,040 - QTvcp.QTVCP.WIDGETS.JOG_INCREMENTS - DEBUG - Angular Current index: 0 Increment: 0 , selection changed Continuous
-2026-10-27 20:43:02,043 - QTvcp - DEBUG - Calling the handler file's initialized__ function
-2026-10-27 20:43:05,367 - QTvcp.QTDRAGON_HD_HANDLER - INFO - Using Versa Probe
-2026-10-27 20:43:06,523 - QTvcp.QTDRAGON_HD_HANDLER - INFO - Using NGCGUI utility
-2026-10-27 20:43:06,529 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - UI Filename: /usr/lib/python3/dist-packages/qtvcp/lib/qt_ngcgui/ngcgui.ui
-2026-10-27 20:43:06,625 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Path to NGCGUI files:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib
-2026-10-27 20:43:06,628 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Found the following ngc_sub: ['slot.ngc', 'qpocket.ngc']
-2026-10-27 20:43:06,629 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Adding NGCGUI:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
-2026-10-27 20:43:06,643 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
-2026-10-27 20:43:06,648 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Adding NGCGUI:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
-2026-10-27 20:43:06,660 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
-2026-10-27 20:43:06,822 - QTvcp.QTVCP.QT_MAKEGUI - INFO - No Handler Override file at: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/.qtdragon_hdrc
-2026-10-27 20:43:07,292 - QTvcp - DEBUG - Set HAL ready.
-2026-10-27 20:43:09,648 - QTvcp - DEBUG - Show window.
-2026-10-27 20:43:09,651 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Calculating geometry of main window using natural placement: 0 27 1920 1080
-2026-10-27 20:43:12,496 - QTvcp - INFO - Postgui filename: ['hallib/postgui_call_list.hal']
-2026-10-27 20:43:12,651 - QTvcp - INFO - Postgui commands: None
-2026-10-27 20:43:12,655 - QTvcp - INFO - Preference path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.pref
-2026-10-27 20:43:50,502 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Button pressed is: &Yes
-2026-10-27 20:43:50,506 - QTvcp.QTVCP.WIDGETS.DIALOGMIXIN - DEBUG - Saving LncMessage-geometry data from widget  to file.
-2026-10-27 20:43:50,821 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Value of pressed button: 16384
-2026-10-27 20:43:50,823 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Calling handler file Closing_cleanup__ function of <qtvcp.qt_makegui.VCPWindow object at 0x7f6649899ea0>.
-2026-10-27 20:43:50,968 - QTvcp - DEBUG - Status shutdown
-2026-10-27 20:43:50,973 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Qsettings sync called:
-2026-10-27 20:43:50,978 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Calling handler file Closing_cleanup__ function of <qtvcp.qt_makegui.VCPWindow object at 0x7f6649899ea0>.
-2026-10-27 20:43:51,213 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Saving Main Window geometry to preference file.
-2026-10-27 20:43:51,228 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Calling widget's _hal_cleanup functions.
-2026-10-27 20:43:51,234 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving __dialogOffsetViewWidget data to file.
-2026-10-27 20:43:51,263 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving __dialogOffsetViewWidget data to file.
-2026-10-27 20:43:51,288 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving __dialogOffsetViewWidget data to file.
-2026-10-27 20:43:51,347 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving offset_table data to file.
-2026-10-27 20:43:51,399 - QTvcp.QTVCP.WIDGETS.GCODE_GRAPHICS - DEBUG - Saving gcodegraphics data to file.
-2026-10-27 20:43:51,578 - QTvcp.QTVCP.WIDGETS.VERSA_PROBE - DEBUG - Saving Versa probe data to preference file.
-2026-10-27 20:43:51,600 - QTvcp - DEBUG - Exiting HAL
+2026-10-27 22:54:45,620 - QTvcp - DEBUG - DEBUGGING logging on
+2026-10-27 22:54:45,699 - QTvcp.QTVCP.QT_ISTAT - DEBUG - Machine is METRIC based. unit Conversion constant=0.03937007874015748
+2026-10-27 22:54:45,700 - QTvcp.QTVCP.QT_ISTAT - DEBUG - TRAJ COORDINATES: XYZ
+2026-10-27 22:54:45,702 - QTvcp.QTVCP.QT_ISTAT - DEBUG - DEFAULT_LINEAR_VELOCITY = 4080.0
+2026-10-27 22:54:45,703 - QTvcp.QTVCP.QT_ISTAT - DEBUG - MIN_LINEAR_VELOCITY = 30.0
+2026-10-27 22:54:45,703 - QTvcp.QTVCP.QT_ISTAT - DEBUG - MAX_LINEAR_VELOCITY = 7200.0
+2026-10-27 22:54:46,375 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Passed name=qtdragon_hd, BASENAME=qtdragon_hd BASEPATH=qtdragon_hd
+2026-10-27 22:54:46,376 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd_handler.py
+2026-10-27 22:54:46,377 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for handler file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_handler.py
+2026-10-27 22:54:46,377 - QTvcp.QTVCP.QT_PSTAT - INFO - Using LOCAL handler file path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_handler.py
+2026-10-27 22:54:46,378 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.ui
+2026-10-27 22:54:46,378 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
+2026-10-27 22:54:46,379 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.ui
+2026-10-27 22:54:46,379 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .ui in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
+2026-10-27 22:54:46,380 - QTvcp.QTVCP.QT_PSTAT - INFO - Using DEFAULT ui file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.ui
+2026-10-27 22:54:46,380 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.qss
+2026-10-27 22:54:46,381 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
+2026-10-27 22:54:46,382 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.qss
+2026-10-27 22:54:46,382 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qss in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
+2026-10-27 22:54:46,383 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT qss file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qss
+2026-10-27 22:54:46,383 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd.qrc
+2026-10-27 22:54:46,384 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2026-10-27 22:54:46,384 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/qtdragon_hd.qrc
+2026-10-27 22:54:46,385 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for .qrc in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2026-10-27 22:54:46,385 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT qrc file from: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2026-10-27 22:54:46,386 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for resources.py in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
+2026-10-27 22:54:46,387 - QTvcp.QTVCP.QT_PSTAT - INFO - Using LOCAL resources.py file from: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
+2026-10-27 22:54:46,390 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd.qrc
+2026-10-27 22:54:46,390 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd/languages/qtdragon_hd_C.qm
+2026-10-27 22:54:46,391 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for translation file in: /usr/share/qtvcp/screens/qtdragon_hd/languages/qtdragon_hd_C.qm
+2026-10-27 22:54:46,392 - QTvcp.QTVCP.QT_PSTAT - INFO - Using no translations, default system locale is: C
+2026-10-27 22:54:46,392 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for LOCAL about file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon_hd_ABOUT
+2026-10-27 22:54:46,393 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for LOCAL about file in: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
+2026-10-27 22:54:46,393 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Checking for DEFAULT about file in: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
+2026-10-27 22:54:46,394 - QTvcp.QTVCP.QT_PSTAT - DEBUG - Using DEFAULT about file path: /usr/share/qtvcp/screens/qtdragon_hd/qtdragon_hd_ABOUT
+2026-10-27 22:54:46,395 - QTvcp - INFO - Building A LinuxCNC Main Screen with: Python 3
+2026-10-27 22:54:46,395 - QTvcp - INFO - No handler file specified on command line.
+2026-10-27 22:54:46,396 - QTvcp - INFO - No HAL component base name specified on command line using: qtdragon_hd
+2026-10-27 22:54:46,399 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Qsettings file path: /home/zieluch/.config/QtVcp/qtdragon_hd.conf
+2026-10-27 22:54:46,399 - QTvcp - DEBUG - Loading the handler file.
+2026-10-27 22:54:46,400 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Adding import dir: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd
+2026-10-27 22:54:46,628 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Module 'qtdragon_hd_handler' imported OK
+2026-10-27 22:54:46,629 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Module 'qtdragon_hd_handler' : 'get_handlers' function found.
+2026-10-27 22:54:46,658 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Registering handlers in module qtdragon_hd_handler object <qtdragon_hd_handler.HandlerClass object at 0x7f1709a17750>
+2026-10-27 22:54:46,661 - QTvcp - DEBUG - Adding the key events filter.
+2026-10-27 22:54:46,667 - QTvcp.QTVCP.QT_MAKEGUI - INFO - Imported resources.py filed: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtvcp/screens/qtdragon_hd/resources.py
+2026-10-27 22:54:50,690 - QTvcp.QTVCP.QT_MAKEPINS - INFO - Changed HAL Component basename to qtdragon, as specified in screenOptions: 
+2026-10-27 22:54:50,692 - QTvcp.QTVCP.WIDGETS.SCREEN_OPTIONS - DEBUG - Preference File Path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.pref
+2026-10-27 22:54:50,696 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - QTVCP: Parsing for HAL widgets.
+2026-10-27 22:54:51,153 - QTvcp.QTVCP.WIDGETS.FILE_MANAGER - DEBUG - lAST FILE PATH: /home/zieluch/linuxcnc/nc_files/wood
+2026-10-27 22:54:51,156 - QTvcp.QTVCP.WIDGETS.FILE_MANAGER - DEBUG - lAST FILE PATH: /home/zieluch/linuxcnc/nc_files/wood
+2026-10-27 22:54:51,175 - QTvcp.QTVCP.WIDGETS.DRO_WIDGET - DEBUG - axis number 3 not found in available-axis to joint conversion dict {0: 0, 1: 1, 2: 2} of widget: dro_axis_4
+2026-10-27 22:54:51,176 - QTvcp.QTVCP.WIDGETS.DRO_WIDGET - DEBUG - axis number 4 not found in available-axis to joint conversion dict {0: 0, 1: 1, 2: 2} of widget: dro_axis_5
+2026-10-27 22:54:51,192 - QTvcp.QTVCP.WIDGETS.JOG_INCREMENTS - DEBUG - Linear Current index: 0 Increment: 0 , selection changed Continuous
+2026-10-27 22:54:51,194 - QTvcp.QTVCP.WIDGETS.JOG_INCREMENTS - DEBUG - Angular Current index: 0 Increment: 0 , selection changed Continuous
+2026-10-27 22:54:51,197 - QTvcp - DEBUG - Calling the handler file's initialized__ function
+2026-10-27 22:54:51,478 - QTvcp.QTDRAGON_HD_HANDLER - INFO - Using Versa Probe
+2026-10-27 22:54:51,977 - QTvcp.QTDRAGON_HD_HANDLER - INFO - Using NGCGUI utility
+2026-10-27 22:54:51,980 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - UI Filename: /usr/lib/python3/dist-packages/qtvcp/lib/qt_ngcgui/ngcgui.ui
+2026-10-27 22:54:52,023 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Path to NGCGUI files:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib
+2026-10-27 22:54:52,024 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Found the following ngc_sub: ['slot.ngc', 'qpocket.ngc']
+2026-10-27 22:54:52,025 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Adding NGCGUI:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
+2026-10-27 22:54:52,029 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc
+2026-10-27 22:54:52,030 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - DEBUG - Adding NGCGUI:/home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
+2026-10-27 22:54:52,034 - QTvcp.QTVCP.LIB.QT_NGCGUI.NGCGUI - WARNING - The ngc_sub path is not in a known path from the INI: /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc
+2026-10-27 22:54:52,168 - QTvcp.QTVCP.QT_MAKEGUI - INFO - No Handler Override file at: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/.qtdragon_hdrc
+2026-10-27 22:54:52,440 - QTvcp - DEBUG - Set HAL ready.
+2026-10-27 22:54:53,214 - QTvcp - DEBUG - Show window.
+2026-10-27 22:54:53,215 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Calculating geometry of main window using natural placement: 0 27 1920 1080
+2026-10-27 22:54:53,838 - QTvcp - INFO - Postgui filename: ['hallib/postgui_call_list.hal']
+2026-10-27 22:54:53,889 - QTvcp - INFO - Postgui commands: None
+2026-10-27 22:54:53,893 - QTvcp - INFO - Preference path: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/qtdragon.pref
+2026-10-27 22:54:58,010 - QTvcp.QTVCP.QT_ACTION - INFO - Homing Joint: -1
+2026-10-27 22:55:34,020 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: , mdi_history.dat
+2026-10-27 22:55:38,012 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: m3 s6000
+
+2026-10-27 22:55:52,637 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: s30000, mdi_history.dat
+2026-10-27 22:55:52,837 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: m5, mdi_history.dat
+2026-10-27 22:55:52,849 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: s12000, mdi_history.dat
+2026-10-27 22:55:52,868 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: m64 p0, mdi_history.dat
+2026-10-27 22:55:52,883 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: g1 z89.6 f1000, mdi_history.dat
+2026-10-27 22:55:52,907 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: m6 t53, mdi_history.dat
+2026-10-27 22:55:52,946 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: g1 z 18 f1000, mdi_history.dat
+2026-10-27 22:55:52,971 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: g1 z-0.3 f1000, mdi_history.dat
+2026-10-27 22:55:52,985 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: g1 x120 f400, mdi_history.dat
+2026-10-27 22:55:53,012 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: g1 x120 f400, mdi_history.dat
+2026-10-27 22:56:23,772 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: m3 s6000
+
+2026-10-27 22:56:24,006 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: , mdi_history.dat
+2026-10-27 22:56:44,162 - QTvcp.QTVCP.QT_ACTION - DEBUG - CALL_MDI Command: m6 t2
+
+2026-10-27 22:56:45,185 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: , mdi_history.dat
+2026-10-27 22:56:45,241 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 55
+2026-10-27 22:56:45,245 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 55
+2026-10-27 22:56:45,343 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 144
+2026-10-27 22:56:45,346 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 144
+2026-10-27 22:56:45,446 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 161
+2026-10-27 22:56:45,454 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 161
+2026-10-27 22:56:46,494 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 166
+2026-10-27 22:56:46,495 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 166
+2026-10-27 22:56:47,404 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 168
+2026-10-27 22:56:47,405 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 168
+2026-10-27 22:57:08,102 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Button pressed is: Pause For Jogging
+2026-10-27 22:57:08,172 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - message returned:{'NAME': 'RUNFROMLINE', 'LINE': 170, 'NONBLOCKING': True, 'RETURN': None}
+2026-10-27 22:57:08,173 - QTvcp.QTVCP.WIDGETS.TOOL_OFFSETVIEW - DEBUG - message returned:{'NAME': 'RUNFROMLINE', 'LINE': 170, 'NONBLOCKING': True, 'RETURN': None}
+2026-10-27 22:57:08,173 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - message returned:{'NAME': 'RUNFROMLINE', 'LINE': 170, 'NONBLOCKING': True, 'RETURN': None}
+2026-10-27 22:57:08,174 - QTvcp.QTVCP.WIDGETS.DIALOGMIXIN - DEBUG - Saving ToolChangeDialog-geometry data from widget  to file.
+2026-10-27 22:57:08,176 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Button pressed is: Pause For Jogging
+2026-10-27 22:57:08,242 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - message returned:{'NAME': 'RUNFROMLINE', 'LINE': 170, 'NONBLOCKING': True, 'RETURN': None}
+2026-10-27 22:57:08,243 - QTvcp.QTVCP.WIDGETS.TOOL_OFFSETVIEW - DEBUG - message returned:{'NAME': 'RUNFROMLINE', 'LINE': 170, 'NONBLOCKING': True, 'RETURN': None}
+2026-10-27 22:57:08,244 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - message returned:{'NAME': 'RUNFROMLINE', 'LINE': 170, 'NONBLOCKING': True, 'RETURN': None}
+2026-10-27 22:57:08,245 - QTvcp.QTVCP.WIDGETS.DIALOGMIXIN - DEBUG - Saving ToolChangeDialog-geometry data from widget  to file.
+2026-10-27 22:57:08,565 - QTvcp.QTVCP.WIDGETS.GCODE_GRAPHICS - DEBUG - load the display: /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+2026-10-27 22:57:08,574 - QTvcp.QTVCP.WIDGETS.MDI_LINE - DEBUG - Ext line selected: ; M6 REMAP Macro for ATC track ool change, /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+2026-10-27 22:57:08,639 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 0
+2026-10-27 22:57:08,640 - QTvcp.QTVCP.WIDGETS.GCODE_EDITOR - DEBUG - editor: got external highlight 0
+2026-10-27 22:57:21,909 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Button pressed is: &Yes
+2026-10-27 22:57:21,909 - QTvcp.QTVCP.WIDGETS.DIALOGMIXIN - DEBUG - Saving LncMessage-geometry data from widget  to file.
+2026-10-27 22:57:22,536 - QTvcp.QTVCP.WIDGETS.DIALOG_WIDGET - DEBUG - Value of pressed button: 16384
+2026-10-27 22:57:22,548 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Calling handler file Closing_cleanup__ function of <qtvcp.qt_makegui.VCPWindow object at 0x7f17103eee60>.
+2026-10-27 22:57:23,039 - QTvcp - DEBUG - Status shutdown
+2026-10-27 22:57:23,059 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Qsettings sync called:
+2026-10-27 22:57:23,065 - QTvcp.QTVCP.QT_MAKEGUI - DEBUG - Calling handler file Closing_cleanup__ function of <qtvcp.qt_makegui.VCPWindow object at 0x7f17103eee60>.
+2026-10-27 22:57:23,234 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Saving Main Window geometry to preference file.
+2026-10-27 22:57:23,243 - QTvcp.QTVCP.QT_MAKEPINS - DEBUG - Calling widget's _hal_cleanup functions.
+2026-10-27 22:57:23,255 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving __dialogOffsetViewWidget data to file.
+2026-10-27 22:57:23,306 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving __dialogOffsetViewWidget data to file.
+2026-10-27 22:57:23,329 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving __dialogOffsetViewWidget data to file.
+2026-10-27 22:57:23,364 - QTvcp.QTVCP.WIDGETS.ORIGIN_OFFSETVIEW - DEBUG - Saving offset_table data to file.
+2026-10-27 22:57:23,388 - QTvcp.QTVCP.WIDGETS.GCODE_GRAPHICS - DEBUG - Saving gcodegraphics data to file.
+2026-10-27 22:57:23,462 - QTvcp.QTVCP.WIDGETS.VERSA_PROBE - DEBUG - Saving Versa probe data to preference file.
+2026-10-27 22:57:23,503 - QTvcp - DEBUG - Exiting HAL
