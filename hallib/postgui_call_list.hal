@@ -23,3 +23,9 @@ net tool-prep-number    hal_manualtoolchange.number             <=  iocontrol.0.
 #net tool-number         hal_manualtoolchange.toolchange-number  <=   iocontrol.0.tool-number
 net tool-prep-loopback  iocontrol.0.tool-prepare                <=   iocontrol.0.tool-prepared
 net pocketprepnumer     iocontrol.0.tool-prep-pocket 
+
+# --- E500 VFD values into QtDragon HD spindle display (signals from spindle_setup.hal) ---
+net vfd-amps          => qtdragon.spindle-amps
+net vfd-volts         => qtdragon.spindle-volts
+net vfd-fault-code    => qtdragon.spindle-fault
+net vfd-modbus-errors => qtdragon.spindle-modbus-errors-u32

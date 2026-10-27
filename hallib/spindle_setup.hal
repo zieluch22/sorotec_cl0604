@@ -1,5 +1,17 @@
 #*******************
 #  SPINDLE
+#  Simphoenix E500 VFD controlled over Modbus RTU (RS485, USB adapter) via mb2hal
+#  Modbus settings: hallib/vfd_e500_mb2hal.ini
+#  Scaling:         [VFD] section in qthd_sorotec_cl0604.ini
+#
+#  Required VFD parameters (keypad):
+#    F0.00 = 2     frequency from communication
+#    F0.02 = 0002  run command from RS485, no power-on auto start
+#    F0.04 = max spindle Hz (must match [VFD]MAX_FREQ / 10)
+#    F4.00 = 0114  Modbus RTU, 8E1, 9600 baud
+#    F4.01 = 1     slave address
+#    F4.03 = 0000  STOP spindle on communication loss
+#    F4.04 = 1.0   comm timeout [s]
 #*******************
 
 setp   pid.s.Pgain     [SPINDLE_0]P
@@ -22,15 +34,13 @@ net spindle-output        <=  pid.s.output
 
 
 ##################
-#pasted from linux cnc section
-
-setp   hm2_7i76e.0.7i76.0.0.spinout-minlim    [SPINDLE_0]OUTPUT_MIN_LIMIT
-setp   hm2_7i76e.0.7i76.0.0.spinout-maxlim    [SPINDLE_0]OUTPUT_MAX_LIMIT
-setp   hm2_7i76e.0.7i76.0.0.spinout-scalemax  [SPINDLE_0]OUTPUT_SCALE
-
-net spindle-vel-cmd-rpm-abs     => hm2_7i76e.0.7i76.0.0.spinout
-net spindle-enable     => hm2_7i76e.0.7i76.0.0.spinena
-net spindle-ccw         => hm2_7i76e.0.7i76.0.0.spindir
+# OLD: 7i76 analog 0-10V spindle output - replaced by Modbus below
+#setp   hm2_7i76e.0.7i76.0.0.spinout-minlim    [SPINDLE_0]OUTPUT_MIN_LIMIT
+#setp   hm2_7i76e.0.7i76.0.0.spinout-maxlim    [SPINDLE_0]OUTPUT_MAX_LIMIT
+#setp   hm2_7i76e.0.7i76.0.0.spinout-scalemax  [SPINDLE_0]OUTPUT_SCALE
+#net spindle-vel-cmd-rpm-abs     => hm2_7i76e.0.7i76.0.0.spinout
+#net spindle-enable     => hm2_7i76e.0.7i76.0.0.spinena
+#net spindle-ccw         => hm2_7i76e.0.7i76.0.0.spindir
 #####################
 
 # ---setup spindle control signals---
@@ -44,15 +54,84 @@ net spindle-cw                 <=  spindle.0.forward
 net spindle-ccw                <=  spindle.0.reverse
 net spindle-brake              <=  spindle.0.brake
 net spindle-revs               =>  spindle.0.revs
-#net spindle-at-speed           =>  spindle.0.at-speed
+net spindle-at-speed           =>  spindle.0.at-speed
 net spindle-vel-fb-rps         =>  spindle.0.speed-in
 net spindle-index-enable      <=>  spindle.0.index-enable
 
 
-# ---Setup spindle at speed signals---
+#*******************
+#  VFD MODBUS
+#*******************
 
-#atc addition
-net spindle-running           <= spindle.0.at-speed
-#net  spindle-running 		   <= spindle.0.on
+# --- Modbus driver (userspace) ---
+loadusr -W mb2hal config=hallib/vfd_e500_mb2hal.ini
 
+# --- helper components ---
+# NOTE: or2 / lut5 / not / mux_generic are already loaded by other files
+#       (a module can only be loaded once) - so only unused ones are used here.
+loadrt mux2   names=vfd-dir,vfd-runcmd
+loadrt scale  names=vfd-rpm2freq,vfd-freq2rps,vfd-freq2rpm,vfd-amps
+loadrt limit1 names=vfd-freqlim
+loadrt near   names=vfd-atspeed
+loadrt comp   names=vfd-turning
+loadrt logic  names=vfd-running-or personality=0x202
 
+addf vfd-dir          servo-thread
+addf vfd-runcmd       servo-thread
+addf vfd-rpm2freq     servo-thread
+addf vfd-freqlim      servo-thread
+addf vfd-freq2rps     servo-thread
+addf vfd-freq2rpm     servo-thread
+addf vfd-amps         servo-thread
+addf vfd-atspeed      servo-thread
+addf vfd-turning      servo-thread
+addf vfd-running-or   servo-thread
+
+# --- run command register 0x1001: on ? (reverse ? 2 REV : 1 FWD) : 3 STOP ---
+setp vfd-dir.in0     1
+setp vfd-dir.in1     2
+setp vfd-runcmd.in0  3
+net spindle-ccw      => vfd-dir.sel
+net vfd-dir-cmd      vfd-dir.out     => vfd-runcmd.in1
+net spindle-enable   => vfd-runcmd.sel
+# LinuxCNC 2.9 pin name (on 2.8 it is mb2hal.vfd-cmd.00 without .float)
+net vfd-run-cmd      vfd-runcmd.out  => mb2hal.vfd-cmd.00.float
+
+# --- frequency register 0x1002 (0.1 Hz units) from S word ---
+setp vfd-rpm2freq.gain   [VFD]CMD_GAIN
+setp vfd-freqlim.min     0
+setp vfd-freqlim.max     [VFD]MAX_FREQ
+net spindle-vel-cmd-rpm-abs  => vfd-rpm2freq.in
+net vfd-freq-raw      vfd-rpm2freq.out  => vfd-freqlim.in
+# LinuxCNC 2.9 pin name (on 2.8 it is mb2hal.vfd-freq.00 without .float)
+net vfd-freq-cmd      vfd-freqlim.out   => mb2hal.vfd-freq.00.float vfd-atspeed.in1
+
+# --- feedback: d-00 actual output frequency (0.1 Hz) ---
+setp vfd-freq2rps.gain   [VFD]FB_RPS_GAIN
+setp vfd-freq2rpm.gain   [VFD]FB_RPM_GAIN
+net vfd-freq-actual   mb2hal.vfd-mon.00.float => vfd-freq2rps.in vfd-freq2rpm.in vfd-atspeed.in2 vfd-turning.in1
+net spindle-vel-fb-rps      <= vfd-freq2rps.out
+net spindle-vel-fb-rpm-abs  <= vfd-freq2rpm.out
+
+# --- at-speed: within 2 % or 1.0 Hz of command ---
+setp vfd-atspeed.scale       1.02
+setp vfd-atspeed.difference  10
+net spindle-at-speed   <= vfd-atspeed.out
+
+# --- spindle-running: HIGH while spindle is ON or VFD still outputs > 0.5 Hz
+#     (i.e. also while coasting down after M5). Available for the ATC drawbar
+#     interlock in atc.hal (which currently uses spindle-enable).
+setp vfd-turning.in0         5
+setp vfd-turning.hyst        2
+net vfd-is-turning    vfd-turning.out   => vfd-running-or.in-00
+net spindle-enable    => vfd-running-or.in-01
+net spindle-running   <= vfd-running-or.or
+
+# --- VFD values; connected to QtDragon HD in postgui_call_list.hal ---
+setp vfd-amps.gain 0.1
+net vfd-amps-raw      mb2hal.vfd-mon.01.float => vfd-amps.in
+net vfd-amps          <= vfd-amps.out                # output current [A]
+net vfd-volts         <= mb2hal.vfd-mon.02.float     # output voltage [V]
+net vfd-status        <= mb2hal.vfd-stat.00.int      # 3 = stopped, 0x20 = fault
+net vfd-fault-code    <= mb2hal.vfd-stat.01.int      # Fu.xx
+net vfd-modbus-errors <= mb2hal.vfd-cmd.num_errors
