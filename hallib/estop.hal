@@ -78,7 +78,8 @@ net estop-signal lut5.estop.out => iocontrol.0.emc-enable-in
 # SETUP VARIOUS MESSAGES
 #******************************
 #loadrt message names=m_vfdcom,m_vfderror,m_estopext,m_drivealm,m_lowpressure messages="Vfd-Communication lost, VfD-Error (check vfd-display), External E-Stop triggered, Drive Alarm, Air pressure low"
-loadrt message names=m_estopext, m_drivealm messages=" External E-Stop triggered, Drive Alarm"
+# loaded in hallib/messages.hal:
+#loadrt message names=m_estopext, m_drivealm messages=" External E-Stop triggered, Drive Alarm"
 
 
 #addf m_vfdcom servo-thread

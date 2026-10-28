@@ -1,0 +1,11 @@
+# All GUI messages (HAL 'message' component) are loaded HERE ONLY.
+# A HAL module can only be loaded once - other files just addf/net the instances.
+# Names and messages: comma separated, NO spaces after commas, no commas inside a message.
+#
+#   m_notool      -> spindle_setup.hal (spindle commanded without clamped tool)
+#   m_estopext    -> estop.hal
+#   m_drivealm    -> estop.hal
+#   m_vfderror    -> spare: VFD fault (Modbus status 0x20)
+#   m_vfdcom      -> spare: VFD Modbus communication lost
+#   m_lowpressure -> spare: air pressure low
+loadrt message names=m_notool,m_estopext,m_drivealm,m_vfderror,m_vfdcom,m_lowpressure messages="Spindle blocked: no tool clamped or drawbar open,External E-Stop triggered,Drive Alarm,VFD error (check VFD display),VFD Modbus communication lost,Air pressure low"

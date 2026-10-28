@@ -55,6 +55,14 @@ G49
 G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT>-2.0]
 (print, Moved safe Z)
 
+; Stop spindle and wait until the VFD reports standstill (< 0.5 Hz) before any tool handling
+M5
+M66 P#<_ini[ATC_PINS]SENSOR_SPINDLE_STOPPED> L3 Q#<_ini[ATC]SPINDLE_STOP_TIMEOUT>
+O105 if [#5399 LT 0]
+    (abort, Spindle did not stop in time - tool change aborted)
+O105 endif
+(print, Spindle stopped)
+
 ; First, get rid of the old tool
 ; check if the spindle is not empty by checking if tool_in_spindle GT 0
 O150 if [#<oldtool> NE #<newtool>]
@@ -70,6 +78,11 @@ O200 if [#<oldtool> GT 0]
              (print, Putting tool away into rack in pocket #<oldpocket>)
             ; We are already at safe Z; now rapid to pre position for a specific pocket
             G53 G0 X[#<_ini[ATC]FIRSTPOCKET_X> + [#<oldpocket> -1] * #<_ini[ATC]DELTA_X> - #<_ini[ATC]SAFE_X>] Y[#<_ini[ATC]FIRSTPOCKET_Y> + [#<oldpocket> -1] * #<_ini[ATC]DELTA_Y> - #<_ini[ATC]SAFE_Y>] 
+            ; wait for real spindle standstill BEFORE entering the rack fork
+            M66 P#<_ini[ATC_PINS]SENSOR_SPINDLE_STOPPED> L3 Q#<_ini[ATC]SPINDLE_STOP_TIMEOUT>
+            O108 if [#5399 LT 0]
+                (abort, Spindle did not stop in time - tool change aborted)
+            O108 endif
             ; Now put the tool down gently 
             ; first move X
             G53 G01 X[#<_ini[ATC]FIRSTPOCKET_X> + [#<oldpocket> -1] * #<_ini[ATC]DELTA_X>] F#<_ini[ATC]DROPSPEEDXY>
@@ -78,13 +91,13 @@ O200 if [#<oldtool> GT 0]
             ; third move Z partially rapid
             G53 G01 Z[#<_ini[ATC]OFF_HEIGHT_Z>]  F#<_ini[ATC]DROPSPEEDRAPID>
             ; Wait briefly before opening spindle to ensure it has stopped, additionally spindle on = false is checke in hal
-            G4  P #<_ini[ATC]WAITSPINDLE> 
+            ; removed - standstill checked by M66: G4  P #<_ini[ATC]WAITSPINDLE> 
             G53 G01 Z[#<_ini[ATC]FIRSTPOCKET_Z>]   F#<_ini[ATC]DROPSPEEDZ>
             ; Open ATC Spindle
             M64 P #<_ini[ATC_PINS]ATC_OPEN>
-            G4 P0.4
+            ; removed - sensor wait below: G4 P0.4
             ;Check if Release was ok by watching pin to turn high (L3)
-            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
+            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             O900 IF [#5399 NE 1]
                  (DEBUG, Timeout! Drawbar did not unlock - Aborting!)
                  M2
@@ -167,15 +180,15 @@ O300 if [#<newtool> GT 0]
             ; third move Z partially rapid
             G53 G01 Z[#<_ini[ATC]OFF_HEIGHT_Z>]  F#<_ini[ATC]DROPSPEEDRAPID>
             ; Wait briefly before opening spindle to ensure it has stopped, additionally spindle-running = false is check is done in hal
-            G4  P #<_ini[ATC]WAITSPINDLE>            (print, above  pocket #<newpocket>, opening drawbar)
+            ; removed - standstill checked by M66: G4  P #<_ini[ATC]WAITSPINDLE>            (print, above  pocket #<newpocket>, opening drawbar)
             ; Open spindle
             M64 P #<_ini[ATC_PINS]ATC_OPEN>
             (print, before pause)
-            G4 P1
+            ; removed - sensor wait below: G4 P1
             (print, after pause)
              ; Check if the drawbar is open HIGH L3 within permissible time
             (print, opened ATC, picking)
-            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
+            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             (print, check drawbar AFTER m64 SHOULD BE 1 value: #5399)
             O930 IF [#5399 NE 1]
                 (DEBUG, Error! The drawbar did not open - Aborting!)
@@ -189,16 +202,16 @@ O300 if [#<newtool> GT 0]
             ; a short wait seems to be required for the motions pins to update
             M64 P #<_ini[ATC_PINS]ATC_CLOSE>
             (print, close drawbar -open air-return)
-            G4 P0.3
+            ; removed - sensor wait below: G4 P0.3
             ; Check if the drawbar is locked (LOW) 
-            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
+            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L4 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             (print, check drawbar close AFTER m65 should be 0; value: #5399)
             O940 IF [#5399 NE 0]
                 (print, Error! The drawbar did not close - Aborting!)
             O940     return [999]
             O940 ENDIF  
             ; check 2: Is there a tool in the spindle Check immediately
-            M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
+            M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             (print, check tool in spindle AFTER M65 should be 1; VALUE #5399)
             O950 IF [#5399 NE 1]
                 (print, Error! No tool found in spindle - Aborting!)

@@ -69,12 +69,12 @@ loadusr -W mb2hal config=hallib/vfd_e500_mb2hal.ini
 # --- helper components ---
 # NOTE: or2 / lut5 / not / mux_generic are already loaded by other files
 #       (a module can only be loaded once) - so only unused ones are used here.
-loadrt mux2   names=vfd-dir,vfd-runcmd
+loadrt mux2   names=vfd-dir,vfd-runcmd,vfd-pausecmd,vfd-toolcmd
 loadrt scale  names=vfd-rpm2freq,vfd-freq2rps,vfd-freq2rpm,vfd-amps
 loadrt limit1 names=vfd-freqlim
 loadrt near   names=vfd-atspeed
-loadrt comp   names=vfd-turning
-loadrt logic  names=vfd-running-or personality=0x202
+loadrt comp   names=vfd-turning,vfd-faultcmp,vfd-errpulse
+loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or personality=0x1202,0x802,0x102,0x802,0x1202,0x102,0x802,0x102,0x203
 
 addf vfd-dir          servo-thread
 addf vfd-runcmd       servo-thread
@@ -86,6 +86,18 @@ addf vfd-amps         servo-thread
 addf vfd-atspeed      servo-thread
 addf vfd-turning      servo-thread
 addf vfd-running-or   servo-thread
+addf vfd-abort-or       servo-thread
+addf vfd-faultcmp       servo-thread
+addf vfd-errpulse       servo-thread
+addf vfd-commok         servo-thread
+addf vfd-atspeed-ok     servo-thread
+addf vfd-toolcmd        servo-thread
+addf vfd-notool         servo-thread
+addf vfd-toolok         servo-thread
+addf vfd-notool-msg     servo-thread
+addf vfd-pausecmd       servo-thread
+addf vfd-notatspeed     servo-thread
+addf vfd-feedinh        servo-thread
 
 # --- run command register 0x1001: on ? (reverse ? 2 REV : 1 FWD) : 3 STOP ---
 setp vfd-dir.in0     1
@@ -95,7 +107,11 @@ net spindle-ccw      => vfd-dir.sel
 net vfd-dir-cmd      vfd-dir.out     => vfd-runcmd.in1
 net spindle-enable   => vfd-runcmd.sel
 # LinuxCNC 2.9 pin name (on 2.8 it is mb2hal.vfd-cmd.00 without .float)
-net vfd-run-cmd      vfd-runcmd.out  => mb2hal.vfd-cmd.00.float
+net vfd-run-cmd      vfd-runcmd.out  => vfd-pausecmd.in0
+setp vfd-pausecmd.in1  3      # 0x0003 Stop while program is paused
+net vfd-run-cmd-out  vfd-pausecmd.out  => vfd-toolcmd.in1
+setp vfd-toolcmd.in0  3      # 0x0003 STOP when no tool clamped / drawbar open
+net vfd-cmd-final  vfd-toolcmd.out => mb2hal.vfd-cmd.00.float
 
 # --- frequency register 0x1002 (0.1 Hz units) from S word ---
 setp vfd-rpm2freq.gain   [VFD]CMD_GAIN
@@ -114,18 +130,22 @@ net spindle-vel-fb-rps      <= vfd-freq2rps.out
 net spindle-vel-fb-rpm-abs  <= vfd-freq2rpm.out
 
 # --- at-speed: within 2 % or 1.0 Hz of command ---
-setp vfd-atspeed.scale       1.02
+setp vfd-atspeed.scale       [VFD]AT_SPEED_SCALE      # start threshold, see INI
 setp vfd-atspeed.difference  10
-net spindle-at-speed   <= vfd-atspeed.out
+net vfd-near-speed     vfd-atspeed.out     => vfd-atspeed-ok.in-00
+net vfd-comm-ok        vfd-commok.nand     => vfd-atspeed-ok.in-01
+net spindle-at-speed   <= vfd-atspeed-ok.and   # at speed AND Modbus OK
 
 # --- spindle-running: HIGH while spindle is ON or VFD still outputs > 0.5 Hz
 #     (i.e. also while coasting down after M5). Available for the ATC drawbar
 #     interlock in atc.hal (which currently uses spindle-enable).
-setp vfd-turning.in0         5
+setp vfd-turning.in0         [VFD]STANDSTILL_FREQ     # standstill, see INI
 setp vfd-turning.hyst        2
 net vfd-is-turning    vfd-turning.out   => vfd-running-or.in-00
 net spindle-enable    => vfd-running-or.in-01
 net spindle-running   <= vfd-running-or.or
+# spindle-stopped = NOT(on OR turning) -> motion.digital-in-02 for M66 wait in rack_change.ngc
+net spindle-stopped   <= vfd-running-or.nor => motion.digital-in-02
 
 # --- VFD values; connected to QtDragon HD in postgui_call_list.hal ---
 setp vfd-amps.gain 0.1
@@ -135,3 +155,87 @@ net vfd-volts         <= mb2hal.vfd-mon.02.float     # output voltage [V]
 net vfd-status        <= mb2hal.vfd-stat.00.int      # 3 = stopped, 0x20 = fault
 net vfd-fault-code    <= mb2hal.vfd-stat.01.int      # Fu.xx
 net vfd-modbus-errors <= mb2hal.vfd-cmd.num_errors
+
+
+#*******************
+#  STOP SPINDLE WHILE PROGRAM IS PAUSED
+#*******************
+# pdnt.program.is-paused is driven by halui.program.is-paused in whb04b.hal
+# (a pin can only be in one signal, so that signal is reused here).
+# - spindle.0.inhibit: LinuxCNC commands speed 0 while paused
+# - vfd-pausecmd:      sends STOP (3) to the VFD while paused
+net pdnt.program.is-paused  => spindle.0.inhibit vfd-pausecmd.sel
+
+# On resume (and after any speed change) hold ALL motion until the spindle is
+# back at speed:  feed-inhibit = spindle ON  AND  NOT at-speed
+net spindle-at-speed      => vfd-notatspeed.in-00 vfd-notatspeed.in-01
+net vfd-not-at-speed      vfd-notatspeed.nand => vfd-feedinh.in-01
+net spindle-enable        => vfd-feedinh.in-00
+net vfd-feed-inhibit      vfd-feedinh.and     => motion.feed-inhibit
+
+
+#*******************
+#  NO TOOL -> NO SPINDLE
+#*******************
+# spindle_tool    (io.hal, input-09): HIGH = tool clamped
+# spindle_drawbar (io.hal, input-10): HIGH = drawbar open
+# tool-ok = tool clamped AND drawbar closed. If not ok the VFD always gets STOP.
+# LinuxCNC then never reaches at-speed, so a program waits instead of cutting.
+net spindle_tool          => vfd-notool.in-00 vfd-notool.in-01
+net vfd-no-tool           vfd-notool.nand => vfd-toolok.in-00
+net spindle_drawbar       => vfd-toolok.in-01
+net spindle-tool-ok       vfd-toolok.nor  => vfd-toolcmd.sel
+net spindle-tool-not-ok   vfd-toolok.or   => vfd-notool-msg.in-01
+
+# message in the GUI when the spindle is commanded on without a tool
+# m_notool is loaded in hallib/messages.hal
+addf m_notool servo-thread
+net spindle-enable        => vfd-notool-msg.in-00
+net spindle-notool-alarm  vfd-notool-msg.and => m_notool.trigger
+
+
+#*******************
+#  VFD ALARMS
+#*******************
+# --- VFD fault: status register 0x2000 = 0x20 (32) -> message ---
+setp vfd-faultcmp.in0   32
+setp vfd-faultcmp.hyst  0.5
+net vfd-status-f        mb2hal.vfd-stat.00.float => vfd-faultcmp.in1
+net vfd-fault           vfd-faultcmp.equal       => m_vfderror.trigger
+addf m_vfderror servo-thread
+
+# --- Modbus communication lost ---
+# every new read error -> short pulse -> retriggerable 0.8 s oneshot;
+# errors arrive every ~0.5 s while the link is down, so the oneshot stays high.
+# If it stays high > 1.5 s -> comm lost (a single glitch does not trigger).
+loadrt conv_u32_float names=vfd-errcnt
+loadrt ddt            names=vfd-errrate
+loadrt oneshot        names=vfd-erros
+loadrt timedelay      names=vfd-commlost-dly
+addf vfd-errcnt        servo-thread
+addf vfd-errrate       servo-thread
+addf vfd-erros         servo-thread
+addf vfd-commlost-dly  servo-thread
+setp vfd-errpulse.in0  0.5
+setp vfd-erros.width   0.8
+setp vfd-erros.retriggerable TRUE
+setp vfd-commlost-dly.on-delay   1.5
+setp vfd-commlost-dly.off-delay  0.0
+net vfd-err-count       mb2hal.vfd-mon.num_errors => vfd-errcnt.in
+net vfd-err-count-f     vfd-errcnt.out    => vfd-errrate.in
+net vfd-err-rate        vfd-errrate.out   => vfd-errpulse.in1
+net vfd-err-pulse       vfd-errpulse.out  => vfd-erros.in
+net vfd-err-active      vfd-erros.out     => vfd-commlost-dly.in
+net vfd-commlost        vfd-commlost-dly.out => m_vfdcom.trigger vfd-commok.in-00 vfd-commok.in-01
+addf m_vfdcom servo-thread
+
+
+#*******************
+#  ABORT WHEN THE SPINDLE CANNOT RUN
+#*******************
+# Like pressing ESC: stops the program / MDI and LinuxCNC switches the spindle
+# OFF, so the GUI never shows a running spindle that is not really turning.
+net spindle-notool-alarm  => vfd-abort-or.in-00
+net vfd-fault             => vfd-abort-or.in-01
+net vfd-commlost          => vfd-abort-or.in-02
+net spindle-abort         vfd-abort-or.or => halui.abort
