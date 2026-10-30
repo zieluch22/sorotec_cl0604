@@ -165,6 +165,27 @@ def _home_pocket(toolno):
         print("change_prolog: tool table lookup failed: %s" % e)
     return -1
 
+TOUCH_LOG = "tool_touch.log"   # written by rack_change.ngc (LOGAPPEND), in the config dir
+
+def _last_touch(toolno):
+    """Machine Z (G53) of this tool's last toolsetter touch, or None.
+    Lines in TOUCH_LOG look like 'T5.000000 -98.123400'; the last one for the tool wins."""
+    if toolno <= 0:
+        return None
+    try:
+        import os
+        path = os.path.join(os.path.dirname(os.environ["INI_FILE_NAME"]), TOUCH_LOG)
+        z = None
+        with open(path) as f:
+            for line in f:
+                w = line.split()
+                # LOG writes numbers as 5.000000, so compare numerically
+                if len(w) == 2 and w[0][:1] == "T" and int(float(w[0][1:])) == toolno:
+                    z = float(w[1])
+        return z
+    except Exception:
+        return None
+
 def change_prolog(self, **words):
     try:
         # this is relevant only when using iocontrol-v2.
@@ -187,6 +208,10 @@ def change_prolog(self, **words):
         # rack pockets (P column) of old and new tool, used by rack_change.ngc
         self.params["old_home"] = _home_pocket(int(self.current_tool))
         self.params["new_home"] = _home_pocket(int(self.selected_tool))
+        # last toolsetter touch of the new tool in machine Z (fast approach)
+        z = _last_touch(int(self.selected_tool))
+        self.params["new_touch_ok"] = 0 if z is None else 1
+        self.params["new_touch"] = 0.0 if z is None else z
         return INTERP_OK
     except Exception as e:
         self.set_errormsg("M6/change_prolog: %s" % (e))

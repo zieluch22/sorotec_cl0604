@@ -113,8 +113,22 @@ o150 if [#<oldtool> NE #<newtool>]
             o430 return [-2]
         o430 endif
 
+        ; fast approach: rack tool with a recorded touch -> G0 to FAST_APPROACH mm
+        ; above its last touch (machine Z), then search only 2x that distance.
+        ; Otherwise (manual tool, first measurement) slow search from TOOLSENSOR Z.
+        #<search> = #<_ini[TOOLSENSOR]MAXPROBE>
+        #<fast> = #<_ini[TOOLSENSOR]FAST_APPROACH>
+        o415 if [[#<fast> GT 0] AND [#<new_touch_ok> EQ 1] AND [#<newpocket> GE 1] AND [#<newpocket> LE #<_ini[ATC]NUMPOCKETS>]]
+            #<fast_z> = [#<new_touch> + #<fast>]
+            o416 if [#<fast_z> LT #<_ini[TOOLSENSOR]Z>]
+                (print, fast approach to G53 Z#<fast_z>, last touch #<new_touch>)
+                G53 G0 Z#<fast_z>
+                #<search> = [-2 * #<fast>]
+            o416 endif
+        o415 endif
+
         M64 P#<_ini[OTHER_PINS]TS>
-        o<_psng_probe_tool> call [#<_ini[TOOLSENSOR]MAXPROBE>]
+        o<_psng_probe_tool> call [#<search>]
         o440 if [#<_value> EQ -1]
             M65 P#<_ini[OTHER_PINS]TS>
             M72
@@ -135,6 +149,12 @@ o150 if [#<oldtool> NE #<newtool>]
         #<touch_result> = #5063
         (print, touch=#<touch_result> setter=#<_hal[qtversaprobe.probeheight]> block=#<_hal[qtversaprobe.blockheight]>)
         G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
+        ; remember this touch in machine Z for the next fast approach
+        ; (work offset Z of the active G54..G59.3 + G92 Z if active; G49 is in effect)
+        #<touch_mz> = [#<touch_result> + #[5203 + 20 * #5220] + #5213 * #5210]
+        (LOGAPPEND,tool_touch.log)
+        (LOG,T#<newtool> #<touch_mz>)
+        (LOGCLOSE)
         G43
     o400 else
         G43 H#<newtool>
