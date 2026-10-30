@@ -99,17 +99,16 @@ O200 if [#<oldtool> GT 0]
             ;Check if Release was ok by watching pin to turn high (L3)
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             O900 IF [#5399 NE 1]
-                 (DEBUG, Timeout! Drawbar did not unlock - Aborting!)
-                 M2
-                 m71
+                 M65 P #<_ini[ATC_PINS]ATC_OPEN>
+                 (abort, Drawbar did not unlock - tool change aborted)
             O900 ENDIF   
             ; Move back to safe Z above the oldpocket
             G53 G01 Z #<_ini[ATC]OFF_HEIGHT_Z> F#<_ini[ATC]DROPSPEEDZ> 
             ; After this move there should be no tool left; check pin for going LOW L4 
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             O910 IF [#5399 EQ 1]
-                (DEBUG, Timeout! Tool still in spindle - Aborting!)
-            O910     return [999]
+                M65 P #<_ini[ATC_PINS]ATC_OPEN>
+                (abort, Tool still in spindle after drop-off - tool change aborted)
             O910 ENDIF   
             ; Close spindle
             M65 P #<_ini[ATC_PINS]ATC_OPEN>
@@ -143,8 +142,7 @@ O200 if [#<oldtool> GT 0]
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             ;4 Q1
             O920 IF [#5399 EQ 1]
-                (DEBUG, Error! Tool still in spindle - Aborting!)
-            O920     return [999]
+                (abort, Tool still in spindle after manual removal - tool change aborted)
             O920 ENDIF
             (print, Finished  manual drop off) 
         o220 endif
@@ -191,8 +189,8 @@ O300 if [#<newtool> GT 0]
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             (print, check drawbar AFTER m64 SHOULD BE 1 value: #5399)
             O930 IF [#5399 NE 1]
-                (DEBUG, Error! The drawbar did not open - Aborting!)
-            O930     return [999]
+                M65 P #<_ini[ATC_PINS]ATC_OPEN>
+                (abort, Drawbar did not open - tool change aborted)
             O930 ENDIF  
             ; Carefully drop Z onto pickup height
             G53 G01 Z #<_ini[ATC]FIRSTPOCKET_Z> F#<_ini[ATC]DROPSPEEDZ>
@@ -207,15 +205,13 @@ O300 if [#<newtool> GT 0]
             M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L4 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             (print, check drawbar close AFTER m65 should be 0; value: #5399)
             O940 IF [#5399 NE 0]
-                (print, Error! The drawbar did not close - Aborting!)
-            O940     return [999]
+                (abort, Drawbar did not close - tool change aborted)
             O940 ENDIF  
             ; check 2: Is there a tool in the spindle Check immediately
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
             (print, check tool in spindle AFTER M65 should be 1; VALUE #5399)
             O950 IF [#5399 NE 1]
-                (print, Error! No tool found in spindle - Aborting!)
-            O950     return [999]
+                (abort, No tool clamped after pick-up - tool change aborted)
             O950 ENDIF
             (print, Tool locked, drawbar closed, ready to move)
             ; Move slowly up to offheight_Z
@@ -254,26 +250,22 @@ O300 if [#<newtool> GT 0]
             M6
             ;G43 T#<newtool>
             ; Check  1: the drawbar is locked LOW L4 immediately 
-            (print, check if SENSOR_DRAWBAR open)
-            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
-            (print, SENSOR_DRAWBAR open)
             M64  P #<_ini[ATC_PINS]ATC_CLOSE> 
             (print, turn on drawbar close for 3s)
             G4 P3
             M65 P #<_ini[ATC_PINS]ATC_CLOSE> 
             (print, drawbar close turn off)
-            O970 IF [#5399 EQ -1]
-                (DEBUG, Error! The drawbar is still open - Aborting!)
-            M72
-            O970     return [999]
-            
+            ; drawbar sensor must be LOW (closed) now
+            M66 P #<_ini[ATC_PINS]SENSOR_DRAWBAR> L4 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
+            O970 IF [#5399 NE 0]
+                M72
+                (abort, Drawbar is still open after manual tool load - press the drawbar button to close it)
             O970 ENDIF  
             ; check 2: there is a tool in the spindle HIGH L3 immediately 
             M66 P #<_ini[ATC_PINS]SENSOR_TOOL> L0
             O980 IF [#5399 NE 1]
-                (DEBUG, Error! No tool in spindle - Aborting!)
                 M72
-            O980     return [999]
+                (abort, No tool clamped after manual tool load - tool change aborted)
             O980 ENDIF  
             (print, A tool is manually loaded and we can continue with measurement)
         O320 ENDIF

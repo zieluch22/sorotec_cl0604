@@ -1,8 +1,10 @@
-%
+; Called by LinuxCNC on every abort (ESC, E-stop, program error)
+; via [RS274NGC]ON_ABORT_COMMAND in the INI.
+;
+; SAFETY: release the automatic drawbar-open request (M64 P1 from rack_change.ngc).
+; M64 outputs are NOT reset by an abort. If P1 stays high, the drawbar opens again
+; by itself after every later M5 / spindle stop.
 o<on_abort> sub
-
-G90
-G40
-G49
+M65 P#<_ini[ATC_PINS]ATC_OPEN>
 o<on_abort> endsub
 M2

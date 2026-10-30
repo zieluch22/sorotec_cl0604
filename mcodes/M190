@@ -1,0 +1,4 @@
+#!/bin/bash
+# M190 - reconnect the VFD Modbus link. Run from MDI / the "VFD Reconnect" button.
+# All logic is in hallib/vfd_reconnect.sh (shared with the automatic watchdog).
+exec bash "$(dirname "$0")/../hallib/vfd_reconnect.sh" 10 button

@@ -69,12 +69,20 @@ loadusr -W mb2hal config=hallib/vfd_e500_mb2hal.ini
 # --- helper components ---
 # NOTE: or2 / lut5 / not / mux_generic are already loaded by other files
 #       (a module can only be loaded once) - so only unused ones are used here.
-loadrt mux2   names=vfd-dir,vfd-runcmd,vfd-pausecmd,vfd-toolcmd
+loadrt mux2   names=vfd-dir,vfd-runcmd,vfd-pausecmd,vfd-toolcmd,vfd-fbrps-mux,vfd-fbrpm-mux,vfd-amps-mux,vfd-volts-mux
 loadrt scale  names=vfd-rpm2freq,vfd-freq2rps,vfd-freq2rpm,vfd-amps
 loadrt limit1 names=vfd-freqlim
 loadrt near   names=vfd-atspeed
 loadrt comp   names=vfd-turning,vfd-faultcmp,vfd-errpulse
-loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or personality=0x1202,0x802,0x102,0x802,0x1202,0x102,0x802,0x102,0x203
+# vfd-toolok is 3 inputs (tool missing / drawbar sensor open / drawbar commanded open)
+# vfd-atcreset is used by atc.hal (logic can only be loaded once)
+loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202
+# timedelay can only be loaded once - instances for spindle_setup.hal AND atc.hal:
+#   vfd-commlost-dly  Modbus comm-lost detection
+#   vfd-toolok-dly    tool clamped + drawbar closed must be stable before RUN is allowed
+#   vfd-stop-hold     spindle must be stopped for a while before the drawbar may open
+#   atc-btn-deb       debounce of the manual drawbar push button (atc.hal)
+loadrt timedelay names=vfd-commlost-dly,vfd-toolok-dly,vfd-stop-hold,atc-btn-deb
 
 addf vfd-dir          servo-thread
 addf vfd-runcmd       servo-thread
@@ -126,14 +134,28 @@ net vfd-freq-cmd      vfd-freqlim.out   => mb2hal.vfd-freq.00.float vfd-atspeed.
 setp vfd-freq2rps.gain   [VFD]FB_RPS_GAIN
 setp vfd-freq2rpm.gain   [VFD]FB_RPM_GAIN
 net vfd-freq-actual   mb2hal.vfd-mon.00.float => vfd-freq2rps.in vfd-freq2rpm.in vfd-atspeed.in2 vfd-turning.in1
-net spindle-vel-fb-rps      <= vfd-freq2rps.out
-net spindle-vel-fb-rpm-abs  <= vfd-freq2rpm.out
+# Display/feedback values go through a mux: when Modbus comm is lost they show 0
+# instead of the last (stale) reading. The drawbar interlock (vfd-turning) still
+# uses the RAW vfd-freq-actual, so a stale "turning" value keeps the drawbar locked.
+addf vfd-fbrps-mux servo-thread
+addf vfd-fbrpm-mux servo-thread
+addf vfd-amps-mux  servo-thread
+addf vfd-volts-mux servo-thread
+setp vfd-fbrps-mux.in0 0
+setp vfd-fbrpm-mux.in0 0
+setp vfd-amps-mux.in0  0
+setp vfd-volts-mux.in0 0
+net vfd-fb-rps-raw          vfd-freq2rps.out   => vfd-fbrps-mux.in1
+net vfd-fb-rpm-raw          vfd-freq2rpm.out   => vfd-fbrpm-mux.in1
+net spindle-vel-fb-rps      <= vfd-fbrps-mux.out
+net spindle-vel-fb-rpm-abs  <= vfd-fbrpm-mux.out
 
 # --- at-speed: within 2 % or 1.0 Hz of command ---
 setp vfd-atspeed.scale       [VFD]AT_SPEED_SCALE      # start threshold, see INI
 setp vfd-atspeed.difference  10
 net vfd-near-speed     vfd-atspeed.out     => vfd-atspeed-ok.in-00
 net vfd-comm-ok        vfd-commok.nand     => vfd-atspeed-ok.in-01
+net vfd-comm-ok        => vfd-fbrps-mux.sel vfd-fbrpm-mux.sel vfd-amps-mux.sel vfd-volts-mux.sel
 net spindle-at-speed   <= vfd-atspeed-ok.and   # at speed AND Modbus OK
 
 # --- spindle-running: HIGH while spindle is ON or VFD still outputs > 0.5 Hz
@@ -144,14 +166,24 @@ setp vfd-turning.hyst        2
 net vfd-is-turning    vfd-turning.out   => vfd-running-or.in-00
 net spindle-enable    => vfd-running-or.in-01
 net spindle-running   <= vfd-running-or.or
+# spindle-running-hold: stays HIGH until the spindle has been stopped (not ON and
+# VFD < STANDSTILL_FREQ) for [ATC]SPINDLE_STOP_HOLD seconds. Used by atc.hal
+# so the drawbar can never open on a spindle that is still turning / just stopped.
+addf vfd-stop-hold servo-thread
+setp vfd-stop-hold.on-delay   0
+setp vfd-stop-hold.off-delay  [ATC]SPINDLE_STOP_HOLD
+net spindle-running        => vfd-stop-hold.in
+net spindle-running-hold   <= vfd-stop-hold.out
 # spindle-stopped = NOT(on OR turning) -> motion.digital-in-02 for M66 wait in rack_change.ngc
 net spindle-stopped   <= vfd-running-or.nor => motion.digital-in-02
 
 # --- VFD values; connected to QtDragon HD in postgui_call_list.hal ---
 setp vfd-amps.gain 0.1
 net vfd-amps-raw      mb2hal.vfd-mon.01.float => vfd-amps.in
-net vfd-amps          <= vfd-amps.out                # output current [A]
-net vfd-volts         <= mb2hal.vfd-mon.02.float     # output voltage [V]
+net vfd-amps-raw-a    vfd-amps.out  => vfd-amps-mux.in1
+net vfd-amps          <= vfd-amps-mux.out            # output current [A] (0 when comm lost)
+net vfd-volts-raw     mb2hal.vfd-mon.02.float => vfd-volts-mux.in1
+net vfd-volts         <= vfd-volts-mux.out           # output voltage [V] (0 when comm lost)
 net vfd-status        <= mb2hal.vfd-stat.00.int      # 3 = stopped, 0x20 = fault
 net vfd-fault-code    <= mb2hal.vfd-stat.01.int      # Fu.xx
 net vfd-modbus-errors <= mb2hal.vfd-cmd.num_errors
@@ -179,12 +211,24 @@ net vfd-feed-inhibit      vfd-feedinh.and     => motion.feed-inhibit
 #*******************
 # spindle_tool    (io.hal, input-09): HIGH = tool clamped
 # spindle_drawbar (io.hal, input-10): HIGH = drawbar open
-# tool-ok = tool clamped AND drawbar closed. If not ok the VFD always gets STOP.
-# LinuxCNC then never reaches at-speed, so a program waits instead of cutting.
+# drawbar_open    (atc.hal): HIGH = drawbar valve commanded open
+# tool-ok = tool clamped AND drawbar sensor closed AND drawbar NOT commanded open.
+# Using the valve command as well covers a broken/stuck drawbar sensor.
+# tool-ok must be stable for [ATC]DRAWBAR_SETTLE s before the VFD may get RUN
+# (drawbar fully pulled in, no sensor bounce while it closes). Loss of tool-ok
+# blocks the VFD immediately (off-delay 0).
+# If not ok the VFD always gets STOP. LinuxCNC then never reaches at-speed,
+# so a program waits instead of cutting.
 net spindle_tool          => vfd-notool.in-00 vfd-notool.in-01
 net vfd-no-tool           vfd-notool.nand => vfd-toolok.in-00
 net spindle_drawbar       => vfd-toolok.in-01
-net spindle-tool-ok       vfd-toolok.nor  => vfd-toolcmd.sel
+net drawbar_open          => vfd-toolok.in-02
+addf vfd-toolok-dly servo-thread
+setp vfd-toolok-dly.on-delay   [ATC]DRAWBAR_SETTLE
+setp vfd-toolok-dly.off-delay  0
+net spindle-tool-ok         vfd-toolok.nor      => vfd-toolok-dly.in
+net spindle-tool-ok-stable  vfd-toolok-dly.out  => vfd-toolcmd.sel
+# alarm + abort use the instantaneous (not delayed) state
 net spindle-tool-not-ok   vfd-toolok.or   => vfd-notool-msg.in-01
 
 # message in the GUI when the spindle is commanded on without a tool
@@ -211,7 +255,7 @@ addf m_vfderror servo-thread
 loadrt conv_u32_float names=vfd-errcnt
 loadrt ddt            names=vfd-errrate
 loadrt oneshot        names=vfd-erros
-loadrt timedelay      names=vfd-commlost-dly
+# (timedelay vfd-commlost-dly is loaded at the top of this file)
 addf vfd-errcnt        servo-thread
 addf vfd-errrate       servo-thread
 addf vfd-erros         servo-thread
@@ -226,7 +270,14 @@ net vfd-err-count-f     vfd-errcnt.out    => vfd-errrate.in
 net vfd-err-rate        vfd-errrate.out   => vfd-errpulse.in1
 net vfd-err-pulse       vfd-errpulse.out  => vfd-erros.in
 net vfd-err-active      vfd-erros.out     => vfd-commlost-dly.in
-net vfd-commlost        vfd-commlost-dly.out => m_vfdcom.trigger vfd-commok.in-00 vfd-commok.in-01
+# vfd-driver-down: set to 1 by mcodes/M190 while mb2hal is stopped/restarting
+# and stays 1 if the restart fails. Without it a MISSING driver looks like a
+# healthy link (no new errors -> comm-lost clears by itself).
+addf vfd-commlost-or servo-thread
+net vfd-commlost-raw    vfd-commlost-dly.out => vfd-commlost-or.in-00
+net vfd-driver-down     => vfd-commlost-or.in-01
+sets vfd-driver-down    0
+net vfd-commlost        vfd-commlost-or.or => m_vfdcom.trigger vfd-commok.in-00 vfd-commok.in-01
 addf m_vfdcom servo-thread
 
 
@@ -235,7 +286,25 @@ addf m_vfdcom servo-thread
 #*******************
 # Like pressing ESC: stops the program / MDI and LinuxCNC switches the spindle
 # OFF, so the GUI never shows a running spindle that is not really turning.
+# Abort = spindle ON while it cannot run. Using "ON AND problem" (not just the
+# problem edge) also catches M3 issued while the VFD is ALREADY in fault or
+# comm is ALREADY lost - otherwise the program waits for at-speed forever and
+# the GUI hangs in AUTO showing a "running" spindle.
+addf vfd-norun-or  servo-thread
+addf vfd-norun-and servo-thread
+net vfd-fault             => vfd-norun-or.in-00
+net vfd-commlost          => vfd-norun-or.in-01
+net vfd-cannot-run        vfd-norun-or.or => vfd-norun-and.in-01
+net spindle-enable        => vfd-norun-and.in-00
+net spindle-norun-alarm   vfd-norun-and.and => vfd-abort-or.in-01
 net spindle-notool-alarm  => vfd-abort-or.in-00
-net vfd-fault             => vfd-abort-or.in-01
-net vfd-commlost          => vfd-abort-or.in-02
 net spindle-abort         vfd-abort-or.or => halui.abort
+
+
+#*******************
+#  AUTOMATIC MODBUS RECONNECT
+#*******************
+# Background watchdog: on comm loss (spindle OFF) retries the reconnect after
+# 2 s, 3 s, 5 s, then leaves it to the "VFD Reconnect" button (M190).
+# Started via bash so it does not need the executable flag.
+loadusr bash hallib/vfd_watchdog.sh

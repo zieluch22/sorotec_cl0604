@@ -1,0 +1,14 @@
+# Re-load mb2hal and re-connect its pins. Called by mcodes/M190 AFTER the old
+# mb2hal has been fully unloaded. Must mirror the mb2hal nets in spindle_setup.hal.
+loadusr -W mb2hal config=hallib/vfd_e500_mb2hal.ini
+
+net vfd-cmd-final      => mb2hal.vfd-cmd.00.float
+net vfd-freq-cmd       => mb2hal.vfd-freq.00.float
+net vfd-freq-actual    <= mb2hal.vfd-mon.00.float
+net vfd-amps-raw       <= mb2hal.vfd-mon.01.float
+net vfd-volts-raw      <= mb2hal.vfd-mon.02.float
+net vfd-status         <= mb2hal.vfd-stat.00.int
+net vfd-fault-code     <= mb2hal.vfd-stat.01.int
+net vfd-status-f       <= mb2hal.vfd-stat.00.float
+net vfd-modbus-errors  <= mb2hal.vfd-cmd.num_errors
+net vfd-err-count      <= mb2hal.vfd-mon.num_errors

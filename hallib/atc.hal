@@ -31,17 +31,42 @@ addf lut5.manualatctoggle servo-thread
 setp lut5.manualatctoggle.function 0x4
 #net spindle-running => lut5.manualatctoggle.in-0
 #net spindle-enable           => lut5.manualatctoggle.in-0
-net spindle-running  => lut5.manualatctoggle.in-0   # real rotation (VFD > 0.5 Hz) or ON
-net atc_manual_toogle_button => lut5.manualatctoggle.in-1
+# spindle-running-hold = ON, or turning, or stopped less than [ATC]SPINDLE_STOP_HOLD (spindle_setup.hal)
+net spindle-running-hold  => lut5.manualatctoggle.in-0
+# push button debounced (50 ms) - a bouncing contact must not toggle twice
+addf atc-btn-deb servo-thread
+setp atc-btn-deb.on-delay   0.05
+setp atc-btn-deb.off-delay  0.05
+net atc_manual_toogle_button => atc-btn-deb.in
+net atc_button_debounced  atc-btn-deb.out => lut5.manualatctoggle.in-1
 
 
-# 1.2 use a toggle component to allow triggering of atc via pushbutton without having to hold the button
-# signal lut5.manualatctoggle = trigger signal for manual control 
-# signal_toogle_manualatc is the signal that holds the state for the manual release of the tool changer
+# 1.2 latch for the push button (press = open, press again = close)
+# signal lut5.manualatctoggle = trigger signal for manual control
+# signal_toogle_manualatc holds the state for the manual release of the tool changer
+#
+# SAFETY: the latch is a flipflop wired as toggle WITH RESET (the old 'toggle'
+# component had no reset). It is cleared whenever the spindle is ON/turning or
+# the machine is disabled (E-stop / machine off). Without this a forgotten
+# "open" state stayed latched: M3 closed the drawbar, and after M5 (or after
+# re-enabling the machine) the drawbar opened again by itself.
+# (toogle_manualatc is still loaded in the main .hal but no longer used)
+loadrt flipflop names=ff-manualatc
+addf ff-manualatc servo-thread
+# data = NOT out -> every rising edge on clk flips the state
+# (n_coneclean is loaded in the main .hal and was unused)
+addf n_coneclean servo-thread
+net signal_toogle_manualatc ff-manualatc.out => n_coneclean.in
+net atc_ff_next          n_coneclean.out => ff-manualatc.data
+net toggle_lut5_manualatctoggle lut5.manualatctoggle.out => ff-manualatc.clk
 
-addf toogle_manualatc servo-thread
-net toggle_lut5_manualatctoggle lut5.manualatctoggle.out <= toogle_manualatc.in
-net signal_toogle_manualatc toogle_manualatc.out 
+# reset = spindle-running OR machine NOT enabled
+addf n_atctoggle  servo-thread
+addf vfd-atcreset servo-thread
+net machine-is-enabled    => n_atctoggle.in
+net machine-not-enabled   n_atctoggle.out => vfd-atcreset.in-01
+net spindle-running       => vfd-atcreset.in-00
+net atc_manual_reset      vfd-atcreset.or => ff-manualatc.reset
 
 
 # When signal_toogle_manualatc = high ==> release a tool
@@ -64,14 +89,16 @@ addf lut5.drawbar_open servo-thread
 # output of lut5.drawbar_open HIGH when
 # in0 signal_toogle_manualatc = HIGH 
 # in1 motion.digital-out-01 = HIGH (or signal_toogle_manualatc; both ok too)
-# in2 spindle-running = LOW
-# corresponds to 1110 = hex E lub 0x4 
+# in2 spindle-running-hold = LOW (not ON, not turning, stopped >= SPINDLE_STOP_HOLD)
+# in3 vfd-commlost = LOW (with lost Modbus the real spindle speed is unknown)
+# corresponds to 1110 = hex E (in2/in3 high -> always 0)
 setp lut5.drawbar_open.function 0xE
 net signal_toogle_manualatc lut5.drawbar_open.in-0
 net signal_automatic_atc motion.digital-out-01 lut5.drawbar_open.in-1
 #net spindle-running  lut5.drawbar_open.in-2
 #net spindle-enable  lut5.drawbar_open.in-2
-net spindle-running  => lut5.drawbar_open.in-2   # real rotation (VFD > 0.5 Hz) or ON
+net spindle-running-hold  => lut5.drawbar_open.in-2
+net vfd-commlost          => lut5.drawbar_open.in-3
 # 2.1 drawbar_open signal
 net drawbar_open lut5.drawbar_open.out
 
