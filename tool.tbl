@@ -6,11 +6,11 @@ T53  P1   D+16.000000 Z+112.572370 ;GUS 16mm 2F inserts
 T67  P2   D+6.000000 Z+135.789000 ;Thread 0.5-1.5 ali 6mm, 3.8 mm 
 T8   P4   D+4.000000 Z+147.404880 ;4mm 1f 32mm 
 T23  P2   D+6.000000 Z+138.312460 ;datron 6mm 1F 21mm 
-T1   P2   D+6.000000 Z+137.197880 ;6mm flat 
+T1   P2   D+6.000000 Z+136.945584 ;6mm flat 
 T2   P2   D+6.000000 Z+138.314880 ;6mm 40mm lenght 1F 
 T3   P3   D+6.000000 Z+132.578880 ; 
 T4   P5   D+6.000000 Z+125.080880 ;sorotec 2mm 1F 
-T5   P5   D+6.000000 Z+129.950870 ;3f chamfer mill 
+T5   P5   D+6.000000 Z+129.721708 ;3f chamfer mill 
 T6   P3   Z+134.865042 ;1/8 " 17mm 
 T7   P7   Z+129.101370 ;1f 6mm sorotec 25mm 
 T9   P9   Z+134.969208 ;2mm flat 
