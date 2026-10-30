@@ -11,7 +11,7 @@ T2   P2   D+6.000000 Z+138.314880 ;6mm 40mm lenght 1F
 T3   P3   D+6.000000 Z+132.578880 ; 
 T4   P5   D+6.000000 Z+125.080880 ;sorotec 2mm 1F 
 T5   P5   D+6.000000 Z+129.950870 ;3f chamfer mill 
-T6   P3   Z+135.131540 ;1/8 " 17mm 
+T6   P3   Z+134.865042 ;1/8 " 17mm 
 T7   P7   Z+129.101370 ;1f 6mm sorotec 25mm 
 T9   P9   Z+134.969208 ;2mm flat 
 T11  P11  D+5.000000 ;5mm 4f china 

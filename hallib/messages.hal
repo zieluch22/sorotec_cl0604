@@ -8,4 +8,5 @@
 #   m_vfderror    -> spare: VFD fault (Modbus status 0x20)
 #   m_vfdcom      -> spare: VFD Modbus communication lost
 #   m_lowpressure -> spare: air pressure low
-loadrt message names=m_notool,m_estopext,m_drivealm,m_vfderror,m_vfdcom,m_lowpressure messages="Spindle blocked: no tool clamped or drawbar open,External E-Stop triggered,Drive Alarm,VFD error (check VFD display),VFD Modbus communication lost,Air pressure low"
+#   m_overload    -> spindle_setup.hal (spindle current above [VFD]OVERLOAD_AMPS)
+loadrt message names=m_notool,m_estopext,m_drivealm,m_vfderror,m_vfdcom,m_lowpressure,m_overload messages="Spindle blocked: no tool clamped or drawbar open,External E-Stop triggered,Drive Alarm,VFD error (check VFD display),VFD Modbus communication lost,Air pressure low,Spindle overload - feed held until load drops (ESC to abort)"

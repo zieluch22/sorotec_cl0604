@@ -1,0 +1,53 @@
+; Pick the tool from rack pocket #1 (1..NUMPOCKETS) into an empty spindle.
+; Called from rack_change.ngc. Starts and ends at safe Z, spindle stopped.
+o<rack_pick> sub
+#<px> = [#<_ini[ATC]FIRSTPOCKET_X> + [#1 - 1] * #<_ini[ATC]DELTA_X>]
+#<py> = [#<_ini[ATC]FIRSTPOCKET_Y> + [#1 - 1] * #<_ini[ATC]DELTA_Y>]
+#<sx> = [#<px> - #<_ini[ATC]SAFE_X>]
+#<sy> = [#<py> - #<_ini[ATC]SAFE_Y>]
+#<zs> = [#<_ini[AXIS_Z]MAX_LIMIT> - 1]
+
+; SAFETY NET: never go down onto a holder with a tool still in the spindle
+M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+o10 if [#5399 EQ 1]
+    (abort, Spindle is not empty - refusing to pick up from rack)
+o10 endif
+
+G53 G0 Z#<zs>
+G53 G0 X#<sx> Y#<sy>
+G53 G1 X#<px> F#<_ini[ATC]DROPSPEEDXY>
+G53 G1 Y#<py>
+G53 G1 Z#<_ini[ATC]OFF_HEIGHT_Z> F#<_ini[ATC]DROPSPEEDRAPID>
+
+; open, go down onto the holder
+M64 P#<_ini[ATC_PINS]ATC_OPEN>
+M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
+o20 if [#5399 NE 1]
+    M65 P#<_ini[ATC_PINS]ATC_OPEN>
+    (abort, Drawbar did not open - tool change aborted)
+o20 endif
+G53 G1 Z#<_ini[ATC]FIRSTPOCKET_Z> F#<_ini[ATC]DROPSPEEDZ>
+
+; clamp
+M65 P#<_ini[ATC_PINS]ATC_OPEN>
+M64 P#<_ini[ATC_PINS]ATC_CLOSE>
+M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L4 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
+o30 if [#5399 NE 0]
+    M65 P#<_ini[ATC_PINS]ATC_CLOSE>
+    (abort, Drawbar did not close - tool change aborted)
+o30 endif
+M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
+o40 if [#5399 NE 1]
+    M65 P#<_ini[ATC_PINS]ATC_CLOSE>
+    (abort, No tool clamped after pick-up - tool change aborted)
+o40 endif
+
+; leave the rack (same speeds as drop-off)
+G53 G1 Z#<_ini[ATC]OFF_HEIGHT_Z> F#<_ini[ATC]DROPSPEEDZ>
+G53 G1 Z#<_ini[ATC]SAFE_Z> F#<_ini[ATC]DROPSPEEDRAPID>
+M65 P#<_ini[ATC_PINS]ATC_CLOSE>
+G53 G1 X#<sx> F#<_ini[ATC]DROPSPEEDXY>
+G53 G1 Y#<sy>
+G53 G0 Z#<zs>
+o<rack_pick> endsub
+M2

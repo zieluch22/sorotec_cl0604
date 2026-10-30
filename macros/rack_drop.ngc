@@ -1,0 +1,51 @@
+; Put the tool in the spindle into rack pocket #1 (1..NUMPOCKETS).
+; Called from rack_change.ngc. Starts and ends at safe Z, spindle stopped.
+o<rack_drop> sub
+#<px> = [#<_ini[ATC]FIRSTPOCKET_X> + [#1 - 1] * #<_ini[ATC]DELTA_X>]
+#<py> = [#<_ini[ATC]FIRSTPOCKET_Y> + [#1 - 1] * #<_ini[ATC]DELTA_Y>]
+#<sx> = [#<px> - #<_ini[ATC]SAFE_X>]
+#<sy> = [#<py> - #<_ini[ATC]SAFE_Y>]
+#<zs> = [#<_ini[AXIS_Z]MAX_LIMIT> - 1]
+
+; a tool must really be clamped - otherwise tool table and spindle disagree
+M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+o10 if [#5399 NE 1]
+    (abort, Tool table says a tool is loaded but the spindle sensor sees none - check spindle, then M61 Q0)
+o10 endif
+
+G53 G0 Z#<zs>
+G53 G0 X#<sx> Y#<sy>
+; real standstill again before entering the rack
+M66 P#<_ini[ATC_PINS]SENSOR_SPINDLE_STOPPED> L3 Q#<_ini[ATC]SPINDLE_STOP_TIMEOUT>
+o20 if [#5399 LT 0]
+    (abort, Spindle did not stop in time - tool change aborted)
+o20 endif
+
+G53 G1 X#<px> F#<_ini[ATC]DROPSPEEDXY>
+G53 G1 Y#<py>
+G53 G1 Z#<_ini[ATC]OFF_HEIGHT_Z> F#<_ini[ATC]DROPSPEEDRAPID>
+G53 G1 Z#<_ini[ATC]FIRSTPOCKET_Z> F#<_ini[ATC]DROPSPEEDZ>
+
+; release tool
+M64 P#<_ini[ATC_PINS]ATC_OPEN>
+M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q#<_ini[ATC]DRAWBAR_TIMEOUT>
+o30 if [#5399 NE 1]
+    M65 P#<_ini[ATC_PINS]ATC_OPEN>
+    (abort, Drawbar did not open - tool change aborted)
+o30 endif
+
+G53 G1 Z#<_ini[ATC]OFF_HEIGHT_Z> F#<_ini[ATC]DROPSPEEDZ>
+M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+o40 if [#5399 EQ 1]
+    M65 P#<_ini[ATC_PINS]ATC_OPEN>
+    (abort, Tool still in spindle after drop-off - tool change aborted)
+o40 endif
+M65 P#<_ini[ATC_PINS]ATC_OPEN>
+
+; leave the rack
+G53 G1 Z#<_ini[ATC]SAFE_Z> F#<_ini[ATC]DROPSPEEDRAPID>
+G53 G1 X#<sx> F#<_ini[ATC]DROPSPEEDXY>
+G53 G1 Y#<sy>
+G53 G0 Z#<zs>
+o<rack_drop> endsub
+M2

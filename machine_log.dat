@@ -1,17 +1,22 @@
---- QtVCP Screen Started on: Fri, Oct 30 2026 18:41:28 ---
-Fri30 18:41: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
-Fri30 18:41: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+--- QtVCP Screen Started on: Sat, Oct 31 2026 00:00:10 ---
 --- QtDragon_hd Version 1.5 on Linuxcnc 2.9.7-9-gd435482ad1 ---
-Fri30 18:41: Machine OFF
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Tool 0: No Tool
-Fri30 18:41: Machine ON
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: Hard limits tripped
-Fri30 18:41: VFD Modbus communication lost
+Sat31 00:00: Machine OFF
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Tool 0: No Tool
+Sat31 00:00: Machine ON
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Hard limits tripped
+Sat31 00:00: Spindle blocked: no tool clamped or drawbar open
+Sat31 00:00: Loaded tool 5
+Sat31 00:00: Tool 5: 3f chamfer mill 
+Sat31 00:01: Loaded file /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+Sat31 00:01:  Tool table says a tool is loaded but the spindle sensor sees none - check spindle, then M61 Q0
+Sat31 00:01: No tool selected
+Sat31 00:02: Tool 1: 6mm flat 
+Sat31 00:02: Cannot switch pages while in AUTO mode
+Sat31 00:03: Tool 6: 1/8 " 17mm 
+Sat31 00:03: Tool 6: 1/8 " 17mm 

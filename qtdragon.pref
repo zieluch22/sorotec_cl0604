@@ -24,10 +24,10 @@ RunFromLineDialog_play_sound = True
 RunFromLineDialog_sound_type = READY
 
 [BOOK_KEEPING]
-last_loaded_directory = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
-last_loaded_file = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+last_loaded_directory = /home/zieluch/linuxcnc/nc_files/test
+last_loaded_file = /home/zieluch/linuxcnc/nc_files/test/10013.ngc
 style_QSS_Path = DEFAULT
-RecentPath_0 = /home/zieluch/linuxcnc/nc_files/wood/last7.ngc
+RecentPath_0 = /home/zieluch/linuxcnc/nc_files/test/10013.ngc
 
 [ORIGINOFFSET_SYSTEM_NAMES]
 __dialogOffsetViewWidget-G54 = User System 1
@@ -93,7 +93,7 @@ gcodegraphics-user-lat = 0.0
 gcodegraphics-user-lon = 0.0
 
 [CUSTOM_FORM_ENTRIES]
-Tool to load = 0
+Tool to load = 5
 Laser X = 100.0
 Laser Y = -20.0
 Sensor X = 154.77

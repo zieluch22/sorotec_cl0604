@@ -73,16 +73,16 @@ loadrt mux2   names=vfd-dir,vfd-runcmd,vfd-pausecmd,vfd-toolcmd,vfd-fbrps-mux,vf
 loadrt scale  names=vfd-rpm2freq,vfd-freq2rps,vfd-freq2rpm,vfd-amps
 loadrt limit1 names=vfd-freqlim
 loadrt near   names=vfd-atspeed
-loadrt comp   names=vfd-turning,vfd-faultcmp,vfd-errpulse
+loadrt comp   names=vfd-turning,vfd-faultcmp,vfd-errpulse,vfd-overcur
 # vfd-toolok is 3 inputs (tool missing / drawbar sensor open / drawbar commanded open)
 # vfd-atcreset is used by atc.hal (logic can only be loaded once)
-loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202
+loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or,vfd-ovl-and,vfd-feedinh-or personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202,0x102,0x202
 # timedelay can only be loaded once - instances for spindle_setup.hal AND atc.hal:
 #   vfd-commlost-dly  Modbus comm-lost detection
 #   vfd-toolok-dly    tool clamped + drawbar closed must be stable before RUN is allowed
 #   vfd-stop-hold     spindle must be stopped for a while before the drawbar may open
 #   atc-btn-deb       debounce of the manual drawbar push button (atc.hal)
-loadrt timedelay names=vfd-commlost-dly,vfd-toolok-dly,vfd-stop-hold,atc-btn-deb
+loadrt timedelay names=vfd-commlost-dly,vfd-toolok-dly,vfd-stop-hold,atc-btn-deb,vfd-steady-dly,vfd-ovl-dly
 
 addf vfd-dir          servo-thread
 addf vfd-runcmd       servo-thread
@@ -203,7 +203,38 @@ net pdnt.program.is-paused  => spindle.0.inhibit vfd-pausecmd.sel
 net spindle-at-speed      => vfd-notatspeed.in-00 vfd-notatspeed.in-01
 net vfd-not-at-speed      vfd-notatspeed.nand => vfd-feedinh.in-01
 net spindle-enable        => vfd-feedinh.in-00
-net vfd-feed-inhibit      vfd-feedinh.and     => motion.feed-inhibit
+net vfd-feed-inhibit      vfd-feedinh.and     => vfd-feedinh-or.in-00
+# feed-inhibit = (spindle ON and not at speed) OR spindle overload (below)
+addf vfd-feedinh-or servo-thread
+net motion-feed-inhibit   vfd-feedinh-or.or   => motion.feed-inhibit
+
+
+#*******************
+#  SPINDLE OVERLOAD -> FEED HOLD
+#*******************
+# Current above [VFD]OVERLOAD_AMPS for OVERLOAD_DELAY s while the spindle runs
+# steadily -> motion is held (spindle keeps turning) and a message is shown.
+# Motion continues by itself once the current drops below the limit minus
+# hysteresis for 1 s. If it does not drop, press ESC to abort.
+# "steady" = at speed for 1 s (ignores the start-up current); stays TRUE for 3 s
+# after at-speed drops, so a speed dip caused by the overload does not hide it.
+addf vfd-overcur   servo-thread
+addf vfd-steady-dly servo-thread
+addf vfd-ovl-and   servo-thread
+addf vfd-ovl-dly   servo-thread
+addf m_overload    servo-thread
+setp vfd-overcur.in0          [VFD]OVERLOAD_AMPS
+setp vfd-overcur.hyst         [VFD]OVERLOAD_HYST
+setp vfd-steady-dly.on-delay  1.0
+setp vfd-steady-dly.off-delay 3.0
+setp vfd-ovl-dly.on-delay     [VFD]OVERLOAD_DELAY
+setp vfd-ovl-dly.off-delay    1.0
+net vfd-amps              => vfd-overcur.in1
+net spindle-at-speed      => vfd-steady-dly.in
+net spindle-steady        vfd-steady-dly.out  => vfd-ovl-and.in-01
+net vfd-overcurrent       vfd-overcur.out     => vfd-ovl-and.in-00
+net vfd-overload-raw      vfd-ovl-and.and     => vfd-ovl-dly.in
+net spindle-overload      vfd-ovl-dly.out     => vfd-feedinh-or.in-01 m_overload.trigger
 
 
 #*******************
