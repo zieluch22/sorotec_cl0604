@@ -1,20 +1,17 @@
---- QtVCP Screen Started on: Tue, Oct 27 2026 22:54:51 ---
-Tue27 22:54: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
-Tue27 22:54: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
---- QtDragon_hd Version 1.5 on Linuxcnc 2.9.3-90-g86cdee2be8 ---
-Tue27 22:54: Machine OFF
-Tue27 22:54: Hard limits tripped
-Tue27 22:54: Tool 0: No Tool
-Tue27 22:54: Machine ON
-Tue27 22:55: Hard limits tripped
-Tue27 22:55: Hard limits tripped
-Tue27 22:55: Hard limits tripped
-Tue27 22:55: Hard limits tripped
-Tue27 22:55: Hard limits tripped
-Tue27 22:55: Hard limits tripped
-Tue27 22:56:  Error! The drawbar did not open - Aborting!
-Tue27 22:57: tool change paused for jogging; launched run-from-line
-Tue27 22:57: tool change paused for jogging; launched run-from-line
-Tue27 22:57: Loaded file /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
-Tue27 22:57: Tool 2: 6mm 40mm lenght 1F 
-Tue27 22:57: hm2/hm2_7i76e.0: error finishing read! iter=157497
+--- QtVCP Screen Started on: Fri, Oct 30 2026 18:41:28 ---
+Fri30 18:41: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/slot.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+Fri30 18:41: NGCGUI Path /home/zieluch/linuxcnc/nc_files/examples/ngcgui_lib/qpocket.ngc not in linuxcnc's SUBROUTINE_PATH INI entry
+--- QtDragon_hd Version 1.5 on Linuxcnc 2.9.7-9-gd435482ad1 ---
+Fri30 18:41: Machine OFF
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Tool 0: No Tool
+Fri30 18:41: Machine ON
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: Hard limits tripped
+Fri30 18:41: VFD Modbus communication lost
