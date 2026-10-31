@@ -101,7 +101,7 @@ net  pdnt.mist.on                         whb.halui.mist.on                     
 net pdnt.button.m-home                    whb.button.m-home                     halui.home-all                   # Homing use built-in halui home all
 net pdnt.button.safe-z                    whb.button.safe-z                     halui.mdi-command-00             # [HALUI] MDI_COMMAND #00 - safe Z
 net pdnt.button.w-home                    whb.button.w-home                     halui.mdi-command-01             # [HALUI] MDI_COMMAND #01 - go to X0 Y0
-net pdnt.button.probe-z                   whb.button.probe-z                    halui.mdi-command-04             # [HALUI] MDI_COMMAND #04 - probe Z (macros/pendant_probe_z.ngc)
+#net pdnt.button.probe-z                   whb.button.probe-z                    halui.mdi-command-08             # Probe-Z use MDI command from main.ini
 
 
 # unused, just exposes pendant internal status or as basic button

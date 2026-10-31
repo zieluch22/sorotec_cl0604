@@ -6,11 +6,9 @@
 ;   ATC_OPEN  - automatic drawbar-open request (else drawbar re-opens after every spindle stop)
 ;   ATC_CLOSE - clamp-side air
 ;   TS        - toolsetter (left on if probing fails)
-;   PROBE     - touch probe power (left on if pendant Probe-Z fails)
 o<on_abort> sub
 M65 P#<_ini[ATC_PINS]ATC_OPEN>
 M65 P#<_ini[ATC_PINS]ATC_CLOSE>
 M65 P#<_ini[OTHER_PINS]TS>
-M65 P#<_ini[OTHER_PINS]PROBE>
 o<on_abort> endsub
 M2
