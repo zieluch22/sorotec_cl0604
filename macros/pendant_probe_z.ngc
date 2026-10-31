@@ -1,0 +1,110 @@
+; WHB04B Probe-Z button  ([HALUI] MDI_COMMAND #04)
+;
+; 1. If the probe (INI [VERSA_PROBE_OPTIONS]ps_probe_tool) is not in the spindle:
+;    M6 to it (rack_change.ngc), go back over the X/Y where the button was
+;    pressed and move down - with G38.3, so it stops on any contact - to the
+;    tool-tip Z the old tool had there.
+; 2. Probe screen "Probe down": fast G38.2 by Max Z travel, back off by the
+;    latch distance, slow G38.2.
+; 3. Auto zero ticked on the probe screen -> work Z0 = touched surface + Z adjust.
+;    Otherwise only reports the measured Z.
+; 4. Retract by Z clearance. Probe power off.
+;
+; Parameters come from the probe screen (see python/oword.py).
+
+o<pendant_probe_z> sub
+
+; only in the milltask interpreter, otherwise preview breaks
+o10 if [#<_task> EQ 0]
+o10     return
+o10 endif
+
+#<probe_tool> = #<_ini[VERSA_PROBE_OPTIONS]ps_probe_tool>
+
+; ---------- probe screen parameters ----------
+o<pz_param> call [1]
+#<svel> = #<_value>
+o<pz_param> call [2]
+#<pvel> = #<_value>
+o<pz_param> call [3]
+#<latch> = #<_value>
+o<pz_param> call [4]
+#<max_z> = #<_value>
+o<pz_param> call [5]
+#<z_clear> = #<_value>
+o<pz_param> call [6]
+#<rapid> = #<_value>
+o<pz_param> call [7]
+#<offs_z> = #<_value>
+o<pz_param> call [8]
+#<auto_zero> = #<_value>
+
+o20 if [[#<svel> LE 0] OR [#<pvel> LE 0] OR [#<latch> LE 0] OR [#<max_z> LE 0] OR [#<rapid> LE 0] OR [#<z_clear> LT 0]]
+o20     (abort, Probe Z: probe screen parameters missing - check search/probe velocity, latch, max Z travel, rapid)
+o20 endif
+
+; ---------- 1. probe in the spindle? ----------
+o30 if [#<_current_tool> NE #<probe_tool>]
+    #<x0> = #<_x>
+    #<y0> = #<_y>
+    #<z0> = #<_z>
+    (print, Probe Z: loading probe T#<probe_tool>, return to X#<x0> Y#<y0> Z#<z0>)
+
+    T#<probe_tool> M6
+
+    o31 if [#<_current_tool> NE #<probe_tool>]
+        (abort, Probe Z: probe is not in the spindle after the tool change)
+    o31 endif
+
+    ; back over the start point at safe height
+    G90
+    G53 G0 Z[#<_ini[AXIS_Z]MAX_LIMIT> - 1]
+    G0 X#<x0> Y#<y0>
+
+    M64 P#<_ini[OTHER_PINS]PROBE>
+    G4 P1
+
+    ; down to the old tool-tip height (only if it is below us); stops on contact
+    o32 if [#<z0> LT #<_z>]
+        ; search velocity, not rapid: the probe must be able to stop within its overtravel
+        G38.3 Z#<z0> F#<svel>
+        o33 if [#5070 EQ 1]
+            M65 P#<_ini[OTHER_PINS]PROBE>
+            (abort, Probe Z: probe touched something while moving down to the start height)
+        o33 endif
+    o32 endif
+o30 else
+    M64 P#<_ini[OTHER_PINS]PROBE>
+    G4 P1
+o30 endif
+
+; modal state is restored automatically when this sub ends or aborts
+M73
+
+; ---------- 2. probe down (same moves as the probe screen) ----------
+G91
+G38.2 Z-#<max_z> F#<svel>
+G1 Z#<latch> F#<rapid>
+G4 P0.5
+G38.2 Z-[1.2 * #<latch>] F#<pvel>
+G90
+
+; touched Z in the active work coordinates (with probe length offset)
+#<touch> = #5063
+
+; ---------- 3. zero or report ----------
+o50 if [#<auto_zero> EQ 1]
+    G10 L20 P0 Z[#<_z> - #<touch> + #<offs_z>]
+    (DEBUG, Probe Z: part top was Z#<touch> - work Z set to #<offs_z>)
+o50 else
+    (DEBUG, Probe Z: part top Z#<touch> (auto zero off - offset not changed))
+o50 endif
+
+; ---------- 4. retract ----------
+G91
+G1 Z#<z_clear> F#<rapid>
+G90
+M65 P#<_ini[OTHER_PINS]PROBE>
+
+o<pendant_probe_z> endsub
+M2
