@@ -35,6 +35,11 @@ net pdnt.mode.is-mdi                      halui.mode.is-mdi                     
 net pdnt.mode.is-joint                    halui.mode.is-joint                   whb.halui.mode.is-joint
 net pdnt.mode.is-teleop                   halui.mode.is-teleop                  whb.halui.mode.is-teleop
 
+# "is-homed" signals - without these the pendant thinks no axis is ever homed
+# and re-requests teleop mode on every wheel tick
+net pdnt.axis.X.is-homed                  halui.joint.0.is-homed                whb.halui.joint.x.is-homed
+net pdnt.axis.Y.is-homed                  halui.joint.1.is-homed                whb.halui.joint.y.is-homed
+net pdnt.axis.Z.is-homed                  halui.joint.2.is-homed                whb.halui.joint.z.is-homed
 
 # "selected axis" signals
 net pdnt.axis.X.select                    whb.halui.axis.x.select               halui.axis.x.select
@@ -59,8 +64,8 @@ net pdnt.axis.z.jog-vel-mode              whb.axis.z.jog-vel-mode               
 
 
 # macro buttons to MDI commands
-#net pdnt.macro-1                          whb.button.macro-1                    halui.mdi-command-01             # use MDI command from main.ini - spindle-warmup
-#net pdnt.macro-2                          whb.button.macro-2                    halui.mdi-command-02             # use MDI command from main.ini or used for Hardcoded lube on/off
+net pdnt.macro-1                          whb.button.macro-1                    halui.mdi-command-02             # [HALUI] MDI_COMMAND #02 - spindle warmup
+net pdnt.macro-2                          whb.button.macro-2                    halui.mdi-command-03             # [HALUI] MDI_COMMAND #03 - VFD reconnect
 net pdnt.reserved.for.spindle+            whb.button.macro-3                                                     # Hardcoded for spindle+ whb.halui.spindle.increase
 net pdnt.reserved.for.spindle-            whb.button.macro-4                                                     # Hardcoded for spindle- whb.halui.spindle.decrease
 #net pdnt.macro-5                          whb.button.macro-5                    halui.mdi-command-05             # use MDI command from main.ini
@@ -94,8 +99,8 @@ net  pdnt.mist.on                         whb.halui.mist.on                     
 
 # default function button signals
 net pdnt.button.m-home                    whb.button.m-home                     halui.home-all                   # Homing use built-in halui home all
-#net pdnt.button.safe-z                    whb.button.safe-z                     halui.mdi-command-03             # Safe-z  use MDI command from main.ini
-#net pdnt.button.w-home                    whb.button.w-home                     halui.mdi-command-04             # Unpark  use MDI command from main.ini
+net pdnt.button.safe-z                    whb.button.safe-z                     halui.mdi-command-00             # [HALUI] MDI_COMMAND #00 - safe Z
+net pdnt.button.w-home                    whb.button.w-home                     halui.mdi-command-01             # [HALUI] MDI_COMMAND #01 - go to X0 Y0
 #net pdnt.button.probe-z                   whb.button.probe-z                    halui.mdi-command-08             # Probe-Z use MDI command from main.ini
 
 
@@ -119,14 +124,16 @@ net pdnt.button.feed-minus                whb.button.feed-minus
 
 
 # spindle related signals
-net pdnt.spindle.is-on                    whb.halui.spindle.is-on               #spindle.0.on
-net pdnt.spindle.start                    whb.halui.spindle.start               #halui.spindle.0.start
-net pdnt.spindle.stop                     whb.halui.spindle.stop                #halui.spindle.0.stop
-net pdnt.spindle.forward                  whb.halui.spindle.forward             #halui.spindle.0.forward
-net pdnt.spindle.reverse                  whb.halui.spindle.reverse             #halui.spindle.0.reverse
-net pdnt.spindle.increase                 whb.halui.spindle.increase            #halui.spindle.0.increase         # reserved whb.button.macro-3
-net pdnt.spindle.decrease                 whb.halui.spindle.decrease            #halui.spindle.0.decrease         # reserved whb.button.macro-4
-net pdnt.spindle-speed-abs                whb.halui.spindle-speed-cmd          #spindle.0.speed-out-abs          # speed cmd from motion in rpm absolue
+# spindle.0.on and spindle.0.speed-out-abs are already on nets in spindle_setup.hal
+# (a pin can only be on one net), so the pendant joins those existing signals
+net spindle-enable                        => whb.halui.spindle.is-on                                             # from spindle_setup.hal
+net spindle-vel-cmd-rpm-abs               => whb.halui.spindle-speed-cmd                                         # from spindle_setup.hal
+net pdnt.spindle.start                    whb.halui.spindle.start               halui.spindle.0.start
+net pdnt.spindle.stop                     whb.halui.spindle.stop                halui.spindle.0.stop
+net pdnt.spindle.forward                  whb.halui.spindle.forward             halui.spindle.0.forward
+net pdnt.spindle.reverse                  whb.halui.spindle.reverse             halui.spindle.0.reverse
+net pdnt.spindle.increase                 whb.halui.spindle.increase            halui.spindle.0.increase         # reserved whb.button.macro-3
+net pdnt.spindle.decrease                 whb.halui.spindle.decrease            halui.spindle.0.decrease         # reserved whb.button.macro-4
 
 
 # spindle speed override signals
