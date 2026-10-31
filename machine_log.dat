@@ -1,19 +1,13 @@
---- QtVCP Screen Started on: Sat, Oct 31 2026 00:14:16 ---
+--- QtVCP Screen Started on: Sat, Oct 31 2026 14:49:12 ---
 --- QtDragon_hd Version 1.5 on Linuxcnc 2.9.7-9-gd435482ad1 ---
-Sat31 00:14: Machine OFF
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Tool 0: No Tool
-Sat31 00:14: Machine ON
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Hard limits tripped
-Sat31 00:14: Cannot switch pages while in AUTO mode
-Sat31 00:15: Tool 1: 6mm flat 
-Sat31 00:15: Tool 1: 6mm flat 
-Sat31 00:15: Tool 5: 3f chamfer mill 
-Sat31 00:15: Tool 5: 3f chamfer mill 
-Sat31 00:16: Tool 1: 6mm flat 
-Sat31 00:16: Tool 1: 6mm flat 
+Sat31 14:49: Machine OFF
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Tool 0: No Tool
+Sat31 14:49: Machine ON
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Hard limits tripped
+Sat31 14:49: Spindle blocked: no tool clamped or drawbar open
