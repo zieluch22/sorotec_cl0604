@@ -499,6 +499,21 @@ class HandlerClass:
         except Exception as e:
             LOG.info("Utility hole enlarge unavailable: {}".format(e))
 
+        # G-code Joiner: join several single-tool NC files into one program (Utilities tab)
+        try:
+            import sys
+            here = os.path.dirname(os.path.abspath(__file__))
+            if here not in sys.path:
+                sys.path.insert(0, here)
+            from gcode_joiner_tab import GcodeJoinerTab
+            prefix = INFO.INI.find('DISPLAY', 'PROGRAM_PREFIX') or '~/linuxcnc/nc_files'
+            self.gcode_joiner = GcodeJoinerTab(start_dir=os.path.expanduser(prefix),
+                                               load_callback=self.joiner_load_program,
+                                               status_callback=self.add_status)
+            ACTION.ADD_WIDGET_TO_TAB(self.w.tabWidget_utilities, self.gcode_joiner, 'G-code Joiner')
+        except Exception as e:
+            LOG.warning("Utility G-code Joiner unavailable: {}".format(e))
+
         LOG.info("Using NGCGUI utility")
         self.ngcgui = NgcGui()
         self.w.layout_ngcgui.addWidget(self.ngcgui)
@@ -1145,6 +1160,14 @@ class HandlerClass:
     #####################
     # GENERAL FUNCTIONS #
     #####################
+    # 'Join & Load' button of the G-code Joiner tab
+    def joiner_load_program(self, fname):
+        if STATUS.is_auto_running():
+            self.add_status("G-code Joiner: program is running - joined file saved but not loaded", WARNING)
+            return False
+        self.load_code(fname)
+        return True
+
     def load_code(self, fname):
         if fname is None: return
         filename, file_extension = os.path.splitext(fname)
