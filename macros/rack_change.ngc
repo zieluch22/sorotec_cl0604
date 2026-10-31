@@ -9,6 +9,8 @@
 ; - Rack moves are in rack_drop.ngc / rack_pick.ngc. Both check the tool sensor
 ;   first, so the spindle never goes into the rack in the wrong state.
 ; - Valves via M64/M65; drawbar interlock (standstill, VFD comm) is in atc.hal.
+; - Manual remove/load runs on the tool + drawbar sensors (5 s safety pause);
+;   only the probe (PS_PROBE_TOOL) gets the confirmation prompt on the screen.
 
 o<rack_change> sub
 M73 ; auto-restore modal state on error; invalidated with M71 at the end
@@ -26,11 +28,41 @@ o100 endif
 M66 E0
 #<newpocket> = #5399
 #<zs> = [#<_ini[AXIS_Z]MAX_LIMIT> - 1]
+; the probe (cable!) is always changed with confirmation on the screen,
+; every other manual change runs on the tool / drawbar sensors
+#<probe> = #<_ini[VERSA_PROBE_OPTIONS]PS_PROBE_TOOL>
+
+; after a restart LinuxCNC says T0 (interpreter even -1 = no tool) with a tool
+; clamped. If the sensor sees a tool, take the last tool stored by
+; python/last_tool.py (last_tool.txt).
+; Sensor sees a tool but nothing is stored -> unknown tool -> stop.
+o105 if [#<oldtool> LE 0]
+    M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+    o106 if [#5399 EQ 1]
+        o107 if [#<stored_tool> GT 0]
+            (DEBUG, %dNo tool set but the spindle holds one - using last tool T#<stored_tool> from the last session)
+            M61 Q#<stored_tool>
+            #<oldtool>   = #<stored_tool>
+            #<oldpocket> = #<stored_home>
+        o107 else
+            (abort, Spindle holds a tool but the last tool is unknown - set it with M61 Q<tool>, then M6 again)
+        o107 endif
+    o106 endif
+o105 endif
 (print, M6: T#<oldtool> P#<oldpocket> -> T#<newtool> P#<newpocket>)
 
 o110 if [[#<newtool> GT 0] AND [#<new_home> GE 0] AND [#<new_home> NE #<newpocket>]]
     (abort, Tool table pocket differs from prepared pocket - reload the tool table)
 o110 endif
+
+; old and new tool share one rack pocket in the tool table: dropping the old tool
+; would fill the pocket the new one should come from -> change both by hand.
+; -1 = manual removal / manual load below, and slow search when measuring.
+o120 if [[#<oldtool> GT 0] AND [#<newtool> GT 0] AND [#<oldtool> NE #<newtool>] AND [#<oldpocket> EQ #<newpocket>] AND [#<oldpocket> GE 1] AND [#<oldpocket> LE #<_ini[ATC]NUMPOCKETS>]]
+    (DEBUG, %dT#<oldtool> and T#<newtool> share pocket P#<oldpocket> in the tool table - manual tool change for safety)
+    #<oldpocket> = -1
+    #<newpocket> = -1
+o120 endif
 
 G90 G40 G49
 G53 G0 Z#<zs>
@@ -47,16 +79,37 @@ o150 if [#<oldtool> NE #<newtool>]
     o200 if [#<oldtool> GT 0]
         o210 if [[#<oldpocket> GE 1] AND [#<oldpocket> LE #<_ini[ATC]NUMPOCKETS>]]
             o<rack_drop> call [#<oldpocket>]
+            ; spindle is empty now - keeps last_tool.txt right if the pick fails
+            M61 Q0
         o210 else
             ; no rack pocket (P0, not in table, ...) -> remove manually
             G53 G0 X#<_ini[ATC]CHANGEX> Y#<_ini[ATC]CHANGEY>
             G53 G0 Z#<_ini[ATC]CHANGEZ>
-            ; built-in M6 with T0 = operator prompt: remove tool with the drawbar button
-            T0
-            M6
-            T#<newtool>
-            M65 P#<_ini[ATC_PINS]ATC_OPEN>
-            G4 P0.5
+            o215 if [#<oldtool> NE #<probe>]
+                ; no screen confirmation: wait for tool out (sensor low), then
+                ; drawbar closed again (button pressed a second time), then 5 s
+                ; for the hands to get clear before the machine moves
+                (DEBUG, %dRemove T#<oldtool> with the drawbar button and press it again to close - machine continues 5 s later)
+                o216 do
+                    M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L4 Q60
+                o216 while [#5399 LT 0]
+                o217 do
+                    M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L4 Q60
+                o217 while [#5399 LT 0]
+                G4 P5
+                M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
+                o218 if [#5399 EQ 1]
+                    (abort, Drawbar opened again after manual removal - tool change aborted)
+                o218 endif
+                M61 Q0
+            o215 else
+                ; built-in M6 with T0 = operator prompt: remove tool with the drawbar button
+                T0
+                M6
+                T#<newtool>
+                M65 P#<_ini[ATC_PINS]ATC_OPEN>
+                G4 P0.5
+            o215 endif
             M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
             o220 if [#5399 EQ 1]
                 (abort, Tool still in spindle after manual removal - tool change aborted)
@@ -74,8 +127,31 @@ o150 if [#<oldtool> NE #<newtool>]
             G53 G0 Z#<zs>
             G53 G0 X#<_ini[ATC]CHANGEX> Y#<_ini[ATC]CHANGEY>
             G53 G0 Z#<_ini[ATC]CHANGEZ>
-            ; built-in M6 = operator prompt to insert the tool
-            M6
+            o315 if [#<newtool> NE #<probe>]
+                ; no screen confirmation: drawbar open (button), tool in, drawbar
+                ; closed (button again) with a tool clamped, then 5 s for the hands
+                ; to get clear. Closed without a tool -> wait for the next try.
+                (DEBUG, %dInsert T#<newtool> with the drawbar button and press it again to close - machine continues 5 s later)
+                o316 do
+                    o317 do
+                        M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L3 Q60
+                    o317 while [#5399 LT 0]
+                    o318 do
+                        M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L4 Q60
+                    o318 while [#5399 LT 0]
+                    G4 P0.5
+                    M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+                o316 while [#5399 NE 1]
+                G4 P5
+                M66 P#<_ini[ATC_PINS]SENSOR_DRAWBAR> L0
+                o319 if [#5399 EQ 1]
+                    M72
+                    (abort, Drawbar opened again after manual tool load - tool change aborted)
+                o319 endif
+            o315 else
+                ; built-in M6 = operator prompt to insert the tool
+                M6
+            o315 endif
             ; air on the clamp side for 3 s
             M64 P#<_ini[ATC_PINS]ATC_CLOSE>
             G4 P3
@@ -90,6 +166,8 @@ o150 if [#<oldtool> NE #<newtool>]
                 M72
                 (abort, No tool clamped after manual tool load - tool change aborted)
             o330 endif
+            ; sensor path has no built-in M6 that sets the tool
+            M61 Q#<newtool>
         o310 endif
     o300 endif
 

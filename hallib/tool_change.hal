@@ -18,3 +18,7 @@ unlinkp iocontrol.0.tool-prepared
 #net eoffset_clear    qtdragon.eoffset-clear => axis.z.eoffset-clear
 #net eoffset_count    qtdragon.eoffset-spindle-count => axis.z.eoffset-counts
 #net eoffset          qtdragon.eoffset-value <= axis.z.eoffset
+# Remember the tool in the spindle across restarts (python/last_tool.py).
+# rack_change.ngc uses last_tool.txt when no tool is set but the sensor sees one.
+loadusr -Wn lasttool python3 python/last_tool.py last_tool.txt
+net last-tool-number iocontrol.0.tool-number => lasttool.tool-number

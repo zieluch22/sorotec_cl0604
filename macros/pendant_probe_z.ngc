@@ -1,6 +1,6 @@
 ; WHB04B Probe-Z button  ([HALUI] MDI_COMMAND #04)
 ;
-; 1. If the probe (INI [VERSA_PROBE_OPTIONS]ps_probe_tool) is not in the spindle:
+; 1. If the probe (INI [VERSA_PROBE_OPTIONS]PS_PROBE_TOOL) is not in the spindle:
 ;    M6 to it (rack_change.ngc), go back over the X/Y where the button was
 ;    pressed and move down - with G38.3, so it stops on any contact - to the
 ;    tool-tip Z the old tool had there.
@@ -19,7 +19,7 @@ o10 if [#<_task> EQ 0]
 o10     return
 o10 endif
 
-#<probe_tool> = #<_ini[VERSA_PROBE_OPTIONS]ps_probe_tool>
+#<probe_tool> = #<_ini[VERSA_PROBE_OPTIONS]PS_PROBE_TOOL>
 
 ; ---------- probe screen parameters ----------
 o<pz_param> call [1]

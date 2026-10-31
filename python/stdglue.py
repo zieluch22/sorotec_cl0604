@@ -186,6 +186,18 @@ def _last_touch(toolno):
     except Exception:
         return None
 
+LAST_TOOL_FILE = "last_tool.txt"   # written by python/last_tool.py (HAL), in the config dir
+
+def _last_tool():
+    """Tool that was in the spindle at the end of the last session, 0 if unknown."""
+    try:
+        import os
+        path = os.path.join(os.path.dirname(os.environ["INI_FILE_NAME"]), LAST_TOOL_FILE)
+        with open(path) as f:
+            return max(0, int(f.read().split()[0]))
+    except Exception:
+        return 0
+
 def change_prolog(self, **words):
     try:
         # this is relevant only when using iocontrol-v2.
@@ -208,6 +220,10 @@ def change_prolog(self, **words):
         # rack pockets (P column) of old and new tool, used by rack_change.ngc
         self.params["old_home"] = _home_pocket(int(self.current_tool))
         self.params["new_home"] = _home_pocket(int(self.selected_tool))
+        # tool from the last session (used only if no tool is set but the sensor sees one)
+        last = _last_tool()
+        self.params["stored_tool"] = last
+        self.params["stored_home"] = _home_pocket(last)
         # last toolsetter touch of the new tool in machine Z (fast approach)
         z = _last_touch(int(self.selected_tool))
         self.params["new_touch_ok"] = 0 if z is None else 1

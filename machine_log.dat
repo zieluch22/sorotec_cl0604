@@ -1,13 +1,20 @@
---- QtVCP Screen Started on: Sat, Oct 31 2026 14:49:12 ---
+--- QtVCP Screen Started on: Sat, Oct 31 2026 15:20:40 ---
 --- QtDragon_hd Version 1.5 on Linuxcnc 2.9.7-9-gd435482ad1 ---
-Sat31 14:49: Machine OFF
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Tool 0: No Tool
-Sat31 14:49: Machine ON
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Hard limits tripped
-Sat31 14:49: Spindle blocked: no tool clamped or drawbar open
+Sat31 15:20: Machine OFF
+Sat31 15:20: Hard limits tripped
+Sat31 15:20: Tool 0: No Tool
+Sat31 15:20: Machine ON
+Sat31 15:20: Hard limits tripped
+Sat31 15:20: Hard limits tripped
+Sat31 15:20: Hard limits tripped
+Sat31 15:20: Hard limits tripped
+Sat31 15:21: Hard limits tripped
+Sat31 15:21: Hard limits tripped
+Sat31 15:21: Hard limits tripped
+Sat31 15:21: Hard limits tripped
+Sat31 15:21: Loaded file /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/rack_change.ngc
+Sat31 15:21:  Spindle is not empty - refusing to pick up from rack
+Sat31 15:25:  No tool set but the spindle holds one - using last tool T5 from the last session
+Sat31 15:25: Tool 5: 3f chamfer mill 
+Sat31 15:25: Tool 0: No Tool
+Sat31 15:25: Tool 1: 6mm flat 
