@@ -13,7 +13,12 @@ net min-home-x     <=  hm2_7i76e.0.7i76.0.0.input-00-not
 #net estop-loopout iocontrol.0.emc-enable-in <= estop-latch.0.ok-out
 #net estop-loopin iocontrol.0.user-enable-out => estop-latch.0.ok-in
 #net estop-reset iocontrol.0.user-request-enable => estop-latch.0.reset
-net remote-estop estop-latch.0.fault-in <= hm2_7i76e.0.7i76.0.0.input-01-not
+# E-stop fault = E-stop button OR any drive alarm X/Y/Z (lut5.servoalarm = OR of all 5 inputs)
+#   in-0 E-stop button (input-01-not)   in-1 X alarm (16)   in-2 Y alarm (17)   in-3 Z alarm (18)
+addf lut5.servoalarm servo-thread
+setp lut5.servoalarm.function 0xFFFFFFFE
+net remote-estop     lut5.servoalarm.in-0 <= hm2_7i76e.0.7i76.0.0.input-01-not
+net estop-fault      lut5.servoalarm.out  => estop-latch.0.fault-in
 # ---AI-02 ---
 # spindle change tool manual button on side of Z axis
 net atc_manual_toogle_button     <=  hm2_7i76e.0.7i76.0.0.input-02
@@ -56,14 +61,36 @@ net spindle_drawbar     <=  hm2_7i76e.0.7i76.0.0.input-09 motion.digital-in-01
 # ---DI-14 ---
 # ---DI-15 ---
 # ---DI-16 ---
-# Connect JMC IHSV/IHSS alarm signal X
-#net servoalarm1   <=  hm2_7i76e.0.7i76.0.0.input-16
+# JMC iHSV57 servo alarms X/Y/Z -> E-stop (latched) + "Drive Alarm" message.
+# Datasheet: ALM output open = OK, closed = alarm (overcurrent, overvoltage,
+# position error, encoder, overload). Wiring: ALM+ = +24 V, ALM- = Mesa input.
+# Signal servoalarmN is TRUE = ALARM after the polarity fix below.
+#
+# X alarm, TB5 pin 1: socket wiring correct -> FALSE = OK, TRUE = alarm
+net servoalarm1   <=  hm2_7i76e.0.7i76.0.0.input-16 => lut5.servoalarm.in-1 drvalm-or.in-00
 # ---DI-17 ---
-# Connect JMC IHSV/IHSS alarm signal Y
-#net servoalarm2   <=  hm2_7i76e.0.7i76.0.0.input-17
+# TODO REWORK: Y and Z enclosure socket cables are soldered with ALM+/ALM- reversed.
+#   Inputs 17/18 read TRUE when the drive is OK, so they are inverted here (-not).
+#   After the socket soldering is fixed, change input-17-not / input-18-not
+#   back to input-17 / input-18, like X.
+# Y alarm, TB5 pin 2 (inverted, see TODO above)
+# TEMP: Y DISCONNECTED from E-stop and message - its input reads inconsistently
+#   (check Y wire contact in TB5 pin 2). When stable, add back:
+#   => lut5.servoalarm.in-2 drvalm-or.in-01
+net servoalarm2   <=  hm2_7i76e.0.7i76.0.0.input-17-not
 # ---DI-18 ---
-# Connect JMC IHSV/IHSS alarm signal Z
-#net servoalarm3   <=  hm2_7i76e.0.7i76.0.0.input-18
+# Z alarm, TB5 pin 3 (inverted, see TODO above)
+net servoalarm3   <=  hm2_7i76e.0.7i76.0.0.input-18-not => lut5.servoalarm.in-3 drvalm-or.in-02
+# "Drive Alarm" message when any of X/Y/Z alarms (drvalm-or loaded in spindle_setup.hal)
+addf drvalm-or servo-thread
+# message only while the machine is on: hides the start-up glitch (inputs not yet read,
+# inverted Z briefly reads "alarm"). E-stop protection above is not affected.
+addf drvalm-msg servo-thread
+net drive-alarm   drvalm-or.or  => drvalm-msg.in-00
+net machine-is-enabled          => drvalm-msg.in-01
+net drive-alarm-msg drvalm-msg.and => m_drivealm.trigger
+addf m_drivealm servo-thread
+# message shows on the rising edge (alarm appears) = message component default (edge TRUE)
 # ---DI-19 ---
 # ---DI-20 ---
 # ---DI-21 ---

@@ -76,7 +76,8 @@ loadrt near   names=vfd-atspeed
 loadrt comp   names=vfd-turning,vfd-faultcmp,vfd-errpulse,vfd-overcur
 # vfd-toolok is 3 inputs (tool missing / drawbar sensor open / drawbar commanded open)
 # vfd-atcreset is used by atc.hal (logic can only be loaded once)
-loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or,vfd-ovl-and,vfd-feedinh-or personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202,0x102,0x202
+loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or,vfd-ovl-and,vfd-feedinh-or,drvalm-or,drvalm-msg personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202,0x102,0x202,0x203,0x102
+# drvalm-or: OR of X/Y/Z servo alarms; drvalm-msg: AND with machine-is-enabled (message only while machine on). Used in io.hal
 # timedelay can only be loaded once - instances for spindle_setup.hal AND atc.hal:
 #   vfd-commlost-dly  Modbus comm-lost detection
 #   vfd-toolok-dly    tool clamped + drawbar closed must be stable before RUN is allowed
