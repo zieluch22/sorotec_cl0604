@@ -225,11 +225,15 @@ o150 if [#<oldtool> NE #<newtool>]
         M65 P#<_ini[OTHER_PINS]TS>
 
         #<touch_result> = #5063
-        (print, touch=#<touch_result> setter=#<_hal[qtversaprobe.probeheight]> block=#<_hal[qtversaprobe.blockheight]>)
-        G10 L1 P#<newtool> Z[#<touch_result> - #<_hal[qtversaprobe.probeheight]> + #<_hal[qtversaprobe.blockheight]>]
-        ; remember this touch in machine Z for the next fast approach
-        ; (work offset Z of the active G54..G59.3 + G92 Z if active; G49 is in effect)
+        ; touch in machine Z: add work offset Z of the active G54..G59.3
+        ; + G92 Z if active (G49 is in effect)
         #<touch_mz> = [#<touch_result> + #[5203 + 20 * #5220] + #5213 * #5210]
+        (print, touch=#<touch_result> machine=#<touch_mz> setter=#<_hal[qtversaprobe.probeheight]>)
+        ; tool length from MACHINE Z, so it does not depend on the work offset.
+        ; Same values as the old "work Z - setter + block" while G54 Z = Z MIN_LIMIT + block height
+        ; (what the probe screen sets), but stays valid after Z touch-off / ZERO G5X.
+        G10 L1 P#<newtool> Z[#<touch_mz> - #<_ini[AXIS_Z]MIN_LIMIT> - #<_hal[qtversaprobe.probeheight]>]
+        ; remember this touch in machine Z for the next fast approach
         (LOGAPPEND,tool_touch.log)
         (LOG,T#<newtool> #<touch_mz>)
         (LOGCLOSE)
