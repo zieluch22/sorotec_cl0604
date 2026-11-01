@@ -17,3 +17,5 @@ qtdragon.log
 qtdragon.log
 hallib/linuxcnc.var
 hallib/linuxcnc.var.bak
+__pycache__/
+*.pyc
