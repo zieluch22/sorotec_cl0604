@@ -1,0 +1,124 @@
+; Measure the length of the tool in the spindle on the tool setter and store it
+; in the tool table (G10 L1). Shared by rack_change.ngc (M6) and measure_tool.ngc
+; (screen button).
+;
+;   #1 = tool number to store the length for
+;   #2 = fast approach start, G53 Z (0 = slow search from [TOOLSENSOR]Z)
+;
+; Caller must: have the spindle stopped, G49 active (#5063 without tool offset),
+; G90, and apply G43 afterwards. No M73 here - the caller owns modal state.
+;
+; Sets globals #<_tool_measure_len> = new length, #<_tool_measure_old> = previous
+; length (0 = unknown). If they differ by more than [TOOLSENSOR]MAX_LENGTH_CHANGE:
+; warning + Yes/No dialog (M191) - No keeps the old length (#<_tool_measure_len> = old).
+; Returns 1 = ok, -1 = search velocity 0, -2 = probe velocity 0,
+;        -3 = setter already tripped, -4 = no contact.
+; Ends at G53 Z = Z MAX_LIMIT - 1 above the tool setter, setter output off.
+
+o<tool_measure> sub
+#<tool>   = #1
+#<fast_z> = #2
+#<zs> = [#<_ini[AXIS_Z]MAX_LIMIT> - 1]
+
+o420 if [#<_hal[qtversaprobe.searchvel]> LE 0]
+    o420 return [-1]
+o420 endif
+o430 if [#<_hal[qtversaprobe.probevel]> LE 0]
+    o430 return [-2]
+o430 endif
+
+; length before measuring, for the plausibility check (only if the tool
+; table entry is the loaded tool and has been measured before)
+#<_tool_measure_old> = 0
+o405 if [#5400 EQ #<tool>]
+    #<_tool_measure_old> = #5403
+o405 endif
+
+#<tool_diameter> = #5410
+G53 G0 Z#<zs>
+G53 G0 Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
+G53 G0 X#<_ini[TOOLSENSOR]X>
+o410 if [#<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER>]
+    ; big tool: offset X by half the diameter to clear the holder
+    G53 G1 X[#<_ini[TOOLSENSOR]X> + #<tool_diameter> / 2] Y#<_ini[TOOLSENSOR]Y> F[#<_ini[ATC]DROPSPEEDRAPID> / 2]
+o410 else
+    G53 G1 X#<_ini[TOOLSENSOR]X> Y#<_ini[TOOLSENSOR]Y> F#<_ini[ATC]DROPSPEEDRAPID>
+o410 endif
+G53 G0 Z#<_ini[TOOLSENSOR]Z>
+
+; fast approach (rack tool with a recorded touch): G0 to fast_z, then
+; search only 2x FAST_APPROACH. Otherwise slow search from TOOLSENSOR Z.
+#<search> = #<_ini[TOOLSENSOR]MAXPROBE>
+o415 if [[#<fast_z> NE 0] AND [#<fast_z> LT #<_ini[TOOLSENSOR]Z>]]
+    (print, fast approach to G53 Z#<fast_z>)
+    G53 G0 Z#<fast_z>
+    #<search> = [-2 * #<_ini[TOOLSENSOR]FAST_APPROACH>]
+o415 endif
+
+M64 P#<_ini[OTHER_PINS]TS>
+o<_psng_probe_tool> call [#<search>]
+o440 if [#<_value> EQ -1]
+    M65 P#<_ini[OTHER_PINS]TS>
+    o440 return [-3] ; probe already tripped
+o440 elseif [#<_value> EQ -2]
+    M65 P#<_ini[OTHER_PINS]TS>
+    o440 return [-4] ; probe contact failure
+o440 elseif [#<_value> EQ -3]
+    M65 P#<_ini[OTHER_PINS]TS>
+    (abort, Probe failed to make contact without ERR signal)
+o440 endif
+
+G53 G1 Z#<zs> F#<_ini[TOOLSENSOR]RAPID_SPEED>
+M65 P#<_ini[OTHER_PINS]TS>
+
+#<touch_result> = #5063
+; touch in machine Z: add work offset Z of the active G54..G59.3
+; + G92 Z if active (G49 is in effect)
+#<touch_mz> = [#<touch_result> + #[5203 + 20 * #5220] + #5213 * #5210]
+(print, T#<tool> touch=#<touch_result> machine=#<touch_mz> setter=#<_hal[qtversaprobe.probeheight]>)
+; tool length from MACHINE Z, so it does not depend on the work offset.
+; Same values as the old "work Z - setter + block" while G54 Z = Z MIN_LIMIT + block height
+; (what the probe screen sets), but stays valid after Z touch-off / ZERO G5X.
+#<_tool_measure_len> = [#<touch_mz> - #<_ini[AXIS_Z]MIN_LIMIT> - #<_hal[qtversaprobe.probeheight]>]
+; big change from the last length -> wrong tool number, tool pulled out
+; of the holder, chip under the holder, bad touch on the setter ...
+; -> warning + Yes/No dialog (M191). Yes = save, No = keep the old length.
+#<save> = 1
+#<max_change> = #<_ini[TOOLSENSOR]MAX_LENGTH_CHANGE>
+o460 if [[#<_tool_measure_old> NE 0] AND [#<max_change> GT 0]]
+    #<change> = [#<_tool_measure_len> - #<_tool_measure_old>]
+    o461 if [ABS[#<change>] GT #<max_change>]
+        (DEBUG, WARNING: T#<tool> length changed by #<change> mm - was #<_tool_measure_old>, now #<_tool_measure_len>. Check tool number, clamping, chips, setter touch!)
+        M191
+        ; dialog open? (qtdragon.lengthconfirm-waiting -> digital-in-04)
+        M66 P4 L3 Q5
+        o462 if [#5399 LT 0]
+            (DEBUG, WARNING: length dialog did not open - new length T#<tool> = #<_tool_measure_len> saved)
+        o462 else
+            ; wait for the answer (no time limit)
+            o463 do
+                M66 P4 L4 Q60
+            o463 while [#5399 LT 0]
+            G4 P0.2 ; let the GUI set the response pin
+            ; qtdragon.lengthconfirm-response -> digital-in-03, 1 = Yes
+            M66 P3 L0
+            o464 if [#5399 NE 1]
+                #<save> = 0
+            o464 endif
+        o462 endif
+    o461 endif
+o460 endif
+
+o470 if [#<save> EQ 1]
+    G10 L1 P#<tool> Z#<_tool_measure_len>
+    ; remember this touch in machine Z for the next fast approach
+    (LOGAPPEND,tool_touch.log)
+    (LOG,T#<tool> #<touch_mz>)
+    (LOGCLOSE)
+o470 else
+    (DEBUG, T#<tool>: new length #<_tool_measure_len> NOT saved - keeping #<_tool_measure_old>)
+    #<_tool_measure_len> = #<_tool_measure_old>
+o470 endif
+
+o<tool_measure> endsub [1]
+M2

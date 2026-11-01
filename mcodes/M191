@@ -1,0 +1,10 @@
+#!/bin/bash
+# M191 - pop the "tool length changed a lot - save it?" Yes/No dialog in QtDragon.
+# Called from macros/tool_measure.ngc. The dialog is defined in the INI [DISPLAY]
+# (MESSAGE_PINNAME = lengthconfirm); hallib/postgui_call_list.hal wires its pins:
+#   length-confirm-ask (signal -> qtdragon.lengthconfirm, set here)
+#   qtdragon.lengthconfirm-waiting  -> motion.digital-in-04 (dialog open)
+#   qtdragon.lengthconfirm-response -> motion.digital-in-03 (1 = Yes)
+halcmd sets length-confirm-ask 0
+halcmd sets length-confirm-ask 1
+exit 0

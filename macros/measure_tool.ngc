@@ -1,0 +1,45 @@
+; Re-measure the tool that is in the spindle now (screen button "Measure Tool").
+; For when M6 ran with tool measurement switched off, or a tool was re-clamped.
+; Always a slow search from [TOOLSENSOR]Z (no fast approach), so a tool that is
+; now longer than its last logged touch cannot crash into the setter.
+; Stores the new length in the tool table and applies it (G43).
+
+o<measure_tool> sub
+#<tool> = #5400
+o10 if [#<tool> LE 0]
+    (abort, Measure tool: no tool in the spindle - set it with M61 Q<tool> first)
+o10 endif
+M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+o20 if [#5399 NE 1]
+    (abort, Measure tool: tool sensor sees no tool in the spindle)
+o20 endif
+
+o<_psng_modal_save> call
+G90 G40 G49
+
+; spindle off and real standstill (< 0.5 Hz) before the setter
+M5
+M66 P#<_ini[ATC_PINS]SENSOR_SPINDLE_STOPPED> L3 Q#<_ini[ATC]SPINDLE_STOP_TIMEOUT>
+o30 if [#5399 LT 0]
+    G43
+    (abort, Measure tool: spindle did not stop in time)
+o30 endif
+
+o<tool_measure> call [#<tool>] [0]
+#<result> = #<_value>
+G43
+o<_psng_modal_restore> call
+
+o40 if [#<result> EQ -1]
+    (abort, Measure tool: search velocity is 0 in the probe screen)
+o40 elseif [#<result> EQ -2]
+    (abort, Measure tool: probe velocity is 0 in the probe screen)
+o40 elseif [#<result> EQ -3]
+    (abort, Measure tool: tool setter already tripped)
+o40 elseif [#<result> EQ -4]
+    (abort, Measure tool: no contact with the tool setter)
+o40 endif
+
+(DEBUG, Measure tool: T#<tool> length #<_tool_measure_old> -> #<_tool_measure_len>)
+o<measure_tool> endsub
+M2

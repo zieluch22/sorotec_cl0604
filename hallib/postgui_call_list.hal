@@ -29,3 +29,9 @@ net vfd-amps          => qtdragon.spindle-amps
 net vfd-volts         => qtdragon.spindle-volts
 net vfd-fault-code    => qtdragon.spindle-fault
 net vfd-modbus-errors => qtdragon.spindle-modbus-errors-u32
+
+# --- "Tool length changed a lot - save it?" dialog (INI [DISPLAY] MESSAGE_PINNAME = lengthconfirm) ---
+# opened by mcodes/M191 (halcmd sets length-confirm-ask 1), read by macros/tool_measure.ngc
+net length-confirm-ask      qtdragon.lengthconfirm
+net length-confirm-waiting  qtdragon.lengthconfirm-waiting   => motion.digital-in-04
+net length-confirm-yes      qtdragon.lengthconfirm-response  => motion.digital-in-03

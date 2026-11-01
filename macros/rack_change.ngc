@@ -173,70 +173,19 @@ o150 if [#<oldtool> NE #<newtool>]
 
     ; ---------- 3. measure (probe screen button) or use table length ----------
     o400 if [#<_hal[qtversaprobe.enable]> EQ 1]
-        #<tool_diameter> = #5410
-        G53 G0 Z#<zs>
-        G53 G0 Y[#<_ini[TOOLSENSOR]Y> - #<_ini[ATC]SAFE_Y>]
-        G53 G0 X#<_ini[TOOLSENSOR]X>
-        o410 if [#<tool_diameter> GT #<_ini[TOOLSENSOR]TS_DIAMETER>]
-            ; big tool: offset X by half the diameter to clear the holder
-            G53 G1 X[#<_ini[TOOLSENSOR]X> + #<tool_diameter> / 2] Y#<_ini[TOOLSENSOR]Y> F[#<_ini[ATC]DROPSPEEDRAPID> / 2]
-        o410 else
-            G53 G1 X#<_ini[TOOLSENSOR]X> Y#<_ini[TOOLSENSOR]Y> F#<_ini[ATC]DROPSPEEDRAPID>
-        o410 endif
-        G53 G0 Z#<_ini[TOOLSENSOR]Z>
-        o420 if [#<_hal[qtversaprobe.searchvel]> LE 0]
-            o420 return [-1]
-        o420 endif
-        o430 if [#<_hal[qtversaprobe.probevel]> LE 0]
-            o430 return [-2]
-        o430 endif
-
-        ; fast approach: rack tool with a recorded touch -> G0 to FAST_APPROACH mm
-        ; above its last touch (machine Z), then search only 2x that distance.
-        ; Otherwise (manual tool, first measurement) slow search from TOOLSENSOR Z.
-        #<search> = #<_ini[TOOLSENSOR]MAXPROBE>
-        #<fast> = #<_ini[TOOLSENSOR]FAST_APPROACH>
-        o415 if [[#<fast> GT 0] AND [#<new_touch_ok> EQ 1] AND [#<newpocket> GE 1] AND [#<newpocket> LE #<_ini[ATC]NUMPOCKETS>]]
-            #<fast_z> = [#<new_touch> + #<fast>]
-            o416 if [#<fast_z> LT #<_ini[TOOLSENSOR]Z>]
-                (print, fast approach to G53 Z#<fast_z>, last touch #<new_touch>)
-                G53 G0 Z#<fast_z>
-                #<search> = [-2 * #<fast>]
-            o416 endif
+        ; fast approach only for a rack tool with a recorded touch
+        #<fast_z> = 0
+        o415 if [[#<_ini[TOOLSENSOR]FAST_APPROACH> GT 0] AND [#<new_touch_ok> EQ 1] AND [#<newpocket> GE 1] AND [#<newpocket> LE #<_ini[ATC]NUMPOCKETS>]]
+            #<fast_z> = [#<new_touch> + #<_ini[TOOLSENSOR]FAST_APPROACH>]
         o415 endif
-
-        M64 P#<_ini[OTHER_PINS]TS>
-        o<_psng_probe_tool> call [#<search>]
-        o440 if [#<_value> EQ -1]
-            M65 P#<_ini[OTHER_PINS]TS>
+        o<tool_measure> call [#<newtool>] [#<fast_z>]
+        #<result> = #<_value>
+        o440 if [#<result> LT -2]
             M72
-            o440 return [-3] ; probe already tripped
-        o440 elseif [#<_value> EQ -2]
-            M65 P#<_ini[OTHER_PINS]TS>
-            M72
-            o440 return [-4] ; probe contact failure
-        o440 elseif [#<_value> EQ -3]
-            M65 P#<_ini[OTHER_PINS]TS>
-            M72
-            (abort, Probe failed to make contact without ERR signal)
         o440 endif
-
-        G53 G1 Z#<zs> F#<_ini[TOOLSENSOR]RAPID_SPEED>
-        M65 P#<_ini[OTHER_PINS]TS>
-
-        #<touch_result> = #5063
-        ; touch in machine Z: add work offset Z of the active G54..G59.3
-        ; + G92 Z if active (G49 is in effect)
-        #<touch_mz> = [#<touch_result> + #[5203 + 20 * #5220] + #5213 * #5210]
-        (print, touch=#<touch_result> machine=#<touch_mz> setter=#<_hal[qtversaprobe.probeheight]>)
-        ; tool length from MACHINE Z, so it does not depend on the work offset.
-        ; Same values as the old "work Z - setter + block" while G54 Z = Z MIN_LIMIT + block height
-        ; (what the probe screen sets), but stays valid after Z touch-off / ZERO G5X.
-        G10 L1 P#<newtool> Z[#<touch_mz> - #<_ini[AXIS_Z]MIN_LIMIT> - #<_hal[qtversaprobe.probeheight]>]
-        ; remember this touch in machine Z for the next fast approach
-        (LOGAPPEND,tool_touch.log)
-        (LOG,T#<newtool> #<touch_mz>)
-        (LOGCLOSE)
+        o445 if [#<result> LT 0]
+            o445 return [#<result>]
+        o445 endif
         G43
     o400 else
         G43 H#<newtool>
