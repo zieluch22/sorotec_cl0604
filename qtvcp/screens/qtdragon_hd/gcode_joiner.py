@@ -224,6 +224,26 @@ def check(files):
     return warns
 
 
+def ends_with_code(body, code, tail=6):
+    """True if `code` (e.g. M9) appears in the last `tail` G-code lines of body,
+    before any later move that could re-enable it (M3/M4/M7/M8)."""
+    word = re.compile(r"\b" + code[0] + r"0*" + code[1:] + r"\b", re.IGNORECASE)
+    undo = re.compile(r"\bM0*(3|4)\b" if code.upper() == "M5" else r"\bM0*(7|8)\b", re.IGNORECASE)
+    n = 0
+    for l in reversed(body):
+        s = re.sub(r"\(.*?\)|;.*", "", l).strip()
+        if not s:
+            continue
+        if undo.search(s):
+            return False
+        if word.search(s):
+            return True
+        n += 1
+        if n >= tail:
+            break
+    return False
+
+
 def join(paths, program_name="COMBINED"):
     files = [load(p) for p in paths]
     if not files:
@@ -253,9 +273,11 @@ def join(paths, program_name="COMBINED"):
         out.append("")
         out.append(f"(===== OPERATION {n}: {f.name} =====)")
         if n > 1:
-            # spindle + coolant OFF before the next tool change
-            out.append("M5")
-            out.append("M9")
+            # spindle + coolant OFF before the next tool change - only if the
+            # previous file's tail doesn't already do it (Fusion ends with M9)
+            for code in ("M5", "M9"):
+                if not ends_with_code(files[n - 2].body, code):
+                    out.append(code)
             # restore modal state - previous file may have left G18/G19 or G91 active
             out.extend(f.setup or files[0].setup)
         out.extend(f.body)
