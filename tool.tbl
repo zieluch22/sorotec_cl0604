@@ -36,7 +36,7 @@ T33  P33  ;r3 ball sorotec
 T41  P41  ;drill 5mm sorotec 
 T42  P42  ;drill 2.5 
 T50  P50  D+50.000000 Z+156.564600 ;face 50mm china 
-T51  P1   D+16.000000 Z+111.912042 ;sorotec 16mm face mill 
+T51  P1   D+16.000000 Z+112.294250 ;sorotec 16mm face mill 
 T52  P52  D+35.000000 Z+147.241030 ;Face 35 wood 
 T60  P60  ;3f 90deg 6mm chamfer 
 T66  P3   D+3.800000 Z+133.246380 ;thred m5-m8 sorotec 
