@@ -488,16 +488,11 @@ class HandlerClass:
         self.facing = Facing()
         self.w.layout_facing.addWidget(self.facing)
 
-        from qtvcp.lib.gcode_utility.hole_circle import Hole_Circle
-        self.hole_circle = Hole_Circle()
-        self.w.layout_hole_circle.addWidget(self.hole_circle)
-
-        try:
-            from qtvcp.lib.gcode_utility.hole_enlarge import Hole_Enlarge
-            self.hole_enlarge = Hole_Enlarge()
-            ACTION.ADD_WIDGET_TO_TAB(self.w.tabWidget_utilities,self.hole_enlarge, 'Hole Enlarge')
-        except Exception as e:
-            LOG.info("Utility hole enlarge unavailable: {}".format(e))
+        # Only G-code Joiner (first, default) and Facing are used here.
+        # Hole Circle / Hole Enlarge / NGCGUI / Workpiece are switched off.
+        tabs = self.w.tabWidget_utilities
+        for page in (self.w.hole_circle, self.w.ngcgui, self.w.worlpiece):
+            tabs.removeTab(tabs.indexOf(page))
 
         # G-code Joiner: join several single-tool NC files into one program (Utilities tab)
         try:
@@ -510,18 +505,10 @@ class HandlerClass:
             self.gcode_joiner = GcodeJoinerTab(start_dir=os.path.expanduser(prefix),
                                                load_callback=self.joiner_load_program,
                                                status_callback=self.add_status)
-            ACTION.ADD_WIDGET_TO_TAB(self.w.tabWidget_utilities, self.gcode_joiner, 'G-code Joiner')
+            tabs.insertTab(0, self.gcode_joiner, 'G-code Joiner')
         except Exception as e:
             LOG.warning("Utility G-code Joiner unavailable: {}".format(e))
-
-        LOG.info("Using NGCGUI utility")
-        self.ngcgui = NgcGui()
-        self.w.layout_ngcgui.addWidget(self.ngcgui)
-        self.ngcgui.warp_info_frame(self.w.ngcGuiLeftLayout)
-
-        self.auto_measure = Auto_Measure(self.w)
-        self.w.layout_workpiece.addWidget(self.auto_measure)
-        self.auto_measure._hal_init()
+        tabs.setCurrentIndex(0)
 
     def processed_focus_event__(self, receiver, event):
         if not self.w.chk_use_virtual.isChecked() or STATUS.is_auto_mode(): return
@@ -1114,7 +1101,7 @@ class HandlerClass:
     # show ngcgui info tab (in the stackedWidget) if ngcgui utilites
     # tab is selected
     def tab_utilities_changed(self, num):
-        if num == 2:
+        if self.w.tabWidget_utilities.widget(num) is self.w.ngcgui:
             self.w.stackedWidget.setCurrentIndex(PAGE_NGCGUI)
         else:
             self.w.stackedWidget.setCurrentIndex(PAGE_GCODE)
@@ -1552,7 +1539,7 @@ class HandlerClass:
         # show ngcgui info tab if utilities tab is selected
         # but only if the utilities tab has ngcgui selected
         if main_index == TAB_UTILS:
-            if self.w.tabWidget_utilities.currentIndex() == 2:
+            if self.w.tabWidget_utilities.currentWidget() is self.w.ngcgui:
                 self.w.stackedWidget.setCurrentIndex(PAGE_NGCGUI)
             else:
                 self.w.stackedWidget.setCurrentIndex(PAGE_GCODE)
