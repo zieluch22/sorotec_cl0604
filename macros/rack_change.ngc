@@ -55,6 +55,43 @@ o110 if [[#<newtool> GT 0] AND [#<new_home> GE 0] AND [#<new_home> NE #<newpocke
     (abort, Tool table pocket differs from prepared pocket - reload the tool table)
 o110 endif
 
+; LinuxCNC says a tool is loaded but the spindle sensor sees none (tool taken
+; out by hand) -> ask (M192 Yes/No dialog). Yes = treat the spindle as empty
+; and load the new tool normally (also when it is the same tool number).
+; No = cancel the tool change.
+o112 if [#<oldtool> GT 0]
+    M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
+    o113 if [[#5399 NE 1] AND [#<newtool> LE 0]]
+        ; M6 T0 (unload) and the spindle is already empty: just clear the tool
+        (DEBUG, %dSpindle already empty - T#<oldtool> cleared)
+        M61 Q0
+        #<oldtool>   = 0
+        #<oldpocket> = -1
+    o113 elseif [#5399 NE 1]
+        (DEBUG, %dNo tool detected in the spindle - LinuxCNC has T#<oldtool> loaded. Load T#<newtool>?)
+        M192
+        ; dialog open? (qtdragon.emptyspindle-waiting -> digital-in-06)
+        M66 P6 L3 Q5
+        o114 if [#5399 LT 0]
+            (abort, No tool in the spindle but T#<oldtool> is loaded - dialog did not open. Set M61 Q0, then M6 again)
+        o114 endif
+        o115 do
+            M66 P6 L4 Q60
+        o115 while [#5399 LT 0]
+        G4 P0.2 ; let the GUI set the response pin
+        ; qtdragon.emptyspindle-response -> digital-in-05, 1 = Yes
+        M66 P5 L0
+        o116 if [#5399 NE 1]
+            (abort, Tool change cancelled - spindle is empty, LinuxCNC still has T#<oldtool>)
+        o116 endif
+        ; spindle is empty: nothing to drop, pick/load the new tool
+        M61 Q0
+        #<oldtool>   = 0
+        #<oldpocket> = -1
+        (print, M6: spindle empty confirmed - loading T#<newtool> P#<newpocket>)
+    o113 endif
+o112 endif
+
 ; old and new tool share one rack pocket in the tool table: dropping the old tool
 ; would fill the pocket the new one should come from -> change both by hand.
 ; -1 = manual removal / manual load below, and slow search when measuring.

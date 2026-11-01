@@ -35,3 +35,9 @@ net vfd-modbus-errors => qtdragon.spindle-modbus-errors-u32
 net length-confirm-ask      qtdragon.lengthconfirm
 net length-confirm-waiting  qtdragon.lengthconfirm-waiting   => motion.digital-in-04
 net length-confirm-yes      qtdragon.lengthconfirm-response  => motion.digital-in-03
+
+# --- M6 "no tool detected in the spindle - load again?" dialog (INI MESSAGE_PINNAME = emptyspindle) ---
+# opened by mcodes/M192 (halcmd sets empty-spindle-ask 1), read by macros/rack_change.ngc
+net empty-spindle-ask       qtdragon.emptyspindle
+net empty-spindle-waiting   qtdragon.emptyspindle-waiting    => motion.digital-in-06
+net empty-spindle-yes       qtdragon.emptyspindle-response   => motion.digital-in-05

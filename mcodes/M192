@@ -1,0 +1,10 @@
+#!/bin/bash
+# M192 - pop the "no tool detected in the spindle - load the tool again?" Yes/No
+# dialog in QtDragon. Called from macros/rack_change.ngc. Dialog defined in the
+# INI [DISPLAY] (MESSAGE_PINNAME = emptyspindle); hallib/postgui_call_list.hal:
+#   empty-spindle-ask (signal -> qtdragon.emptyspindle, set here)
+#   qtdragon.emptyspindle-waiting  -> motion.digital-in-06 (dialog open)
+#   qtdragon.emptyspindle-response -> motion.digital-in-05 (1 = Yes)
+halcmd sets empty-spindle-ask 0
+halcmd sets empty-spindle-ask 1
+exit 0
