@@ -1,0 +1,15 @@
+# /etc/udev/rules.d/99-cnc-serial.rules  -  REPLACES /etc/udev/rules.d/99-vfd485.rules
+#
+# Two USB serial devices on this machine (checked 2026-11-02):
+#   VFD Simphoenix E500  USB-RS485 adapter  CH340   1a86:7523  (no serial number)
+#   ColdEnd Arduino Nano                    FT232R  0403:6001  serial AR0KKVM0
+# Different chips -> told apart by chip / serial number, so both can be plugged
+# into ANY USB port.
+# If the Arduino is ever replaced, check the new one with:
+#   udevadm info -q property -n /dev/ttyUSB1 | grep -E 'ID_VENDOR_ID|ID_MODEL_ID|ID_SERIAL_SHORT'
+
+# VFD (the only CH340 device - same match as the old 99-vfd485.rules)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", SYMLINK+="vfd485", GROUP="dialout", MODE="0660"
+
+# ColdEnd mist controller (this exact Arduino Nano, by its FTDI serial number)
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6001", ATTRS{serial}=="AR0KKVM0", SYMLINK+="coldend", GROUP="dialout", MODE="0660"

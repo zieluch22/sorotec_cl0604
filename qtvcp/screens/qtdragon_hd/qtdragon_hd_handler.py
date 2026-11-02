@@ -185,6 +185,8 @@ class HandlerClass:
         self.init_widgets()
         self.init_probe()
         self.init_utils()
+        # after start-up, when the embedded ColdEnd panel exists
+        QtCore.QTimer.singleShot(0, self.init_coldend_main)
         self.w.stackedWidget_log.setCurrentIndex(0)
         self.w.stackedWidget_dro.setCurrentIndex(0)
         if self.probe is not None:
@@ -482,6 +484,30 @@ class HandlerClass:
             return
         self.w.probe_layout.addWidget(self.probe)
         self.probe.hal_init()
+
+    def init_coldend_main(self):
+        # ColdEnd mist controller (qtvcp/panels/coldend, see coldend/README.md):
+        #  - its COLDEND box (link + mist LEDs, mist rpm, PRIME button) moves from the
+        #    USER page into the MAIN screen PROGRAM box, in place of the SPINDLE LIFT /
+        #    Z AXIS COMP displays (external offsets are not used in this config)
+        #  - FLOOD button = M8 = ColdEnd air blast -> labelled AIR
+        # If anything is missing the box simply stays on the USER page.
+        try:
+            panel = getattr(self.w, 'ColdEnd', None)
+            box = getattr(panel, 'grp_main', None) if panel is not None else None
+            if box is None:
+                return
+            layout = self.w.frame_program.layout()
+            index = layout.indexOf(self.w.widget_zaxis_offset)
+            self.w.widget_zaxis_offset_2.hide()
+            self.w.widget_zaxis_offset.hide()
+            layout.insertWidget(index + 1, box)
+            flood = self.w.action_flood
+            flood.set_true_string('AIR\nON')
+            flood.set_false_string('AIR\nOFF')
+            flood.setText('AIR\nON' if flood.isChecked() else 'AIR\nOFF')
+        except Exception as e:
+            LOG.warning("ColdEnd main screen box not installed: {}".format(e))
 
     def init_utils(self):
         from qtvcp.lib.gcode_utility.facing import Facing

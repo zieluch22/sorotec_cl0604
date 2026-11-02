@@ -1,0 +1,55 @@
+# =====================================================================
+#  ColdEnd mist controller over Modbus (Arduino Nano on USB /dev/coldend)
+#  Docs + install steps: coldend/README.md
+#    mb2hal "coldend-mb"  hallib/coldend_mb2hal.ini   (separate from the VFD mb2hal)
+#    logic  "coldend"     python/coldend.py           settings: INI [COLDEND]
+#    screen               qtvcp/panels/coldend  +  hallib/coldend_postgui.hal
+#  Needs the signals machine-is-enabled, coolant-mist, coolant-flood
+#  (qthd_sorotec_cl0604.hal) and vfd-is-turning (spindle_setup.hal):
+#  load this file AFTER those.
+# =====================================================================
+
+loadusr -Wn coldend-mb mb2hal config=hallib/coldend_mb2hal.ini
+loadusr -Wn coldend python3 python/coldend.py
+
+# --- heartbeat / active: straight from the machine state (E-stop = pump off,
+#     even if the python logic hangs). The firmware switches everything off
+#     1 s after the last write with this bit = 1.
+net machine-is-enabled  => coldend-mb.cmd.00.bit coldend.machine-on
+
+# --- requests from LinuxCNC: M7 = mist, M8 = air blast, M9 = off
+net coolant-mist        => coldend.mist-request
+net coolant-flood       => coldend.air-request
+net vfd-is-turning      => coldend.spindle-turning
+
+# --- logic -> ColdEnd
+net ce-led          coldend.cmd-led        => coldend-mb.cmd.01.bit
+net ce-coolant      coldend.cmd-coolant    => coldend-mb.cmd.02.bit
+net ce-fast         coldend.cmd-fast       => coldend-mb.cmd.03.bit
+net ce-spit         coldend.cmd-spit       => coldend-mb.cmd.04.bit
+net ce-air          coldend.cmd-air        => coldend-mb.cmd.05.bit
+net ce-dir          coldend.cmd-dir        => coldend-mb.cmd.06.bit
+
+net ce-mist-rate    coldend.reg-mist-rate  => coldend-mb.rates.00.float
+net ce-fast-rate    coldend.reg-fast-rate  => coldend-mb.rates.01.float
+net ce-spit-rate    coldend.reg-spit-rate  => coldend-mb.rates.02.float
+net ce-spit-time    coldend.reg-spit-time  => coldend-mb.rates.03.float
+net ce-microstep    coldend.reg-microstep  => coldend-mb.rates.04.float
+
+# --- ColdEnd -> logic
+net ce-fw-active    coldend-mb.inputs.00.bit   => coldend.fw-active
+net ce-sw-mist      coldend-mb.inputs.01.bit   => coldend.sw-mist
+net ce-sw-fast      coldend-mb.inputs.02.bit   => coldend.sw-fast
+net ce-sw-air       coldend-mb.inputs.03.bit   => coldend.sw-air
+
+net ce-knob-mist    coldend-mb.status.00.float => coldend.knob-mist-raw
+net ce-knob-spit    coldend-mb.status.01.float => coldend.knob-spit-raw
+net ce-spit-left    coldend-mb.status.02.float => coldend.spit-left-ms
+net ce-fw-version   coldend-mb.status.08.float => coldend.fw-version
+
+net ce-err-cmd      coldend-mb.cmd.num_errors    => coldend.errors-cmd
+net ce-err-status   coldend-mb.status.num_errors => coldend.errors-status
+
+# --- "ColdEnd Modbus link lost" message (m_coldend is loaded in messages.hal)
+addf m_coldend servo-thread
+net ce-link-lost    coldend.link-lost-msg  => m_coldend.trigger

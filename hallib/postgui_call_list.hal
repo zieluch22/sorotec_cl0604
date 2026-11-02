@@ -41,3 +41,6 @@ net length-confirm-yes      qtdragon.lengthconfirm-response  => motion.digital-i
 net empty-spindle-ask       qtdragon.emptyspindle
 net empty-spindle-waiting   qtdragon.emptyspindle-waiting    => motion.digital-in-06
 net empty-spindle-yes       qtdragon.emptyspindle-response   => motion.digital-in-05
+
+# --- ColdEnd mist controller tab (qtvcp/panels/coldend) ---
+source hallib/coldend_postgui.hal
