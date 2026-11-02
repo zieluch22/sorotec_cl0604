@@ -93,7 +93,7 @@ gcodegraphics-user-lat = 0.0
 gcodegraphics-user-lon = 0.0
 
 [CUSTOM_FORM_ENTRIES]
-Tool to load = 1
+Tool to load = 0
 Laser X = 100.0
 Laser Y = -20.0
 Sensor X = 154.77
@@ -144,4 +144,12 @@ ps_offs_angle = 0.0
 ps_probe_rapid_vel = 3000.0
 use_auto_zero = False
 use_auto_skew = False
+
+[COLDEND]
+ds_mist = 12.0
+ds_spit = 80.0
+ds_fast = 100.0
+ds_spit_time = 2.0
+chk_spit = True
+chk_use_screen = False
 
