@@ -146,10 +146,11 @@ use_auto_zero = False
 use_auto_skew = False
 
 [COLDEND]
-ds_mist = 12.0
+ds_mist = 56.0
 ds_spit = 80.0
 ds_fast = 100.0
 ds_spit_time = 2.0
-chk_spit = True
-chk_use_screen = False
+chk_spit = False
+chk_use_screen = True
+btn_spit_on = False
 
