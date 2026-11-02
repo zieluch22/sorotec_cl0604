@@ -7,6 +7,7 @@ from qtvcp.widgets.origin_offsetview import OriginOffsetView as OFFSET_VIEW
 from qtvcp.widgets.stylesheeteditor import StyleSheetEditor as SSE
 from qtvcp.widgets.file_manager import FileManager as FM
 from qtvcp.widgets.versa_probe import VersaProbe as VP
+import qtvcp.widgets.versa_probe as VP_MODULE
 from qtvcp.lib.qt_ngcgui.ngcgui import NgcGui
 from qtvcp.lib.auto_height.auto_height import Auto_Measure
 from qtvcp.lib.writer import writer
@@ -167,6 +168,11 @@ class HandlerClass:
         VP.start_probe = self.start_probe
         self.super_vp_process_finished = VP.process_finished
         VP.process_finished = self.versa_process_finished
+        # our probe subprogram: fixed "outside, four sides" routine (python/probe_fix)
+        config_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+        fixed = os.path.join(config_dir, 'python', 'probe_fix', 'probe_subprog_fixed.py')
+        if os.path.exists(fixed):
+            VP_MODULE.SUBPROGRAM = fixed
 
     # class patch versa probe to call MDI before probing
     def start_probe(self, cmd):
