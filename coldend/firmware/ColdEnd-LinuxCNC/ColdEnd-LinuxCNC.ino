@@ -20,7 +20,8 @@
    - Knobs and switches are reported even while inactive
    - Register 8456 = firmware version
    - OLED display (SSD1306 128x64, I2C 0x3C/0x3D, like the original ColdEND):
-     link status, mode, mist ml/h, spit time, fast ml/h. Works without a display too.
+     big text, readable from a distance: link + mode, mist ml/h, spit time.
+     Works without a display too.
 
   Serial: 9600 baud, 8N1, slave ID 6.
   Libraries: only Wire (part of the Arduino IDE).
@@ -470,8 +471,28 @@ static uint8_t stretch4(uint8_t nib) {          // 4 pixel bits -> 8 (double hei
   return r;
 }
 
-// big: 0 = normal text (21 chars), 1 = top half, 2 = bottom half of 2x text (10 chars)
-static bool oledWritePage(uint8_t page, const char *txt, uint8_t big) {
+static uint8_t stretch3(uint8_t g, uint8_t row) { // row 0..2 of a glyph column at 3x height
+  uint8_t r = 0;
+  for (uint8_t bit = 0; bit < 8; bit++) {
+    uint8_t y = bit * 3;                        // first of the 3 output pixels of this bit
+    if (!(g & (1 << bit))) continue;
+    for (uint8_t k = 0; k < 3; k++) {
+      uint8_t py = y + k;
+      if (py / 8 == row) r |= 1 << (py % 8);
+    }
+  }
+  return r;
+}
+
+// Screen layout (8 pages of 8 pixels):
+//   pages 0-1  2x text, 10 chars   link + mode
+//   pages 2-4  3x text,  7 chars   M mist flow
+//   pages 5-7  3x text,  7 chars   S spit time
+static uint8_t oledTextRow(uint8_t page) {      // row of this page within its text line
+  return page < 2 ? page : (page - 2) % 3;
+}
+
+static bool oledWritePage(uint8_t page, const char *txt) {
   const uint8_t addr[] = {0x21, 0, 127, 0x22, page, page};
   if (!oledCmds(addr, sizeof(addr), false)) return false;
   for (uint8_t x = 0; x < 128; x += 16) {
@@ -479,15 +500,16 @@ static bool oledWritePage(uint8_t page, const char *txt, uint8_t big) {
     Wire.write((uint8_t)0x40);                  // control byte: data
     for (uint8_t j = 0; j < 16; j++) {
       uint8_t col = x + j, b = 0;
-      if (!big) {
-        uint8_t ci = col / 6;
-        if (ci < 21) b = glyphCol(txt[ci], col % 6);
-      } else {
+      uint8_t row = oledTextRow(page);
+      if (page < 2) {
         uint8_t ci = col / 12;
         if (ci < 10) {
           uint8_t g = glyphCol(txt[ci], (col % 12) / 2);
-          b = stretch4(big == 1 ? (g & 0x0F) : (g >> 4));
+          b = stretch4(row == 0 ? (g & 0x0F) : (g >> 4));
         }
+      } else {
+        uint8_t ci = col / 18;
+        if (ci < 7) b = stretch3(glyphCol(txt[ci], (col % 18) / 3), row);
       }
       Wire.write(b);
     }
@@ -502,54 +524,37 @@ static void padLine(char *buf, uint8_t width) { // fill with spaces up to width
   buf[width] = 0;
 }
 
-// ml/h like the original display: one decimal below 10 ml/h, whole numbers above
-static void fmtFlow(char *buf, const char *label, uint16_t rate) {
-  if (rate < 100) snprintf(buf, 22, "%-10s%4u.%u ml/h", label, rate / 10, rate % 10);
-  else            snprintf(buf, 22, "%-10s%6u ml/h", label, (rate + 5) / 10);
-}
-
+// Same text on all pages of a line. One decimal below 10, whole numbers above.
 static void oledText(uint8_t page, char *buf) {
   buf[0] = 0;
-  bool active = bits[B_FW_ACTIVE];
-  switch (page) {
-    case 0:
-      strcpy(buf, active ? "ColdEnd   LinuxCNC OK" : "ColdEnd       NO LINK");
-      break;
-    case 1:
-    case 2: {                                   // big mode text, centred
-      char m[11];
-      switch (dispMode) {
-        case MODE_OFF:   strcpy(m, "OFF");   break;
-        case MODE_MIST:  strcpy(m, "MIST");  break;
-        case MODE_PRIME: strcpy(m, "PRIME"); break;
-        case MODE_AIR:   strcpy(m, "AIR");   break;
-        case MODE_SPIT: {
-          uint16_t t = (words[W_SPIT_LEFT] + 99) / 100;   // 0.1 s, rounded up
-          snprintf(m, sizeof(m), "SPIT %u.%u", t / 10, t % 10);
-          break;
-        }
-        default:         strcpy(m, "STANDBY"); break;
+  if (page < 2) {
+    switch (dispMode) {
+      case MODE_OFF:   strcpy(buf, "LINK OK");  break;
+      case MODE_MIST:  strcpy(buf, "OK MIST");  break;
+      case MODE_PRIME: strcpy(buf, "OK PRIME"); break;
+      case MODE_AIR:   strcpy(buf, "OK AIR");   break;
+      case MODE_SPIT: {
+        uint16_t t = (words[W_SPIT_LEFT] + 99) / 100;   // 0.1 s, rounded up
+        if (t < 100) snprintf(buf, 11, "OK SPIT%u.%u", t / 10, t % 10);
+        else         snprintf(buf, 11, "OK SPIT%u", t / 10);
+        break;
       }
-      uint8_t pad = (10 - strlen(m)) / 2;
-      memset(buf, ' ', pad);
-      strcpy(buf + pad, m);
-      padLine(buf, 10);
-      return;
+      default:         strcpy(buf, "NO LINK");  break;
     }
-    case 4:
-      if (words[W_MIST_RATE] == 0) strcpy(buf, "Mist             off");
-      else fmtFlow(buf, "Mist", words[W_MIST_RATE]);
-      break;
-    case 5: {
-      uint16_t t = (words[W_SPIT_TIME] + 50) / 100;   // 0.1 s
-      if (t == 0) strcpy(buf, "Spit time        off");
-      else snprintf(buf, 22, "Spit time   %4u.%u s", t / 10, t % 10);
-      break;
-    }
-    case 6: fmtFlow(buf, "Spit/Fast", words[W_FAST_RATE]); break;
-    default: break;                             // pages 3 and 7: empty
+    padLine(buf, 10);
+  } else if (page < 5) {
+    uint16_t r = words[W_MIST_RATE];              // 0.1 ml/h
+    if (r == 0)       strcpy(buf, "M OFF");
+    else if (r < 100) snprintf(buf, 8, "M %u.%u", r / 10, r % 10);
+    else              snprintf(buf, 8, "M %u", (r + 5) / 10);
+    padLine(buf, 7);
+  } else {
+    uint16_t t = (words[W_SPIT_TIME] + 50) / 100; // 0.1 s
+    if (t == 0)       strcpy(buf, "S OFF");
+    else if (t < 100) snprintf(buf, 8, "S %u.%us", t / 10, t % 10);
+    else              snprintf(buf, 8, "S %us", t / 10);
+    padLine(buf, 7);
   }
-  padLine(buf, 21);
 }
 
 static void displayTask(unsigned long now) {
@@ -565,8 +570,7 @@ static void displayTask(unsigned long now) {
   char buf[24];
   oledText(oledPage, buf);
   if (strcmp(buf, oledShown[oledPage]) != 0) {
-    uint8_t big = (oledPage == 1) ? 1 : (oledPage == 2) ? 2 : 0;
-    if (oledWritePage(oledPage, buf, big)) {
+    if (oledWritePage(oledPage, buf)) {
       strcpy(oledShown[oledPage], buf);
     } else {
       oledAddr = 0;                             // display gone - look again later

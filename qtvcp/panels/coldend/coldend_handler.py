@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Handler for the embedded QtDragon "ColdEnd" tab (qtvcp/panels/coldend/coldend.ui).
-# Remembers the screen settings (rates, spit time, check boxes) in the QtDragon
+# Remembers the spit on/off button in the QtDragon
 # preference file, section [COLDEND]. All HAL wiring is in hallib/coldend_postgui.hal.
 
 import os
@@ -11,8 +11,7 @@ from qtvcp import logger
 LOG = logger.getLogger(__name__)
 SECTION = "COLDEND"
 
-SPINS = ("ds_mist", "ds_fast", "ds_spit_time")
-CHECKS = ("chk_spit", "chk_use_screen")
+CHECKS = ("btn_spit_on",)
 
 GREEN = QtGui.QColor(0, 220, 0)
 RED = QtGui.QColor(230, 0, 0)
@@ -34,6 +33,7 @@ class HandlerClass:
 
     def initialized__(self):
         self.init_look()
+        self.init_slider()
         try:
             self.prefs = self.w.MAIN.PREFS_
         except AttributeError:
@@ -41,10 +41,6 @@ class HandlerClass:
         if not self.prefs:
             LOG.warning("ColdEnd tab: no preference file - screen settings will not be remembered")
             return
-        for name in SPINS:
-            wid = getattr(self.w, name)
-            wid.setValue(self.prefs.getpref(name, wid.value(), float, SECTION))
-            wid.valueChanged.connect(lambda v, n=name: self.save(n, float(v), float))
         for name in CHECKS:
             wid = getattr(self.w, name)
             wid.setChecked(self.prefs.getpref(name, wid.isChecked(), bool, SECTION))
@@ -62,6 +58,51 @@ class HandlerClass:
         if not pix.isNull():
             self.w.img_board.setPixmap(pix.scaled(300, 300, QtCore.Qt.KeepAspectRatio,
                                                   QtCore.Qt.SmoothTransformation))
+
+    def init_slider(self):
+        # A slider follows the value in use, so it shows the knob's value after the knob
+        # takes over (held at its end above its range). A real touch is reported by the
+        # hidden counters sl_mist_touch / sl_spit_touch: python/coldend.py cannot tell it
+        # from the slider's value, a button may set the value the pin already has.
+        w = self.w
+        w.sl_mist_touch.hide()
+        w.sl_spit_touch.hide()
+        w.sl_mist.actionTriggered.connect(lambda a: self.touched(w.sl_mist_touch))
+        w.sl_spit_time.actionTriggered.connect(lambda a: self.touched(w.sl_spit_touch))
+        for btn, slider, value, counter in (
+                (w.btn_mist_40, w.sl_mist, 40, w.sl_mist_touch),
+                (w.btn_mist2_0, w.sl_mist, 0, w.sl_mist_touch),
+                (w.btn_mist2_40, w.sl_mist, 40, w.sl_mist_touch),
+                (w.btn_spit_0, w.sl_spit_time, 0, w.sl_spit_touch),
+                (w.btn_spit_4, w.sl_spit_time, 40, w.sl_spit_touch),
+                (w.btn_flow_100, w.sl_spit_flow, 100, None),
+                (w.btn_flow_1562, w.sl_spit_flow, 1562, None)):
+            btn.clicked.connect(lambda c, s=slider, v=value, t=counter: self.preset(s, v, t))
+        try:
+            w.lbl_main_flow.hal_pin.value_changed.connect(self.show_flow)
+            w.lbl_spit_time.hal_pin.value_changed.connect(self.show_spit_time)
+        except Exception as e:
+            LOG.warning("ColdEnd tab: sliders will not follow the values: {}".format(e))
+        w.btn_tab_air.set_true_string('AIR\nON')
+        w.btn_tab_air.set_false_string('AIR\nOFF')
+        w.btn_tab_air.setText('AIR\nON' if w.btn_tab_air.isChecked() else 'AIR\nOFF')
+
+    def touched(self, counter):
+        counter.setValue(counter.value() + 1)
+
+    def preset(self, slider, value, counter):
+        slider.setValue(value)
+        if counter is not None:
+            self.touched(counter)
+
+    def show_flow(self, flow):
+        if not self.w.sl_mist.isSliderDown():
+            self.w.sl_mist.setValue(int(round(flow)))
+
+    def show_spit_time(self, seconds):
+        # with the burst switched off the value is 0, but the setting must stay for later
+        if self.w.btn_spit_on.isChecked() and not self.w.sl_spit_time.isSliderDown():
+            self.w.sl_spit_time.setValue(int(round(seconds * 10.0)))
 
     def save(self, name, value, typ):
         try:

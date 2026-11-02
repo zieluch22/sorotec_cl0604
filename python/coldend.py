@@ -8,11 +8,13 @@
 #     (optional, off for now: only while the spindle turns - INI SPINDLE_GATE)
 #   - the board switches keep working (mist / fast / air) and always win
 #   - fast (prime) mode from the board switch or the screen "Prime" button
-#   - pump rates in ml/h, from the board knobs (default) or from the screen.
+#   - mist flow and spit time: screen slider or board knob, last one touched wins.
+#     The sliders are in control after a start (40 ml/h, 3 s).
 #     Knobs work like the original ColdEND firmware:
 #       mist knob = mist flow, logarithmic 1..1000 ml/h (off below 1.1 ml/h)
 #       spit knob = spit burst time 0..8 s (no burst below 1 s)
-#     spit burst and fast/prime run at a fixed rate (original: 1562.5 ml/h)
+#     spit flow: screen slider 100..1562 ml/h, starts at 1000 (top = original 1562.5 ml/h)
+#     fast/prime run at a fixed rate (original: 1562.5 ml/h)
 #   - Modbus link supervision (link-ok, link-lost message)
 #
 # The heartbeat bit (coldend-mb.cmd.00) is NOT driven from here but directly by
@@ -27,6 +29,8 @@ import time
 
 import hal
 
+from coldend_mist import LastTouched
+
 # ---------------- settings from INI [COLDEND] ----------------
 DEFAULTS = {
     "MIST_MLH_MAX": 1000.0,   # mist knob fully right [ml/h] (original: 1000, log curve from 1)
@@ -34,8 +38,10 @@ DEFAULTS = {
     "FAST_MLH": 1562.5,       # spit burst + fast/prime rate [ml/h] (original: 1562.5)
     "SPIT_TIME_MAX": 8.0,     # spit knob fully right [s] (original: 8 s)
     "SPIT_MIN": 1.0,          # spit time below this = no burst [s] (original: 1 s)
+    "KNOB_TAKEOVER": 20.0,    # knob counts (0..1023) that take a value back from its slider
     "MLH_LIMIT": 3000.0,      # absolute max for any rate, also screen values [ml/h]
     "PUMP_REVERSE": 0,        # 1 = reverse pump direction
+    "LINK_MSG_DELAY": 3.0,    # s the link must stay down before the operator message
     "LINK_TIMEOUT": 1.5,      # s without Modbus errors needed for "link OK"
     "FW_VERSION": 3,          # expected firmware version (register 8456; 3 = ml/h)
     "DEVICE": "/dev/coldend", # USB serial port (udev symlink)
@@ -86,12 +92,14 @@ for name, typ in (
         ("knob-mist-raw", F), ("knob-spit-raw", F), ("spit-left-ms", F), ("fw-version", F),
         ("errors-cmd", U), ("errors-status", U),
         # from the screen tab (all default to the safe/normal behaviour when not connected)
-        ("scr-fast", B),                 # "Prime" button (hold)
-        ("use-screen", B),               # 1 = rates from the screen, knobs ignored
+        ("scr-fast", B), ("scr-fast2", B),  # "Prime" buttons (hold), main screen + tab
         ("run-without-spindle", B),      # 1 = M7/M8 also when the spindle is stopped (only with SPINDLE_GATE = 1)
-        ("no-spit", B),                  # 1 = no spit burst
+        ("spit-enable", B),              # 1 = spit burst when mist starts
         ("reconnect", B),                # rising edge = reload the Modbus driver now
-        ("scr-mist-mlh", F), ("scr-fast-mlh", F), ("scr-spit-time", F)):
+        ("scr-slider-mlh", F),           # mist slider [ml/h]
+        ("scr-spit-tenths", F),          # spit time slider [0.1 s]
+        ("scr-spit-flow", F),            # spit flow slider [ml/h]
+        ("scr-mist-touch", F), ("scr-spit-touch", F)):  # counters: operator touched the slider
     c.newpin(name, typ, IN)
 
 for name, typ in (
@@ -102,11 +110,12 @@ for name, typ in (
         ("reg-spit-time", F), ("reg-microstep", F),   # reg-microstep: reserved register, always 16
         # for the screen
         ("mist-on", B), ("air-on", B), ("fast-on", B), ("link-ok", B), ("link-lost-msg", B),
-        ("mist-mlh", F), ("fast-mlh", F), ("spit-time", F),
+        ("mist-mlh", F), ("fast-mlh", F), ("spit-mlh", F), ("spit-time", F),
         ("knob-mist-pct", F), ("knob-spit-pct", F), ("spit-left-s", F), ("errors", S),
-        ("reconnecting", B), ("reconnect-count", S)):
+        ("reconnecting", B), ("reconnect-count", S), ("mist-by-slider", B), ("spit-by-slider", B)):
     c.newpin(name, typ, OUT)
 
+c["spit-enable"] = True                # default without a screen; the SPIT button drives it
 c.ready()
 
 
@@ -150,6 +159,9 @@ def reg_rate(mlh, minimum):
 
 
 knob_mist, knob_spit = Knob(), Knob()
+mist_source = LastTouched(cfg["KNOB_TAKEOVER"])
+spit_source = LastTouched(cfg["KNOB_TAKEOVER"])
+link_down_since = None
 last_err = (None, None)
 last_err_time = time.monotonic()
 version_seen = False
@@ -223,8 +235,11 @@ try:
         # Modbus works but the Arduino has other firmware: reconnecting cannot help
         wrong_fw = no_errors and not in_grace and ver not in (0, int(cfg["FW_VERSION"]))
         c["link-ok"] = link_ok
+        # one failed write only shows in the log: the message needs the link down for a while
+        link_down_since = None if (link_ok or in_grace) else (link_down_since or now)
         c["link-lost-msg"] = bool(machine_on_since and (now - machine_on_since) > 3.0
-                                  and not link_ok and not in_grace)
+                                  and link_down_since is not None
+                                  and now - link_down_since >= cfg["LINK_MSG_DELAY"])
         c["errors"] = int(min(sum(errs), 2**31 - 1))
 
         # log every change of the link state with the reason
@@ -279,7 +294,7 @@ try:
 
         # ---- modes ----
         gate = (not cfg["SPINDLE_GATE"]) or c["spindle-turning"] or c["run-without-spindle"]
-        fast = c["sw-fast"] or c["scr-fast"]
+        fast = c["sw-fast"] or c["scr-fast"] or c["scr-fast2"]
         mist = (c["mist-request"] and gate) or c["sw-mist"]
         air = (c["air-request"] and gate) or c["sw-air"]
         coolant = mist and not fast           # firmware: fast has priority anyway
@@ -287,7 +302,7 @@ try:
         c["cmd-coolant"] = coolant and on
         c["cmd-fast"] = fast and on
         c["cmd-air"] = air and on
-        c["cmd-spit"] = not c["no-spit"]
+        c["cmd-spit"] = c["spit-enable"]
         c["cmd-led"] = coolant and on         # board LED terminal = "mist running" lamp
         c["cmd-dir"] = bool(cfg["PUMP_REVERSE"])
         c["mist-on"] = coolant and on and link_ok
@@ -299,21 +314,23 @@ try:
         ps = knob_spit.update(c["knob-spit-raw"])
         c["knob-mist-pct"] = pm * 100.0
         c["knob-spit-pct"] = ps * 100.0
-        if c["use-screen"]:
-            mist_mlh = clamp(c["scr-mist-mlh"], 0.0, LIMIT)
-            fast_mlh = clamp(c["scr-fast-mlh"], 1.0, LIMIT)
-            spit_time = clamp(c["scr-spit-time"], 0.0, 30.0)
-        else:
-            mist_mlh = knob_mist_mlh(pm * 1023.0)
-            fast_mlh = clamp(cfg["FAST_MLH"], 1.0, LIMIT)
-            spit_time = knob_spit_s(ps * 1023.0)
-        if c["no-spit"]:
+        mist_by_slider = mist_source.update(c["scr-mist-touch"], pm * 1023.0, link_ok)
+        spit_by_slider = spit_source.update(c["scr-spit-touch"], ps * 1023.0, link_ok)
+        c["mist-by-slider"], c["spit-by-slider"] = mist_by_slider, spit_by_slider
+        mist_mlh = clamp(c["scr-slider-mlh"], 0.0, LIMIT) if mist_by_slider else knob_mist_mlh(pm * 1023.0)
+        spit_time = (clamp(c["scr-spit-tenths"] / 10.0, 0.0, 30.0) if spit_by_slider
+                     else knob_spit_s(ps * 1023.0))
+        fast_mlh = clamp(cfg["FAST_MLH"], 1.0, LIMIT)
+        # slider at its top or no screen (pin 0) = the original rate
+        spit_flow = c["scr-spit-flow"]
+        spit_mlh = fast_mlh if spit_flow <= 0.0 or spit_flow >= 1562.0 else clamp(spit_flow, 1.0, LIMIT)
+        if not c["spit-enable"]:
             spit_time = 0.0
 
-        c["mist-mlh"], c["fast-mlh"], c["spit-time"] = mist_mlh, fast_mlh, spit_time
+        c["mist-mlh"], c["fast-mlh"], c["spit-mlh"], c["spit-time"] = mist_mlh, fast_mlh, spit_mlh, spit_time
         c["reg-mist-rate"] = reg_rate(mist_mlh, 0)
         c["reg-fast-rate"] = reg_rate(fast_mlh, 1)
-        c["reg-spit-rate"] = reg_rate(fast_mlh, 1)     # spit burst = fast rate (original)
+        c["reg-spit-rate"] = reg_rate(spit_mlh, 1)
         c["reg-spit-time"] = float(int(spit_time * 1000.0))
         c["reg-microstep"] = 16.0
         c["spit-left-s"] = max(0.0, c["spit-left-ms"]) / 1000.0

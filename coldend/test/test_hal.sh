@@ -53,6 +53,9 @@ check "link OK"                                   "$(g coldend.link-ok)" TRUE
 check "mist knob raw 400 read"                    "$(g coldend.knob-mist-raw)" 400
 check "machine off: pump off"                     "$(st ena)" 1
 
+# the screen is not loaded here: set the sliders to their start values by hand
+halcmd setp coldend.scr-slider-mlh 40
+halcmd setp coldend.scr-spit-tenths 30
 halcmd sets machine-is-enabled 1
 halcmd sets coolant-mist 1
 wait_for "st running" 1
@@ -61,22 +64,37 @@ check "  coldend.mist-on TRUE"                    "$(g coldend.mist-on)" TRUE
 check "firmware sees heartbeat"                   "$(st fw_active)" 1
 check "  air valve open"                          "$(st air)" 0
 check "  LED lamp on"                             "$(st led)" 1
-# knob 400 -> original curve 1000^((400-23)/1000) = 13.5 -> 13 ml/h -> reg 130
-check "mist flow from knob, original curve (13 ml/h)" "$(st rate_mist)" 130
-# spit knob 700 -> 700/1023*8 = 5.47 -> 5.5 s
-check "spit time from spit knob (5.5 s)"          "$(st spit_ms)" 5500
+wait_for "st rate_mist" 400
+check "start: slider in control, 40 ml/h"         "$(st rate_mist)" 400
+check "start: slider in control, 3 s"             "$(st spit_ms)" 3000
+# knob 420 -> original curve 1000^((420-23)/1000) = 15.5 -> 15 ml/h -> reg 150
+# spit knob 720 -> 720/1023*8 = 5.63 -> 5.6 s
+echo "420 720 0 0 0" > "$WORK/ce_inputs"
+wait_for "st rate_mist" 150
+check "mist knob turned: original curve (15 ml/h)" "$(st rate_mist)" 150
+check "spit knob turned: spit time 5.6 s"         "$(st spit_ms)" 5600
 check "spit/fast rate = original 1562.5 ml/h"     "$(st rate_fast)$(st rate_spit)" 1562515625
+halcmd setp coldend.scr-spit-flow 100
+wait_for "st rate_spit" 1000
+check "spit flow slider: 100 ml/h, prime unchanged" "$(st rate_spit) $(st rate_fast)" "1000 15625"
+halcmd setp coldend.scr-spit-flow 1562
+wait_for "st rate_spit" 15625
+check "spit flow slider top: original 1562.5 ml/h" "$(st rate_spit)" 15625
 
 echo "1023 700 0 0 0" > "$WORK/ce_inputs"
 wait_for "st rate_mist" 10000
 check "knob fully right -> 1000 ml/h"             "$(st rate_mist)" 10000
 check "  screen value follows knob (1000)"        "$(g coldend.mist-mlh)" 1000
 
-halcmd setp coldend.use-screen 1
-halcmd setp coldend.scr-mist-mlh 5.5
-wait_for "st rate_mist" 55
-check "screen mode: 5.5 ml/h (reg 55), knob ignored" "$(st rate_mist)" 55
-halcmd setp coldend.use-screen 0
+halcmd setp coldend.scr-slider-mlh 55
+halcmd setp coldend.scr-mist-touch 1
+wait_for "st rate_mist" 550
+check "slider moved: 55 ml/h, knob ignored"       "$(st rate_mist)" 550
+echo "700 700 0 0 0" > "$WORK/ce_inputs"
+wait_for "g coldend.mist-by-slider" FALSE
+check "knob turned: knob takes over"              "$(g coldend.mist-by-slider)" FALSE
+echo "1023 700 0 0 0" > "$WORK/ce_inputs"
+wait_for "st rate_mist" 10000
 
 halcmd sets coolant-mist 0
 echo "1023 700 1 0 0" > "$WORK/ce_inputs"

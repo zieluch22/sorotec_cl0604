@@ -1,7 +1,7 @@
 # ColdEnd tab in QtDragon HD (qtvcp/panels/coldend) <-> python/coldend.py
 # Sourced from postgui_call_list.hal (panel pins only exist after the GUI is up).
 # Panel pins are named qtdragon.coldend.<widget name>.
-# MIST / AIR are QtDragon's own MIST / FLOOD buttons on the main screen (= M7 / M8, no nets needed).
+# MIST / AIR are action buttons on both screens (= M7 / M8, no nets needed).
 # grp_main (link + mist LEDs, mist ml/h, PRIME) is moved into the main-screen PROGRAM box by
 # qtdragon_hd_handler.py (init_coldend_main) - its pins keep the qtdragon.coldend. names.
 
@@ -20,19 +20,22 @@ net ce-mist-on                          => qtdragon.coldend.led_main_mist
 # --- buttons and check boxes
 net ce-scr-prime    qtdragon.coldend.btn_prime            => coldend.scr-fast
 net ce-scr-reconn   qtdragon.coldend.btn_reconnect        => coldend.reconnect
-net ce-scr-nospit   qtdragon.coldend.chk_spit-not         => coldend.no-spit
-net ce-scr-screen   qtdragon.coldend.chk_use_screen       => coldend.use-screen
+net ce-scr-spit     qtdragon.coldend.btn_spit_on          => coldend.spit-enable
+net ce-scr-prime2   qtdragon.coldend.btn_prime2           => coldend.scr-fast2
 
-# --- screen rate values
-net ce-scr-mist     qtdragon.coldend.ds_mist-f       => coldend.scr-mist-mlh
-net ce-scr-fast     qtdragon.coldend.ds_fast-f       => coldend.scr-fast-mlh
-net ce-scr-time     qtdragon.coldend.ds_spit_time-f  => coldend.scr-spit-time
+# --- sliders: mist in ml/h, spit time in 0.1 s, spit flow in ml/h; touch counters (hidden sliders)
+net ce-scr-flow     qtdragon.coldend.sl_spit_flow-f  => coldend.scr-spit-flow
+net ce-mist-touch   qtdragon.coldend.sl_mist_touch-f => coldend.scr-mist-touch
+net ce-spit-touch   qtdragon.coldend.sl_spit_touch-f => coldend.scr-spit-touch
+net ce-scr-time     qtdragon.coldend.sl_spit_time-f  => coldend.scr-spit-tenths
+net ce-scr-slider   qtdragon.coldend.sl_mist-f       => coldend.scr-slider-mlh
 
 # --- live values
 net ce-knob-mist-pct  coldend.knob-mist-pct  => qtdragon.coldend.lbl_knob_mist
 net ce-knob-spit-pct  coldend.knob-spit-pct  => qtdragon.coldend.lbl_knob_spit
 net ce-mist-mlh       coldend.mist-mlh       => qtdragon.coldend.lbl_mist_flow qtdragon.coldend.lbl_main_flow
 net ce-fast-mlh       coldend.fast-mlh       => qtdragon.coldend.lbl_fast_flow
+net ce-spit-mlh       coldend.spit-mlh       => qtdragon.coldend.lbl_spit_flow
 net ce-spit-time-s    coldend.spit-time      => qtdragon.coldend.lbl_spit_time
 net ce-spit-left-s    coldend.spit-left-s    => qtdragon.coldend.lbl_spit_left
 net ce-errors         coldend.errors         => qtdragon.coldend.lbl_errors

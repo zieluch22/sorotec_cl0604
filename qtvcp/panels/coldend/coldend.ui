@@ -18,7 +18,7 @@
     <property name="horizontalSpacing">
      <number>16</number>
     </property>
-    <item row="0" column="0">
+    <item row="0" column="1">
      <widget class="QWidget" name="col_left">
       <layout class="QVBoxLayout" name="col_left_l">
        <item>
@@ -29,13 +29,13 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>84</height>
+           <height>150</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>84</height>
+           <height>150</height>
           </size>
          </property>
          <layout class="QGridLayout" name="grp_main_l">
@@ -103,8 +103,11 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4">
+          <item row="1" column="0" colspan="5">
            <widget class="HALLabel" name="lbl_main_flow">
+            <property name="styleSheet"><string>background: black; border: 1px solid gray; border-radius: 4px; font: 10pt &quot;Lato Heavy&quot;; color: white;</string></property>
+            <property name="minimumSize"><size><width>0</width><height>26</height></size></property>
+            <property name="maximumSize"><size><width>16777215</width><height>26</height></size></property>
             <property name="textTemplate" stdset="0">
              <string>%.1f ml/h</string>
             </property>
@@ -115,14 +118,40 @@
              <bool>true</bool>
             </property>
             <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignVCenter</set>
+             <set>Qt::AlignCenter</set>
             </property>
             <property name="text">
              <string>-</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0" colspan="5">
+          <item row="2" column="0" colspan="5">
+           <layout class="QHBoxLayout" name="strip_mist_l">
+          <item>
+          <widget class="QPushButton" name="btn_mist_40">
+           <property name="text">
+            <string>MIST 40 ml/h</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+         </layout>
+          </item>
+          <item row="3" column="0" colspan="5">
            <widget class="PushButton" name="btn_prime">
             <property name="text">
              <string>PRIME (hold)</string>
@@ -154,19 +183,19 @@
            <number>8</number>
           </property>
           <item row="0" column="0">
-           <widget class="CheckBox" name="chk_spit">
-            <property name="text">
-             <string>Spit burst when mist starts</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
+           <widget class="PushButton" name="btn_prime2">
+<property name="sizePolicy"> <sizepolicy hsizetype="Preferred" vsizetype="Fixed"> <horstretch>0</horstretch> <verstretch>0</verstretch> </sizepolicy> </property>
+<property name="minimumSize"> <size> <width>200</width> <height>48</height> </size> </property>
+<property name="maximumSize"> <size> <width>200</width> <height>48</height> </size> </property>
+<property name="focusPolicy"><enum>Qt::NoFocus</enum></property>
+<property name="text"><string>PRIME
+(hold)</string></property>
+</widget>
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="lbl_opt_note">
             <property name="text">
-             <string>MIST (M7), AIR (M8) and PRIME are on the MAIN screen, PROGRAM box. M9 switches mist and air off. The switches on the ColdEnd board always work too.</string>
+             <string>MIST (M7), AIR (M8) and PRIME are here and on the MAIN screen, PROGRAM box. M9 switches mist and air off. The switches on the ColdEnd board always work too.</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -209,7 +238,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item row="0" column="0">
      <widget class="QGroupBox" name="grp_status">
       <property name="title">
        <string>Status</string>
@@ -482,19 +511,50 @@
       <property name="title">
        <string>Flow rate</string>
       </property>
-      <layout class="QGridLayout" name="grp_rates_l" rowstretch="0,0,0,0,0,0,1">
+      <layout class="QGridLayout" name="grp_rates_l" rowstretch="0,0,0,0,0,0,0,1">
        <property name="verticalSpacing">
         <number>8</number>
        </property>
-       <item row="0" column="0" colspan="4">
-        <widget class="CheckBox" name="chk_use_screen">
-         <property name="text">
-          <string>Set values here (board knobs ignored)</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
+       <item row="0" column="0" colspan="5">
+        <layout class="QHBoxLayout" name="rates_buttons_l">
+         <item><widget class="ActionButton" name="btn_tab_mist"> <property name="sizePolicy"> <sizepolicy hsizetype="Preferred" vsizetype="Fixed"> <horstretch>0</horstretch> <verstretch>0</verstretch> </sizepolicy> </property> <property name="minimumSize"> <size> <width>90</width> <height>48</height> </size> </property> <property name="maximumSize"> <size> <width>100</width> <height>48</height> </size> </property> <property name="focusPolicy"> <enum>Qt::NoFocus</enum> </property> <property name="text"> <string>MIST
+OFF</string> </property> <property name="checkable"> <bool>true</bool> </property> <property name="checked"> <bool>false</bool> </property> <property name="indicator_option" stdset="0"> <bool>true</bool> </property> <property name="indicator_HAL_pin_option" stdset="0"> <bool>false</bool> </property> <property name="indicator_status_option" stdset="0"> <bool>true</bool> </property> <property name="checked_state_text_option" stdset="0"> <bool>true</bool> </property> <property name="on_color" stdset="0"> <color> <red>0</red> <green>255</green> <blue>0</blue> </color> </property> <property name="shape_option" stdset="0"> <number>1</number> </property> <property name="indicator_size" stdset="0"> <double>0.200000000000000</double> </property> <property name="right_edge_offset" stdset="0"> <number>6</number> </property> <property name="top_edge_offset" stdset="0"> <number>6</number> </property> <property name="true_state_string" stdset="0"> <string>MIST
+ON</string> </property> <property name="false_state_string" stdset="0"> <string>MIST
+OFF</string> </property> <property name="is_mist_status" stdset="0"> <bool>true</bool> </property> <property name="mist_action" stdset="0"> <bool>true</bool> </property> </widget></item>
+         <item><widget class="ActionButton" name="btn_tab_air"> <property name="sizePolicy"> <sizepolicy hsizetype="Preferred" vsizetype="Fixed"> <horstretch>0</horstretch> <verstretch>0</verstretch> </sizepolicy> </property> <property name="minimumSize"> <size> <width>90</width> <height>48</height> </size> </property> <property name="maximumSize"> <size> <width>100</width> <height>48</height> </size> </property> <property name="focusPolicy"> <enum>Qt::NoFocus</enum> </property> <property name="text"> <string>FLOOD
+OFF</string> </property> <property name="checkable"> <bool>true</bool> </property> <property name="indicator_option" stdset="0"> <bool>true</bool> </property> <property name="indicator_HAL_pin_option" stdset="0"> <bool>false</bool> </property> <property name="indicator_status_option" stdset="0"> <bool>true</bool> </property> <property name="checked_state_text_option" stdset="0"> <bool>true</bool> </property> <property name="on_color" stdset="0"> <color> <red>0</red> <green>255</green> <blue>0</blue> </color> </property> <property name="shape_option" stdset="0"> <number>1</number> </property> <property name="indicator_size" stdset="0"> <double>0.200000000000000</double> </property> <property name="right_edge_offset" stdset="0"> <number>6</number> </property> <property name="top_edge_offset" stdset="0"> <number>6</number> </property> <property name="true_state_string" stdset="0"> <string>FLOOD
+ON</string> </property> <property name="false_state_string" stdset="0"> <string>FLOOD
+OFF</string> </property> <property name="is_flood_status" stdset="0"> <bool>true</bool> </property> <property name="flood_action" stdset="0"> <bool>true</bool> </property> </widget></item>
+         <item><widget class="PushButton" name="btn_spit_on">
+<property name="sizePolicy"> <sizepolicy hsizetype="Preferred" vsizetype="Fixed"> <horstretch>0</horstretch> <verstretch>0</verstretch> </sizepolicy> </property>
+<property name="minimumSize"> <size> <width>90</width> <height>48</height> </size> </property>
+<property name="maximumSize"> <size> <width>100</width> <height>48</height> </size> </property>
+<property name="focusPolicy"> <enum>Qt::NoFocus</enum> </property>
+<property name="checkable"> <bool>true</bool> </property>
+<property name="indicator_option" stdset="0"> <bool>true</bool> </property>
+<property name="checked_state_text_option" stdset="0"> <bool>true</bool> </property>
+<property name="on_color" stdset="0"> <color> <red>0</red> <green>255</green> <blue>0</blue> </color> </property>
+<property name="shape_option" stdset="0"> <number>1</number> </property>
+<property name="indicator_size" stdset="0"> <double>0.200000000000000</double> </property>
+<property name="right_edge_offset" stdset="0"> <number>6</number> </property>
+<property name="top_edge_offset" stdset="0"> <number>6</number> </property>
+<property name="text"><string>SPIT
+ON</string></property>
+<property name="checked"><bool>true</bool></property>
+<property name="true_state_string" stdset="0"><string>SPIT
+ON</string></property>
+<property name="false_state_string" stdset="0"><string>SPIT
+OFF</string></property>
+<property name="toolTip"><string>Spit burst when mist starts</string></property>
+</widget></item>
+         <item>
+          <spacer name="rates_buttons_space">
+           <property name="orientation"><enum>Qt::Horizontal</enum></property>
+           <property name="sizeType"><enum>QSizePolicy::Expanding</enum></property>
+           <property name="sizeHint" stdset="0"><size><width>400</width><height>10</height></size></property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item row="1" column="0">
         <widget class="QLabel" name="h0">
@@ -505,13 +565,15 @@
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="h1">
+         <property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property>
          <property name="text">
           <string>&lt;b&gt;Knob&lt;/b&gt;</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="1" column="4">
         <widget class="QLabel" name="h2">
+         <property name="alignment"><set>Qt::AlignCenter</set></property>
          <property name="text">
           <string>&lt;b&gt;In use&lt;/b&gt;</string>
          </property>
@@ -520,7 +582,7 @@
        <item row="1" column="3">
         <widget class="QLabel" name="h3">
          <property name="text">
-          <string>&lt;b&gt;Screen value&lt;/b&gt;</string>
+          <string>&lt;b&gt;Set&lt;/b&gt;</string>
          </property>
         </widget>
        </item>
@@ -533,6 +595,8 @@
        </item>
        <item row="2" column="1">
         <widget class="HALLabel" name="lbl_knob_mist">
+            <property name="minimumSize"><size><width>52</width><height>0</height></size></property>
+            <property name="maximumSize"><size><width>52</width><height>16777215</height></size></property>
          <property name="textTemplate" stdset="0">
           <string>%.0f %%</string>
          </property>
@@ -550,8 +614,11 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="2" column="4">
         <widget class="HALLabel" name="lbl_mist_flow">
+            <property name="styleSheet"><string>background: black; border: 1px solid gray; border-radius: 4px; font: 10pt &quot;Lato Heavy&quot;; color: white;</string></property>
+            <property name="minimumSize"><size><width>116</width><height>30</height></size></property>
+            <property name="maximumSize"><size><width>116</width><height>30</height></size></property>
          <property name="textTemplate" stdset="0">
           <string>%.1f ml/h</string>
          </property>
@@ -562,7 +629,7 @@
           <bool>true</bool>
          </property>
          <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignVCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
          <property name="text">
           <string>-</string>
@@ -570,32 +637,83 @@
         </widget>
        </item>
        <item row="2" column="3">
-        <widget class="DoubleScale" name="ds_mist">
+        <layout class="QHBoxLayout" name="tab_mist_l">
+          <item>
+          <widget class="QPushButton" name="btn_mist2_0">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>56</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>64</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+          <item>
+          <widget class="Slider" name="sl_mist">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
          <property name="minimum">
-          <double>0.0</double>
+          <number>0</number>
          </property>
          <property name="maximum">
-          <double>3000.0</double>
+          <number>200</number>
          </property>
          <property name="value">
-          <double>10.0</double>
+          <number>40</number>
          </property>
          <property name="singleStep">
-          <double>1.0</double>
-         </property>
-         <property name="decimals">
           <number>1</number>
          </property>
-         <property name="suffix">
-          <string> ml/h</string>
+         <property name="pageStep">
+          <number>10</number>
+         </property>
+         <property name="toolTip">
+          <string>Mist flow 0 - 200 ml/h (0 = off). Turning the mist knob takes over again.</string>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>200</width>
            <height>44</height>
           </size>
          </property>
         </widget>
+          </item>
+          <item>
+          <widget class="QPushButton" name="btn_mist2_40">
+           <property name="text">
+            <string>40</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>56</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>64</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+         </layout>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="r_time">
@@ -606,6 +724,8 @@
        </item>
        <item row="3" column="1">
         <widget class="HALLabel" name="lbl_knob_spit">
+            <property name="minimumSize"><size><width>52</width><height>0</height></size></property>
+            <property name="maximumSize"><size><width>52</width><height>16777215</height></size></property>
          <property name="textTemplate" stdset="0">
           <string>%.0f %%</string>
          </property>
@@ -623,8 +743,11 @@
          </property>
         </widget>
        </item>
-       <item row="3" column="2">
+       <item row="3" column="4">
         <widget class="HALLabel" name="lbl_spit_time">
+            <property name="styleSheet"><string>background: black; border: 1px solid gray; border-radius: 4px; font: 10pt &quot;Lato Heavy&quot;; color: white;</string></property>
+            <property name="minimumSize"><size><width>116</width><height>30</height></size></property>
+            <property name="maximumSize"><size><width>116</width><height>30</height></size></property>
          <property name="textTemplate" stdset="0">
           <string>%.1f s</string>
          </property>
@@ -635,7 +758,7 @@
           <bool>true</bool>
          </property>
          <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignVCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
          <property name="text">
           <string>-</string>
@@ -643,49 +766,96 @@
         </widget>
        </item>
        <item row="3" column="3">
-        <widget class="DoubleScale" name="ds_spit_time">
+        <layout class="QHBoxLayout" name="tab_spit_l">
+          <item>
+          <widget class="QPushButton" name="btn_spit_0">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>56</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>64</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+          <item>
+          <widget class="Slider" name="sl_spit_time">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
          <property name="minimum">
-          <double>0.0</double>
+          <number>0</number>
          </property>
          <property name="maximum">
-          <double>30.0</double>
+          <number>50</number>
          </property>
          <property name="value">
-          <double>2.0</double>
+          <number>30</number>
          </property>
          <property name="singleStep">
-          <double>0.5</double>
-         </property>
-         <property name="decimals">
           <number>1</number>
          </property>
-         <property name="suffix">
-          <string> s</string>
+         <property name="pageStep">
+          <number>5</number>
+         </property>
+         <property name="toolTip">
+          <string>Spit time 0 - 5 s (0 = no burst). Turning the spit knob takes over again.</string>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>200</width>
            <height>44</height>
           </size>
          </property>
         </widget>
+          </item>
+          <item>
+          <widget class="QPushButton" name="btn_spit_4">
+           <property name="text">
+            <string>4 s</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>56</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>64</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+         </layout>
        </item>
        <item row="4" column="0">
-        <widget class="QLabel" name="r_fast">
+        <widget class="QLabel" name="r_flow">
          <property name="text">
-          <string>Spit / prime flow</string>
+          <string>Spit flow</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
-        <widget class="QLabel" name="r_fast_k">
-         <property name="text">
-          <string>(fixed)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2">
-        <widget class="HALLabel" name="lbl_fast_flow">
+       <item row="4" column="4">
+        <widget class="HALLabel" name="lbl_spit_flow">
+            <property name="styleSheet"><string>background: black; border: 1px solid gray; border-radius: 4px; font: 10pt &quot;Lato Heavy&quot;; color: white;</string></property>
+            <property name="minimumSize"><size><width>116</width><height>30</height></size></property>
+            <property name="maximumSize"><size><width>116</width><height>30</height></size></property>
          <property name="textTemplate" stdset="0">
           <string>%.0f ml/h</string>
          </property>
@@ -696,7 +866,7 @@
           <bool>true</bool>
          </property>
          <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignVCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
          <property name="text">
           <string>-</string>
@@ -704,37 +874,137 @@
         </widget>
        </item>
        <item row="4" column="3">
-        <widget class="DoubleScale" name="ds_fast">
+        <layout class="QHBoxLayout" name="tab_flow_l">
+          <item>
+          <widget class="QPushButton" name="btn_flow_100">
+           <property name="text">
+            <string>100</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>56</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>64</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+          <item>
+          <widget class="Slider" name="sl_spit_flow">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
          <property name="minimum">
-          <double>1.0</double>
+          <number>100</number>
          </property>
          <property name="maximum">
-          <double>3000.0</double>
+          <number>1562</number>
          </property>
          <property name="value">
-          <double>1562.5</double>
+          <number>1000</number>
          </property>
          <property name="singleStep">
-          <double>50.0</double>
-         </property>
-         <property name="decimals">
           <number>1</number>
          </property>
-         <property name="suffix">
-          <string> ml/h</string>
+         <property name="pageStep">
+          <number>50</number>
+         </property>
+         <property name="toolTip">
+          <string>Spit flow 100 - 1562 ml/h (the original fixed rate).</string>
          </property>
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>200</width>
            <height>44</height>
           </size>
          </property>
         </widget>
+          </item>
+          <item>
+          <widget class="QPushButton" name="btn_flow_1562">
+           <property name="text">
+            <string>1562</string>
+           </property>
+           <property name="focusPolicy">
+            <enum>Qt::NoFocus</enum>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>56</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>64</width>
+             <height>44</height>
+            </size>
+           </property>
+          </widget>
+          </item>
+         </layout>
        </item>
-       <item row="5" column="0" colspan="4">
+       <item row="5" column="0">
+        <widget class="QLabel" name="r_fast">
+         <property name="text">
+          <string>Prime flow</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLabel" name="r_fast_k">
+         <property name="text">
+          <string>(fixed)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="4">
+        <widget class="HALLabel" name="lbl_fast_flow">
+            <property name="styleSheet"><string>background: black; border: 1px solid gray; border-radius: 4px; font: 10pt &quot;Lato Heavy&quot;; color: white;</string></property>
+            <property name="minimumSize"><size><width>116</width><height>30</height></size></property>
+            <property name="maximumSize"><size><width>116</width><height>30</height></size></property>
+         <property name="textTemplate" stdset="0">
+          <string>%.0f ml/h</string>
+         </property>
+         <property name="bit_pin_type" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="float_pin_type" stdset="0">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="text">
+          <string>-</string>
+         </property>
+        </widget>
+       </item>
+       
+       <item row="7" column="0">
+        <widget class="Slider" name="sl_mist_touch">
+         <property name="maximum"><number>2000000000</number></property>
+         <property name="visible"><bool>false</bool></property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="Slider" name="sl_spit_touch">
+         <property name="maximum"><number>2000000000</number></property>
+         <property name="visible"><bool>false</bool></property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="5">
         <widget class="QLabel" name="r_note">
          <property name="text">
-          <string>Like the original ColdEnd: mist knob = mist flow (1 - 1000 ml/h, off at the left end), spit knob = spit time (0 - 8 s, under 1 s no burst). Settings: INI section [COLDEND].</string>
+          <string>Slider or board knob: the last one touched sets the value. Sliders: mist 0 - 200 ml/h, spit time 0 - 5 s, 0 = off, spit flow 100 - 1562 ml/h. They start at 40 ml/h, 3 s and 1000 ml/h. Knobs: mist 1 - 1000 ml/h, spit time 0 - 8 s. Prime flow is fixed, see INI section [COLDEND].</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -766,14 +1036,14 @@
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
-   <class>CheckBox</class>
-   <extends>QCheckBox</extends>
+   <class>Slider</class>
+   <extends>QSlider</extends>
    <header>qtvcp.widgets.simple_widgets</header>
   </customwidget>
   <customwidget>
-   <class>DoubleScale</class>
-   <extends>QDoubleSpinBox</extends>
-   <header>qtvcp.widgets.simple_widgets</header>
+   <class>ActionButton</class>
+   <extends>IndicatedPushButton</extends>
+   <header>qtvcp.widgets.action_button</header>
   </customwidget>
   <customwidget>
    <class>HALLabel</class>

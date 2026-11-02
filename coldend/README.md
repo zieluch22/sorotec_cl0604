@@ -14,19 +14,19 @@ Based on ColdEnd TallaMod (Talla83 / END-CNC, CC BY-NC-SA 4.0), same register ma
 | **M8** | Air blast only (QtDragon FLOOD button is labelled **AIR**). |
 | **M9** | Mist and air off. |
 | **Board switches** | Mist / Fast / Air switches still work and always win over the screen. |
-| **Board knobs** | Mist knob = mist rate, spit knob = spit + prime rate. Shown live in QtDragon. |
-| **Screen rates** | Tick "Set rates here" on the USER page: the screen values are used, knobs ignored. |
-| **PRIME** | Main screen button (hold) = pump only at fast rate, to fill the line. |
+| **Board knobs** | Mist knob = mist rate, spit knob = spit time. Shown live in QtDragon. |
+| **Sliders** | Each with preset buttons at its ends. Mist 0 - 200 ml/h, buttons 0 and 40 (USER page; the main screen has a 40 ml/h button). Spit time 0 - 5 s, buttons 0 and 4 s. Spit flow 100 - 1562 ml/h, buttons 100 and 1562 (USER page). Mist and spit time: slider or knob, the last one touched wins. Start values: 40 ml/h, 3 s, 1000 ml/h. |
+| **PRIME** | Button (hold) on the main screen and USER page = pump only at the fixed rate (`FAST_MLH`, 1562.5 ml/h), to fill the line. |
 | **E-stop / machine off** | Everything off (heartbeat stops; firmware switches off after max. 1 s). |
-| **OLED display** | Board display (SSD1306 128x64, 0x3C): link status, mode (STANDBY / OFF / MIST / SPIT x.x / PRIME / AIR) in big letters, mist / spit / prime rpm, knob %. |
-| **USB unplugged** | "ColdEnd Modbus link lost" message, pump off, automatic reconnect when it is back. |
+| **OLED display** | Board display (SSD1306 128x64, 0x3C), big text. Top line: `NO LINK` / `LINK OK`, or `OK MIST`, `OK SPIT1.3`, `OK PRIME`, `OK AIR` while running. `M 139` = mist flow in ml/h. `S 1.3s` = spit time.  |
+| **USB unplugged** | "ColdEnd Modbus link lost" message after 3 s (every short error is in `/tmp/coldend_link.log`), pump off, automatic reconnect when it is back. |
 | Spindle gating | Prepared but **off** (`[COLDEND]SPINDLE_GATE = 0`) - later stage. |
 
 Screen:
 - **MAIN, PROGRAM box**: MIST / AIR buttons (= M7 / M8) and the COLDEND strip
-  (link light, mist light, mist rpm, PRIME).
+  (link light, mist light, mist flow, 40 ml/h button, PRIME).
 - **USER button**: ColdEnd page with status, board switch lights, Modbus errors,
-  Reconnect button, rates and spit settings. Settings are remembered (qtdragon.pref).
+  Reconnect button, MIST / AIR / PRIME buttons, sliders. The SPIT on/off button is remembered (qtdragon.pref).
 
 ## Files
 
@@ -116,6 +116,7 @@ Logs: `/tmp/coldend_reconnect.log`.
 S=$(mktemp -d)
 g++ -std=c++11 -O1 -Icoldend/test/shim -o $S/ce_emu coldend/test/emulator.cpp
 python3 -I coldend/test/test_protocol.py $S/ce_emu $S     # firmware protocol
+python3 coldend/test/test_mist_source.py                  # slider / knob: last one touched wins
 python3 -I coldend/test/render_oled.py $S/ce_emu $S       # pictures of the OLED screens ($S/oled_all.png)
 coldend/test/test_hal.sh $S                               # emulator + mb2hal + logic
 coldend/test/test_panel.sh $S                             # screen panel pins
