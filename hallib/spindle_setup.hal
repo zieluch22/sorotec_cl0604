@@ -188,6 +188,19 @@ net vfd-volts         <= vfd-volts-mux.out           # output voltage [V] (0 whe
 net vfd-status        <= mb2hal.vfd-stat.00.int      # 3 = stopped, 0x20 = fault
 net vfd-fault-code    <= mb2hal.vfd-stat.01.int      # Fu.xx
 net vfd-modbus-errors <= mb2hal.vfd-cmd.num_errors
+# extra values for the VFD tab, display only (hallib/postgui_call_list.hal)
+net vfd-dc-raw        <= mb2hal.vfd-mon2.00.float
+net vfd-ac-raw        <= mb2hal.vfd-mon2.01.float
+net vfd-temp-raw      <= mb2hal.vfd-temp.00.float
+net vfd-flt-1         <= mb2hal.vfd-flt1.00.float
+net vfd-flt-2         <= mb2hal.vfd-flt1.01.float
+net vfd-flt-3         <= mb2hal.vfd-flt1.02.float
+net vfd-flt-4         <= mb2hal.vfd-flt1.03.float
+net vfd-flt-freq      <= mb2hal.vfd-flt1.04.float
+net vfd-flt-amps      <= mb2hal.vfd-flt1.05.float
+net vfd-flt-volts     <= mb2hal.vfd-flt2.00.float
+net vfd-flt-dc        <= mb2hal.vfd-flt2.01.float
+net vfd-flt-temp      <= mb2hal.vfd-flt2.02.float
 
 
 #*******************

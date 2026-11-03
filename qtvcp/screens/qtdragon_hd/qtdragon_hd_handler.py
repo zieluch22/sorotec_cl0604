@@ -168,6 +168,8 @@ class HandlerClass:
         VP.start_probe = self.start_probe
         self.super_vp_process_finished = VP.process_finished
         VP.process_finished = self.versa_process_finished
+        self.super_vp_show_results = VP.show_results
+        VP.show_results = self.versa_show_results
         # our probe subprogram: fixed "outside, four sides" routine (python/probe_fix)
         config_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
         fixed = os.path.join(config_dir, 'python', 'probe_fix', 'probe_subprog_fixed.py')
@@ -179,6 +181,16 @@ class HandlerClass:
         # ACTION.CALL_MDI_WAIT('(msg,Before)')
         ACTION.CALL_MDI_WAIT("M64 P3")
         self.super_vp_start_probe(self.probe,cmd)
+
+    # Probe Material Top first sets G54 Z to 0, and the new block height then sets it through
+    # the field's textChanged signal. The same value twice (same part, 3 decimals) does not
+    # change the text, so G54 Z stayed at 0. Set it here in that case.
+    def versa_show_results(self, line):
+        field = self.probe.input_tool_block_height
+        before = field.text()
+        self.super_vp_show_results(self.probe, line)
+        if line.get('bh') not in (None, 'None') and line['bh'] == before:
+            self.probe.update_block_height_pin(before)
 
     # class patch versa probe to call MDI after probing
     def versa_process_finished(self, exitCode, exitStatus):
@@ -193,6 +205,7 @@ class HandlerClass:
         self.init_utils()
         # after start-up, when the embedded ColdEnd panel exists
         QtCore.QTimer.singleShot(0, self.init_coldend_main)
+        self.init_spindle_load()
         self.w.stackedWidget_log.setCurrentIndex(0)
         self.w.stackedWidget_dro.setCurrentIndex(0)
         if self.probe is not None:
@@ -293,6 +306,12 @@ class HandlerClass:
         QHAL.newpin("spindle-inhibit", QHAL.HAL_BIT, QHAL.HAL_OUT)
         pin = QHAL.newpin("spindle-modbus-connection", QHAL.HAL_BIT, QHAL.HAL_IN)
         pin.value_changed.connect(self.mb_connection_changed)
+        # VFD tab under Utilities, read by polling in vfd_tab.py
+        for name in ("vfd-dc-volts", "vfd-ac-volts", "vfd-temp", "vfd-fault-1", "vfd-fault-2",
+                     "vfd-fault-3", "vfd-fault-4", "vfd-fault-freq", "vfd-fault-amps",
+                     "vfd-fault-volts", "vfd-fault-dc", "vfd-fault-temp"):
+            QHAL.newpin(name, QHAL.HAL_FLOAT, QHAL.HAL_IN)
+        QHAL.newpin("vfd-comm-ok", QHAL.HAL_BIT, QHAL.HAL_IN)
 
         # external offset control pins
         QHAL.newpin("eoffset-enable", QHAL.HAL_BIT, QHAL.HAL_OUT)
@@ -491,6 +510,31 @@ class HandlerClass:
         self.w.probe_layout.addWidget(self.probe)
         self.probe.hal_init()
 
+    def init_spindle_load(self):
+        # LOAD bar under the POWER bar: output current as % of [VFD]OVERLOAD_AMPS (same limit as
+        # the overload feed hold). Display only, it does not take the motor's no-load current off.
+        try:
+            self.spindle_load_amps = float(INFO.INI.find('VFD', 'OVERLOAD_AMPS') or 0)
+            if self.spindle_load_amps <= 0:
+                return
+            power = self.w.spindle_power
+            bar = QtWidgets.QProgressBar()
+            bar.setObjectName('spindle_load')
+            bar.setSizePolicy(power.sizePolicy())
+            bar.setMinimumSize(power.minimumSize())
+            bar.setMaximumSize(power.maximumSize())
+            bar.setAlignment(power.alignment())
+            bar.setValue(0)
+            layout = power.parentWidget().layout()
+            layout.insertWidget(layout.indexOf(power) + 1, bar)
+            self.w.spindle_load = bar
+            from vfd_tab import LoadMonitor
+            self.spindle_load_monitor = LoadMonitor(
+                bar, lambda: self.h['spindle-amps'], self.spindle_load_amps,
+                lambda text: self.add_status(text, WARNING))
+        except Exception as e:
+            LOG.warning("Spindle LOAD bar not installed: {}".format(e))
+
     def init_coldend_main(self):
         # ColdEnd mist controller (qtvcp/panels/coldend, see coldend/README.md):
         #  - its COLDEND box (link + mist LEDs, mist rpm, PRIME button) moves from the
@@ -540,6 +584,21 @@ class HandlerClass:
             tabs.insertTab(0, self.gcode_joiner, 'G-code Joiner')
         except Exception as e:
             LOG.warning("Utility G-code Joiner unavailable: {}".format(e))
+
+        # VFD tab: extra E500 values over Modbus, display only
+        try:
+            from vfd_tab import VfdTab
+            def ini_float(name, default):
+                return float(INFO.INI.find('VFD', name) or default)
+            gains = {"dc": ini_float('DC_VOLTS_GAIN', 1.0), "ac": ini_float('AC_VOLTS_GAIN', 1.0),
+                     "temp": ini_float('TEMP_GAIN', 1.0)}
+            self.vfd_tab = VfdTab(get_pin=lambda name: self.h[name], gains=gains,
+                                  temp_warn=ini_float('TEMP_WARN_C', 0.0),
+                                  log_dir=PATH.CONFIGPATH,
+                                  status_callback=lambda text: self.add_status(text, WARNING))
+            tabs.addTab(self.vfd_tab, 'VFD')
+        except Exception as e:
+            LOG.warning("Utility VFD tab unavailable: {}".format(e))
         tabs.setCurrentIndex(0)
 
     def processed_focus_event__(self, receiver, event):

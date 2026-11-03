@@ -29,6 +29,20 @@ net vfd-amps          => qtdragon.spindle-amps
 net vfd-volts         => qtdragon.spindle-volts
 net vfd-fault-code    => qtdragon.spindle-fault
 net vfd-modbus-errors => qtdragon.spindle-modbus-errors-u32
+# VFD tab under Utilities
+net vfd-dc-raw        => qtdragon.vfd-dc-volts
+net vfd-ac-raw        => qtdragon.vfd-ac-volts
+net vfd-temp-raw      => qtdragon.vfd-temp
+net vfd-flt-1         => qtdragon.vfd-fault-1
+net vfd-flt-2         => qtdragon.vfd-fault-2
+net vfd-flt-3         => qtdragon.vfd-fault-3
+net vfd-flt-4         => qtdragon.vfd-fault-4
+net vfd-flt-freq      => qtdragon.vfd-fault-freq
+net vfd-flt-amps      => qtdragon.vfd-fault-amps
+net vfd-flt-volts     => qtdragon.vfd-fault-volts
+net vfd-flt-dc        => qtdragon.vfd-fault-dc
+net vfd-flt-temp      => qtdragon.vfd-fault-temp
+net vfd-comm-ok       => qtdragon.vfd-comm-ok
 
 # --- "Tool length changed a lot - save it?" dialog (INI [DISPLAY] MESSAGE_PINNAME = lengthconfirm) ---
 # opened by mcodes/M191 (halcmd sets length-confirm-ask 1), read by macros/tool_measure.ngc
