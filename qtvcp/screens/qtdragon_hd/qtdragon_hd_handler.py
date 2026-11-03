@@ -745,7 +745,15 @@ class HandlerClass:
         self.w.lbl_spindle_fault.setText(fault)
 
     def mb_errors_changed(self, data):
-        self.w.lbl_mb_errors.setText(str(data))
+        # the VFD has power only with the machine on: count errors only while it should answer,
+        # from [VFD]COMM_START_GRACE s after machine on until machine off
+        on_since = getattr(self, 'mb_on_since', None)
+        counting = on_since is not None and time.monotonic() - on_since >= float(INFO.INI.find('VFD', 'COMM_START_GRACE') or 0)
+        base = getattr(self, 'mb_error_base', 0)
+        if data < base or not counting:   # mb2hal reloaded: its count starts again
+            base = data
+        self.mb_error_base = base
+        self.w.lbl_mb_errors.setText(str(data - base))
 
     def mb_connection_changed(self, data):
         if data:
@@ -1461,6 +1469,7 @@ class HandlerClass:
             self.w.stackedWidget_dro.setCurrentIndex(0)
 
     def enable_onoff(self, state):
+        self.mb_on_since = time.monotonic() if state else None
         if getattr(self, 'coldend_box', None) is not None:
             self.coldend_box.setEnabled(state)
         if state:

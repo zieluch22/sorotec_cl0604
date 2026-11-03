@@ -76,14 +76,14 @@ loadrt near   names=vfd-atspeed
 loadrt comp   names=vfd-turning,vfd-faultcmp,vfd-errpulse,vfd-overcur
 # vfd-toolok is 3 inputs (tool missing / drawbar sensor open / drawbar commanded open)
 # vfd-atcreset is used by atc.hal (logic can only be loaded once)
-loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or,vfd-ovl-and,vfd-feedinh-or,drvalm-or,drvalm-msg personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202,0x102,0x202,0x203,0x102
+loadrt logic  names=vfd-running-or,vfd-notatspeed,vfd-feedinh,vfd-notool,vfd-toolok,vfd-notool-msg,vfd-commok,vfd-atspeed-ok,vfd-abort-or,vfd-atcreset,vfd-norun-or,vfd-norun-and,vfd-commlost-or,vfd-ovl-and,vfd-feedinh-or,drvalm-or,drvalm-msg,vfd-lost-and personality=0x1202,0x802,0x102,0x802,0x1203,0x102,0x802,0x102,0x203,0x202,0x202,0x102,0x202,0x102,0x202,0x203,0x102,0x102
 # drvalm-or: OR of X/Y/Z servo alarms; drvalm-msg: AND with machine-is-enabled (message only while machine on). Used in io.hal
 # timedelay can only be loaded once - instances for spindle_setup.hal AND atc.hal:
 #   vfd-commlost-dly  Modbus comm-lost detection
 #   vfd-toolok-dly    tool clamped + drawbar closed must be stable before RUN is allowed
 #   vfd-stop-hold     spindle must be stopped for a while before the drawbar may open
 #   atc-btn-deb       debounce of the manual drawbar push button (atc.hal)
-loadrt timedelay names=vfd-commlost-dly,vfd-toolok-dly,vfd-stop-hold,atc-btn-deb,vfd-steady-dly,vfd-ovl-dly
+loadrt timedelay names=vfd-comm-grace,vfd-commlost-dly,vfd-toolok-dly,vfd-stop-hold,atc-btn-deb,vfd-steady-dly,vfd-ovl-dly
 
 addf vfd-dir          servo-thread
 addf vfd-runcmd       servo-thread
@@ -294,9 +294,12 @@ net vfd-fault           vfd-faultcmp.equal       => m_vfderror.trigger
 addf m_vfderror servo-thread
 
 # --- Modbus communication lost ---
-# every new read error -> short pulse -> retriggerable 0.8 s oneshot;
-# errors arrive every ~0.5 s while the link is down, so the oneshot stays high.
-# If it stays high > 1.5 s -> comm lost (a single glitch does not trigger).
+# every new read error -> short pulse -> retriggerable oneshot [VFD]COMM_ERROR_WINDOW;
+# with a silent VFD each read waits for its timeout, so errors arrive every 2-3 s.
+# The oneshot stays high only with errors in a row. If it stays high longer than
+# [VFD]COMM_LOST_DELAY -> comm lost (a single glitch ends before that and does not trigger).
+# The VFD has power only with the machine on, so errors do not count with the machine
+# off and for [VFD]COMM_START_GRACE s after it comes on (VFD start-up).
 loadrt conv_u32_float names=vfd-errcnt
 loadrt ddt            names=vfd-errrate
 loadrt oneshot        names=vfd-erros
@@ -306,9 +309,9 @@ addf vfd-errrate       servo-thread
 addf vfd-erros         servo-thread
 addf vfd-commlost-dly  servo-thread
 setp vfd-errpulse.in0  0.5
-setp vfd-erros.width   0.8
+setp vfd-erros.width   [VFD]COMM_ERROR_WINDOW
 setp vfd-erros.retriggerable TRUE
-setp vfd-commlost-dly.on-delay   1.5
+setp vfd-commlost-dly.on-delay   [VFD]COMM_LOST_DELAY
 setp vfd-commlost-dly.off-delay  0.0
 net vfd-err-count       mb2hal.vfd-mon.num_errors => vfd-errcnt.in
 net vfd-err-count-f     vfd-errcnt.out    => vfd-errrate.in
@@ -319,7 +322,14 @@ net vfd-err-active      vfd-erros.out     => vfd-commlost-dly.in
 # and stays 1 if the restart fails. Without it a MISSING driver looks like a
 # healthy link (no new errors -> comm-lost clears by itself).
 addf vfd-commlost-or servo-thread
-net vfd-commlost-raw    vfd-commlost-dly.out => vfd-commlost-or.in-00
+addf vfd-comm-grace    servo-thread
+addf vfd-lost-and      servo-thread
+setp vfd-comm-grace.on-delay  [VFD]COMM_START_GRACE
+setp vfd-comm-grace.off-delay 0.0
+net machine-is-enabled  => vfd-comm-grace.in
+net vfd-power-settled   vfd-comm-grace.out   => vfd-lost-and.in-00
+net vfd-commlost-raw    vfd-commlost-dly.out => vfd-lost-and.in-01
+net vfd-commlost-real   vfd-lost-and.and     => vfd-commlost-or.in-00
 net vfd-driver-down     => vfd-commlost-or.in-01
 sets vfd-driver-down    0
 net vfd-commlost        vfd-commlost-or.or => m_vfdcom.trigger vfd-commok.in-00 vfd-commok.in-01

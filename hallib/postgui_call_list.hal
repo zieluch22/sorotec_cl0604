@@ -42,7 +42,7 @@ net vfd-flt-amps      => qtdragon.vfd-fault-amps
 net vfd-flt-volts     => qtdragon.vfd-fault-volts
 net vfd-flt-dc        => qtdragon.vfd-fault-dc
 net vfd-flt-temp      => qtdragon.vfd-fault-temp
-net vfd-comm-ok       => qtdragon.vfd-comm-ok
+net vfd-comm-ok       => qtdragon.vfd-comm-ok qtdragon.spindle-modbus-connection
 
 # --- "Tool length changed a lot - save it?" dialog (INI [DISPLAY] MESSAGE_PINNAME = lengthconfirm) ---
 # opened by mcodes/M191 (halcmd sets length-confirm-ask 1), read by macros/tool_measure.ngc
