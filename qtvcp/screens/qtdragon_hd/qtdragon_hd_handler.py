@@ -535,27 +535,76 @@ class HandlerClass:
         except Exception as e:
             LOG.warning("Spindle LOAD bar not installed: {}".format(e))
 
+    def center_button_row(self, row):
+        # the two button rows, OFFSETS and COLDEND, line up with the same gap
+        row.setSpacing(6)
+        row.insertStretch(0, 1)
+        row.addStretch(1)
+
     def init_coldend_main(self):
-        # ColdEnd mist controller (qtvcp/panels/coldend, see coldend/README.md):
-        #  - its COLDEND box (link + mist LEDs, mist rpm, PRIME button) moves from the
-        #    USER page into the MAIN screen PROGRAM box, in place of the SPINDLE LIFT /
-        #    Z AXIS COMP displays (external offsets are not used in this config)
+        # OFFSETS section of the main screen:
+        #  - keep only GO TO G30 and REF CAMERA, the other controls are not used here.
+        #    TOOL SENSOR / TOUCH PLATE could also overwrite the G54 Z from the probe.
+        #  - the COLDEND box (link + mist LEDs, mist ml/h, 40 ml/h, PRIME) moves under this
+        #    section from the USER page, with the real mist slider so its pin and feedback stay the same
+        #  - SPINDLE LIFT / Z AXIS COMP stay hidden (external offsets are not used in this config)
         #  - FLOOD button = M8 = ColdEnd air blast -> labelled AIR
         # If anything is missing the box simply stays on the USER page.
         try:
-            panel = getattr(self.w, 'ColdEnd', None)
-            box = getattr(panel, 'grp_main', None) if panel is not None else None
-            if box is None:
-                return
-            layout = self.w.frame_program.layout()
-            index = layout.indexOf(self.w.widget_zaxis_offset)
+            for name in ('chk_lock_wph', 'lineEdit_work_height', 'btn_go_home', 'btn_laser_on',
+                         'btn_ref_laser', 'btn_tool_sensor', 'btn_touchplate', 'btn_goto_sensor'):
+                self.w[name].hide()
             self.w.widget_zaxis_offset_2.hide()
             self.w.widget_zaxis_offset.hide()
-            layout.insertWidget(index + 1, box)
             flood = self.w.action_flood
             flood.set_true_string('AIR\nON')
             flood.set_false_string('AIR\nOFF')
             flood.setText('AIR\nON' if flood.isChecked() else 'AIR\nOFF')
+            offsets = self.w.frame_offsets.layout()
+            offsets.setContentsMargins(4, 0, 4, 4)
+            for i in range(offsets.count()):
+                row = offsets.itemAt(i).layout()
+                if row is not None and row.indexOf(self.w.action_g30) >= 0:
+                    row.removeWidget(self.w.btn_go_home)
+                    row.addWidget(self.w.btn_ref_camera)
+                    self.center_button_row(row)
+                    break
+            panel = getattr(self.w, 'ColdEnd', None)
+            box = getattr(panel, 'grp_main', None) if panel is not None else None
+            if box is None:
+                return
+            # box as tall as its contents, the same 90 x 48 buttons as in OFFSETS:
+            # mist slider, MIST 40 + PRIME side by side
+            # spacing as in the OFFSETS layout: 4 at the sides, 2 between rows, 4 + 2 at the top,
+            # 4 at the bottom like STATUS
+            grid = box.layout()
+            grid.setContentsMargins(4, 6, 4, 4)
+            grid.setVerticalSpacing(2)
+            box.setMinimumHeight(0)
+            box.setMaximumHeight(16777215)
+            box.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
+            grid.removeItem(grid.itemAtPosition(2, 0))
+            grid.removeWidget(panel.btn_prime)
+            strip = QtWidgets.QHBoxLayout()
+            panel.sl_mist.setMinimumSize(0, 30)
+            grid.addWidget(panel.sl_mist, 2, 0, 1, 5)
+            for button, text in ((panel.btn_mist_40, 'MIST\n40 ml/h'), (panel.btn_prime, 'PRIME\n(hold)')):
+                button.setText(text)
+                button.setMinimumSize(90, 48)
+                button.setMaximumSize(90, 48)
+                strip.addWidget(button)
+            self.center_button_row(strip)
+            grid.addLayout(strip, 3, 0, 1, 5)
+            # a section of its own under OFFSETS, same width, both only as tall as their contents
+            box.setMinimumWidth(self.w.frame_offsets.minimumWidth())
+            box.setMaximumWidth(self.w.frame_offsets.maximumWidth())
+            self.w.frame_offsets.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Maximum)
+            column = self.w.frame_offsets.parentWidget().layout()
+            column.insertWidget(column.indexOf(self.w.frame_offsets) + 1, box)
+            column.addStretch(1)
+            # off with the machine, like the sections in onoff_list
+            self.coldend_box = box
+            box.setEnabled(STATUS.machine_is_on())
         except Exception as e:
             LOG.warning("ColdEnd main screen box not installed: {}".format(e))
 
@@ -1412,6 +1461,8 @@ class HandlerClass:
             self.w.stackedWidget_dro.setCurrentIndex(0)
 
     def enable_onoff(self, state):
+        if getattr(self, 'coldend_box', None) is not None:
+            self.coldend_box.setEnabled(state)
         if state:
             self.add_status("Machine ON")
         else:
