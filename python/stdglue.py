@@ -165,6 +165,28 @@ def _home_pocket(toolno):
         print("change_prolog: tool table lookup failed: %s" % e)
     return -1
 
+def _table_length(toolno):
+    """Z length of toolno in the tool table file. 0 = no length, or the table cannot be read
+    (rack_change.ngc then measures with the slow search from the top = safe fallback)."""
+    if toolno <= 0:
+        return 0.0
+    try:
+        import os, linuxcnc
+        ini_path = os.environ["INI_FILE_NAME"]
+        tbl = linuxcnc.ini(ini_path).find("EMCIO", "TOOL_TABLE")
+        tbl = os.path.join(os.path.dirname(ini_path), tbl.strip())
+        with open(tbl) as f:
+            for line in f:
+                words = line.split(";")[0].split()
+                if words and words[0][0] in "Tt" and int(words[0][1:]) == toolno:
+                    for word in words[1:]:
+                        if word[0] in "Zz":
+                            return float(word[1:])
+                    return 0.0
+    except Exception as e:
+        print("change_prolog: tool length lookup failed: %s" % e)
+    return 0.0
+
 TOUCH_LOG = "tool_touch.log"   # written by rack_change.ngc (LOGAPPEND), in the config dir
 
 def _last_touch(toolno):
@@ -225,7 +247,10 @@ def change_prolog(self, **words):
         self.params["stored_tool"] = last
         self.params["stored_home"] = _home_pocket(last)
         # last toolsetter touch of the new tool in machine Z (fast approach)
-        z = _last_touch(int(self.selected_tool))
+        # (none without a length in the tool table -> slow search from the top)
+        has_length = _table_length(int(self.selected_tool)) != 0
+        self.params["new_has_length"] = 1 if has_length else 0
+        z = _last_touch(int(self.selected_tool)) if has_length else None
         self.params["new_touch_ok"] = 0 if z is None else 1
         self.params["new_touch"] = 0.0 if z is None else z
         return INTERP_OK

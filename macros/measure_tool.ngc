@@ -9,6 +9,9 @@ o<measure_tool> sub
 o10 if [#<tool> LE 0]
     (abort, Measure tool: no tool in the spindle - set it with M61 Q<tool> first)
 o10 endif
+o15 if [#<tool> EQ #<_ini[VERSA_PROBE_OPTIONS]PS_PROBE_TOOL>]
+    (abort, Measure tool: the probe is not measured on the tool setter)
+o15 endif
 M66 P#<_ini[ATC_PINS]SENSOR_TOOL> L0
 o20 if [#5399 NE 1]
     (abort, Measure tool: tool sensor sees no tool in the spindle)

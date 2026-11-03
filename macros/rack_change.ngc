@@ -209,8 +209,22 @@ o150 if [#<oldtool> NE #<newtool>]
     o300 endif
 
     ; ---------- 3. measure (probe screen button) or use table length ----------
-    o400 if [#<_hal[qtversaprobe.enable]> EQ 1]
-        ; fast approach only for a rack tool with a recorded touch
+    ; a tool without a length is always measured, even with the probe screen button off:
+    ; G43 with length 0 would put the real tool tip far below where LinuxCNC thinks it is
+    #<measure> = #<_hal[qtversaprobe.enable]>
+    o404 if [#<newtool> EQ #<probe>]
+        ; the probe is never measured on the tool setter, its length is set by hand
+        #<measure> = 0
+        o403 if [#<new_has_length> EQ 0]
+            M72
+            (abort, Probe T#<probe> has no length in the tool table - enter it, the probe is not measured on the setter)
+        o403 endif
+    o404 elseif [[#<newtool> GT 0] AND [#<new_has_length> EQ 0]]
+        (DEBUG, T#<newtool> has no length in the tool table - measuring with the slow search from the top)
+        #<measure> = 1
+    o404 endif
+    o400 if [#<measure> EQ 1]
+        ; fast approach only for a rack tool with a length and a recorded touch
         #<fast_z> = 0
         o415 if [[#<_ini[TOOLSENSOR]FAST_APPROACH> GT 0] AND [#<new_touch_ok> EQ 1] AND [#<newpocket> GE 1] AND [#<newpocket> LE #<_ini[ATC]NUMPOCKETS>]]
             #<fast_z> = [#<new_touch> + #<_ini[TOOLSENSOR]FAST_APPROACH>]
