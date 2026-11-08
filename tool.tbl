@@ -2,15 +2,15 @@ T81  P0   D+4.000000 ;4mm 2f wood
 T71  P4   D+6.000000 ;radious 2.5mm china 6mm 4f 
 T70  P4   ;datron 1/8 bull 
 T61  P3   D+3.850000 ;Sorotec thread 0.5-1 
-T53  P1   D+16.000000 ;GUS 16mm 2F inserts 
+T53  P1   D+16.000000 Z+112.423124 ;GUS 16mm 2F inserts 
 T67  P2   D+6.000000 ;Thread 0.5-1.5 ali 6mm, 3.8 mm 
 T8   P4   D+4.000000 ;4mm 1f 32mm 
 T23  P2   D+6.000000 ;datron 6mm 1F 21mm 
-T1   P2   D+6.000000 Z+137.031417 ;6mm flat 
-T2   P2   D+6.000000 Z+136.995042 ;6mm 40mm lenght 1F 
+T1   P2   D+6.000000 Z+137.030000 ;6mm flat 
+T2   P2   D+6.000000 Z+137.023542 ;6mm 40mm lenght 1F 
 T3   P3   D+6.000000 ; 
 T4   P5   D+6.000000 ;sorotec 2mm 1F 
-T5   P5   D+6.000000 Z+129.727250 ;3f chamfer mill 
+T5   P5   D+6.000000 Z+129.791000 ;3f chamfer mill 
 T6   P3   Z+134.837250 ;1/8 " 17mm 
 T7   P7   ;1f 6mm sorotec 25mm 
 T9   P9   ;2mm flat 
@@ -34,7 +34,7 @@ T33  P33  ;r3 ball sorotec
 T41  P41  ;drill 5mm sorotec 
 T42  P42  ;drill 2.5 
 T50  P50  D+50.000000 ;face 50mm china 
-T51  P1   D+16.000000 Z+112.438583 ;sorotec 16mm face mill 
+T51  P1   D+16.000000 Z+112.366708 ;sorotec 16mm face mill 
 T52  P52  D+35.000000 ;Face 35 wood 
 T60  P60  ;3f 90deg 6mm chamfer 
 T66  P3   D+3.800000 ;thred m5-m8 sorotec 
