@@ -114,6 +114,14 @@ class HandlerClass:
             marks.append(("Rack 1", self._ini("ATC", "FIRSTPOCKET_X", 0), self._ini("ATC", "FIRSTPOCKET_Y", 0)))
         tool = self.ini.find("VERSA_PROBE_OPTIONS", "PS_PROBE_TOOL")
         self.probe_tool = int(float(tool)) if tool else None
+        pin = self.ini.find("OTHER_PINS", "PROBE")
+        self.probe_select = int(float(pin)) if pin else -1
+        self.virtual = bool(self._ini("TABLE_NAV", "VIRTUAL_PROBE", 0))
+        if self.virtual:  # real machine, virtual parts: no probe needed in the spindle
+            import sim_world
+            sim_world.configure(self._ini("TABLE_NAV", "VIRTUAL_TOP", -10.0),
+                                self._ini("TABLE_NAV", "VIRTUAL_SHIFT_X", 0.0), self._ini("TABLE_NAV", "VIRTUAL_SHIFT_Y", 0.0))
+            self.probe_tool = None
         self.map = MapWidget(table, marks)
         self.map.tapped.connect(self.view_go)
         self.build_controls()
@@ -162,6 +170,9 @@ class HandlerClass:
         side.addWidget(box)
         self.sp_travel = self.spin(self.z_max - 1.0, self.z_min, self.z_max)
         self.cfg_row("Travel Z", self.sp_travel)
+        floor = self._ini("TABLE_NAV", "VIRTUAL_TOP", 0.0) - 15.0 if self.virtual else self.z_min + 1.0
+        self.sp_floor = self.spin(floor, self.z_min, self.z_max)
+        self.cfg_row("Search down to Z", self.sp_floor)
 
     def cfg_row(self, text, widget):
         row = self.cfg.rowCount()
@@ -352,9 +363,11 @@ class HandlerClass:
             pass
         self.run_pose = c.pose  # the picture the plan was drawn on; the machine moves away from it
         x, y = self.cam.to_machine(c.pose, c.height_px[0], c.height_px[1], c.z)
-        descent = self.sp_travel.value() - self.z_min - 1.0
+        if self.sp_floor.value() >= self.sp_travel.value() - 1.0:
+            self.lbl_setup.setText("Search down to Z must be below the travel height.")
+            return
         self.stage = ("height", 0)
-        self.send(PP.height_command(x, y, self.sp_travel.value(), descent))
+        self.send(PP.height_command(x, y, self.sp_travel.value(), self.sp_floor.value(), self.probe_select))
         self.lbl_setup.setText("Measuring height...")
 
     def records(self):
@@ -397,12 +410,15 @@ class HandlerClass:
             self.stage = ("finish", 0)
             x, y = self.table.clamp(self.final_xy[0], self.final_xy[1])
             return self.send(move_command(x, y, NAV_FEED, self.sp_travel.value()))
+        if name == "finish" and self.probe_select >= 0:
+            self.stage = ("release", 0)
+            return self.send("M65 P%d" % self.probe_select)
         self.stage = None
 
     def send_touch(self, i):
         start, _, target = self.paths[i]
         zsafe = self.top_f + Z_CLEAR
-        self.send(PP.touch_command(start, target, zsafe, self.top_f - self.sp_depth.value()))
+        self.send(PP.touch_command(start, target, zsafe, self.top_f - self.sp_depth.value(), self.probe_select))
         self.lbl_setup.setText("Edge point %d of %d..." % (i + 1, len(self.paths)))
 
     def apply(self, touches):

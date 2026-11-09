@@ -185,13 +185,15 @@ def solve_circle(contacts, r, inside):
     return sx + cu, sy + cv, rad + r if inside else rad - r
 
 
-def height_command(x, y, travel, descent, fast=1000.0, slow=200.0, feed=3000.0):
-    return "o<setup_height> call [%.3f] [%.3f] [%.3f] [%.3f] [%.1f] [%.1f] [%.1f]" % (x, y, travel, descent, fast, slow, feed)
+def height_command(x, y, travel, floor, select=-1, fast=1000.0, slow=200.0, feed=3000.0):
+    """floor: lowest machine Z the height search may reach. select: probe-select output or -1."""
+    return "o<setup_height> call [%.3f] [%.3f] [%.3f] [%.3f] [%.1f] [%.1f] [%.1f] [%d]" % (
+        x, y, travel, floor, fast, slow, feed, select)
 
 
-def touch_command(start, target, zsafe, zlow, fast=1500.0, slow=200.0):
-    return "o<setup_touch> call [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.1f] [%.1f]" % (
-        start[0], start[1], target[0], target[1], zsafe, zlow, fast, slow)
+def touch_command(start, target, zsafe, zlow, select=-1, fast=1500.0, slow=200.0):
+    return "o<setup_touch> call [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.1f] [%.1f] [%d]" % (
+        start[0], start[1], target[0], target[1], zsafe, zlow, fast, slow, select)
 
 
 def parse_log(text):

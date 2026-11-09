@@ -1,7 +1,11 @@
 ; Setup mode, one edge point. Positions are machine X/Y; heights are in the active offset.
 ; #1 #2 descent point, #3 #4 end of search, #5 safe Z, #6 check Z, #7 travel feed, #8 probe feed
+; #9 digital output that selects the probe input (-1 = none)
 o<setup_touch> sub
 G21 G90
+o120 if [#9 GE 0]
+    M64 P#9
+o120 endif
 #<ox> = #[5201 + 20 * #5220]
 #<oy> = #[5202 + 20 * #5220]
 #<sx> = [#1 - #<ox>]

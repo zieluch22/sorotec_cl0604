@@ -1,0 +1,17 @@
+# Real-machine virtual test only (start_virtual_probe.sh adds this file; the normal INI never loads it).
+# The probe input becomes: real probe chain OR virtual probe. The real chain is unchanged, so with no
+# probe selected it still reads tripped, and a real touch still stops a probing move.
+# OR from two components the config does not load elsewhere (or2 and logic are taken):
+# match8 gives NOR, xor2 against 1 inverts it
+loadrt match8 names=vprobe-nor
+loadrt xor2 names=vprobe-or
+addf vprobe-nor servo-thread
+addf vprobe-or servo-thread
+setp vprobe-nor.in 1
+setp vprobe-or.in1 1
+unlinkp motion.probe-input
+net probe-in => vprobe-nor.a0
+loadusr -Wn vprobe python3 qtvcp/panels/table_nav/virtual_probe.py
+net vprobe-touch vprobe.touch => vprobe-nor.a1
+net vprobe-nor vprobe-nor.out => vprobe-or.in0
+net probe-with-virtual vprobe-or.out => motion.probe-input

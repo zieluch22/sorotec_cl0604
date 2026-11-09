@@ -19,3 +19,4 @@ hallib/linuxcnc.var
 hallib/linuxcnc.var.bak
 __pycache__/
 *.pyc
+qthd_virtual_probe.ini
