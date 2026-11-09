@@ -119,6 +119,10 @@ class HandlerClass:
         self.build_controls()
         if self._ini("TABLE_NAV", "FAKE_CAMERA", 0):
             self.build_canvas()
+        else:  # no sketching: the map is the way to move, so it gets the room
+            self.w.nav_holder.setFixedWidth(560)
+            self.map.setMaximumHeight(16777215)
+            self.map.setMinimumSize(520, 330)
         self.set_target(*table.clamp((table.x_min + table.x_max) / 2, (table.y_min + table.y_max) / 2))
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.poll)
