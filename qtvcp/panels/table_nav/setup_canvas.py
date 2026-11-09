@@ -26,6 +26,7 @@ class Canvas(QtWidgets.QWidget):
         self.cam = cam
         self.frame = None
         self.mode = "move"
+        self.busy = False
         self.pan_from = self.pan_to = None
         self._pix = None
         self._pix_key = None
@@ -240,7 +241,8 @@ class Canvas(QtWidgets.QWidget):
                 self._pix = QtGui.QPixmap.fromImage(img).scaled(int(w * s), int(h * s))
                 self._pix_key = key
             p.drawPixmap(int(ox), int(oy), self._pix)
-        self.paint_setup(p)
+        if self.mode == "sketch" or self.busy:  # plans only show while sketching or probing
+            self.paint_setup(p)
         p.end()
 
     def paint_setup(self, p):

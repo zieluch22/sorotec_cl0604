@@ -16,7 +16,6 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from table_nav_logic import CORNERS, TableMap, move_command, not_ready_reason, setup_reason
 import probe_plan as PP
 
-NAV_FEED = 3000.0  # mm/min for the X/Y part of a move
 PROBE_LOG = "/tmp/table_nav_probe.log"  # also named in macros/setup_height.ngc and setup_touch.ngc
 Z_CLEAR = 5.0     # above the measured top while moving between points
 OVERTRAVEL = 5.0  # search this far past the expected edge
@@ -170,6 +169,10 @@ class HandlerClass:
         side.addWidget(box)
         self.sp_travel = self.spin(self.z_max - 1.0, self.z_min, self.z_max)
         self.cfg_row("Travel Z", self.sp_travel)
+        max_feed = self._ini("TRAJ", "MAX_LINEAR_VELOCITY", 50.0) * 60.0
+        self.sp_feed = self.spin(min(6000.0, max_feed), 100.0, max_feed)
+        self.sp_feed.setDecimals(0)
+        self.cfg_row("Move feed", self.sp_feed)
         floor = self._ini("TABLE_NAV", "VIRTUAL_TOP", 0.0) - 15.0 if self.virtual else self.z_min + 1.0
         self.sp_floor = self.spin(floor, self.z_min, self.z_max)
         self.cfg_row("Search down to Z", self.sp_floor)
@@ -183,7 +186,8 @@ class HandlerClass:
         from setup_canvas import Canvas
         from vision import CameraModel, fake_frame, find_shape
         self.fake_frame, self.find_shape = fake_frame, find_shape
-        self.cam = CameraModel()
+        # the virtual parts sit 10 mm under home in the real-machine test: a higher virtual camera keeps them in view
+        self.cam = CameraModel(above=self._ini("TABLE_NAV", "VIRTUAL_CAMERA_ABOVE", 120.0 if self.virtual else 50.0))
         self.w.camview.hide()
         box = QtWidgets.QWidget()
         col = QtWidgets.QVBoxLayout(box)
@@ -220,7 +224,7 @@ class HandlerClass:
         self.sp_approach = self.spin(20.0, 3.0, 60.0)
         self.sp_dia = self.spin(1.98, 0.1, 20.0)
         self.sp_depth = self.spin(PP.default_depth(1.98), 0.2, 60.0)
-        self.sp_z = self.spin(-70.0, self.z_min, self.z_max)
+        self.sp_z = self.spin(self._ini("TABLE_NAV", "VIRTUAL_TOP", -10.0) if self.virtual else -70.0, self.z_min, self.z_max)
         for text, widget in (("Origin corner", self.cmb_corner), ("Approach mm", self.sp_approach), ("Stylus dia", self.sp_dia),
                              ("Edge depth", self.sp_depth), ("Rough top Z", self.sp_z)):
             self.cfg_row(text, widget)
@@ -326,7 +330,7 @@ class HandlerClass:
         self.poll()
         if self.reason or not self.map.target:
             return
-        self.send(move_command(self.map.target[0], self.map.target[1], NAV_FEED, self.sp_travel.value()))
+        self.send(move_command(self.map.target[0], self.map.target[1], self.sp_feed.value(), self.sp_travel.value()))
 
     def send(self, line):
         self.cmd.mode(linuxcnc.MODE_MDI)
@@ -409,7 +413,7 @@ class HandlerClass:
             # finish over the result (corner or centre) at the travel height
             self.stage = ("finish", 0)
             x, y = self.table.clamp(self.final_xy[0], self.final_xy[1])
-            return self.send(move_command(x, y, NAV_FEED, self.sp_travel.value()))
+            return self.send(move_command(x, y, self.sp_feed.value(), self.sp_travel.value()))
         if name == "finish" and self.probe_select >= 0:
             self.stage = ("release", 0)
             return self.send("M65 P%d" % self.probe_select)
@@ -502,11 +506,10 @@ class HandlerClass:
                 self.drawn_xy = self.xy
                 self.map.update()
             if self.canvas and not self.stage and (moved or self.canvas.frame is None):
-                self.frame_tick += 1
-                if self.frame_tick % 2 == 0 or self.canvas.frame is None:
-                    pose = tuple(s.actual_position[:3])
-                    self.canvas.set_pose(pose, self.fake_frame(self.cam, pose))
+                pose = tuple(s.actual_position[:3])
+                self.canvas.set_pose(pose, self.fake_frame(self.cam, pose))
         if self.canvas:
+            self.canvas.busy = bool(self.stage)
             self.btn_run.setEnabled(not self.run_block)
             self.btn_apply.setEnabled(bool(self.result) and not self.reason)
             self.btn_apply.setText("APPLY TO " + WCS[self.stat.g5x_index])

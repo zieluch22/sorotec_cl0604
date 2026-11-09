@@ -191,9 +191,10 @@ def height_command(x, y, travel, floor, select=-1, fast=1000.0, slow=200.0, feed
         x, y, travel, floor, fast, slow, feed, select)
 
 
-def touch_command(start, target, zsafe, zlow, select=-1, fast=1500.0, slow=200.0):
-    return "o<setup_touch> call [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.1f] [%.1f] [%d]" % (
-        start[0], start[1], target[0], target[1], zsafe, zlow, fast, slow, select)
+def touch_command(start, target, zsafe, zlow, select=-1, fast=3000.0, slow=100.0, probe_fast=800.0):
+    """fast: moves between points; probe_fast: first touch; slow: the measuring re-touch."""
+    return "o<setup_touch> call [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.3f] [%.1f] [%.1f] [%d] [%.1f]" % (
+        start[0], start[1], target[0], target[1], zsafe, zlow, fast, slow, select, probe_fast)
 
 
 def parse_log(text):

@@ -5,6 +5,8 @@ import math
 import cv2
 import numpy as np
 
+BORDER = 3  # px: shapes this close to the picture edge count as not seen
+
 import sim_world as W
 
 
@@ -234,8 +236,13 @@ def find_shape(img, stroke, min_overlap=0.35):
             best, best_score = c, score
     fit = fit_stroke([tuple(p) for p in (best[:, 0] if best is not None else stroke)])
     band = 14 if best is not None else 36
+    h, w = img.shape[:2]
+    inside = lambda x, y, m=BORDER: m <= x <= w - 1 - m and m <= y <= h - 1 - m
     if fit[0] == "rect":
         corners, found = detect_rect(img, fit[1], band=band)
+        # a side running off the picture was not really seen: its edge cannot be trusted
+        found = [f and inside(*corners[i]) and inside(*corners[(i + 1) % 4]) for i, f in enumerate(found)]
         return "rect", corners, found
     center, radius, found = detect_circle(img, fit[1], fit[2], band=band)
+    found = found and inside(center[0] - radius, center[1] - radius) and inside(center[0] + radius, center[1] + radius)
     return "circle", center, radius, found

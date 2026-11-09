@@ -1,6 +1,7 @@
 ; Setup mode, one edge point. Positions are machine X/Y; heights are in the active offset.
 ; #1 #2 descent point, #3 #4 end of search, #5 safe Z, #6 check Z, #7 travel feed, #8 probe feed
-; #9 digital output that selects the probe input (-1 = none)
+; #9 digital output that selects the probe input (-1 = none), #10 fast probe feed
+; Touches fast, backs off 1.5 mm towards the descent point and touches again at the probe feed.
 o<setup_touch> sub
 G21 G90
 o120 if [#9 GE 0]
@@ -12,6 +13,11 @@ o120 endif
 #<sy> = [#2 - #<oy>]
 o<setup_pmove> call [#<sx>] [#<sy>] [#5] [#7]
 o<setup_pmove> call [#<sx>] [#<sy>] [#6] [#7]
+G38.2 X[#3 - #<ox>] Y[#4 - #<oy>] F#10
+#<bx> = [#<sx> - #5061]
+#<by> = [#<sy> - #5062]
+#<blen> = SQRT[#<bx> * #<bx> + #<by> * #<by>]
+G1 X[#5061 + #<bx> / #<blen> * 1.5] Y[#5062 + #<by> / #<blen> * 1.5] F#7
 G38.2 X[#3 - #<ox>] Y[#4 - #<oy>] F#8
 #<mx> = [#5061 + #<ox>]
 #<my> = [#5062 + #<oy>]

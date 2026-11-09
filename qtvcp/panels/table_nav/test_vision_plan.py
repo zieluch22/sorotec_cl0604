@@ -204,6 +204,18 @@ class T(unittest.TestCase):
         res = find_shape(fake_frame(CAM, pose), self.sloppy((320, 240), 40, 40, False, 4))
         self.assertFalse(all(res[2]) if res[0] == "rect" else res[3])
 
+    def test_part_running_off_the_picture_is_not_found(self):
+        W.configure(-10)
+        try:
+            pose = (235.1, 141.0, -1.0)
+            cam = CameraModel(above=50)
+            res = find_shape(fake_frame(cam, pose), self.sloppy((380, 300), 300, 200, False, 1))
+            self.assertFalse(all(res[2]) if res[0] == "rect" else res[3])
+        finally:
+            W.configure(-60)
+            W.BOSS["top"] = -50.0
+            W.TABLE_Z = -100.0
+
     def test_depth(self):
         self.assertAlmostEqual(PP.default_depth(1.98), 1.99)
 
