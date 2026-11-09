@@ -1,0 +1,11 @@
+; Table navigation move: rise to travel height, then X/Y in machine coordinates.
+; Travel height is the same one rack_change.ngc uses to cross the rack.
+; #1 = machine X, #2 = machine Y, #3 = XY feed in mm/min, #4 = travel height (machine Z)
+o<nav_move> sub
+M70
+G21 G90
+G53 G0 Z#4
+G53 G1 X#1 Y#2 F#3
+M72
+o<nav_move> endsub
+M2

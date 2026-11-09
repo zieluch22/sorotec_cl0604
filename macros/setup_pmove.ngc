@@ -1,0 +1,9 @@
+; Protected move for the guided setup: stops with an error if the probe touches anything.
+; #1 X, #2 Y, #3 Z, #4 feed
+o<setup_pmove> sub
+G38.3 X#1 Y#2 Z#3 F#4
+o10 if [#5070 EQ 1]
+    (abort, Guided setup: probe touched something during a travel move)
+o10 endif
+o<setup_pmove> endsub
+M2

@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry"><rect><x>0</x><y>0</y><width>1250</width><height>600</height></rect></property>
+  <property name="windowTitle"><string>Table navigation</string></property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="main_l">
+    <item><widget class="CamView" name="camview"><property name="minimumSize"><size><width>480</width><height>360</height></size></property></widget></item>
+    <item><widget class="QWidget" name="nav_holder"><property name="minimumSize"><size><width>270</width><height>360</height></size></property></widget></item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget><class>CamView</class><extends>QWidget</extends><header>qtvcp.widgets.camview_widget</header></customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
