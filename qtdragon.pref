@@ -93,7 +93,7 @@ gcodegraphics-user-lat = 0.0
 gcodegraphics-user-lon = 0.0
 
 [CUSTOM_FORM_ENTRIES]
-Tool to load = 5
+Tool to load = 0
 Laser X = 100.0
 Laser Y = -20.0
 Sensor X = 154.77
@@ -116,7 +116,7 @@ Use keyboard = False
 Run from line = False
 Use virtual keyboard = False
 Use tool sensor = True
-Use camera = False
+Use camera = True
 Use alpha display mode = True
 Inhibit display mouse selection = True
 Use tool touchplate = True
@@ -134,7 +134,7 @@ ps_probe_latch = 1.0
 ps_probe_diam = 1.98
 ps_xy_clearance = 40.0
 ps_side_edge_length = 0.0
-ps_probe_height = -57.146
+ps_probe_height = -57.226
 ps_block_height = -47.211
 use_tool_measurement = True
 ps_offs_x = 0.0

@@ -1,45 +1,59 @@
-T81  P0   D+4.000000 ;4mm 2f wood 
-T71  P4   D+6.000000 ;radious 2.5mm china 6mm 4f 
-T70  P4   ;datron 1/8 bull 
-T61  P3   D+3.850000 ;Sorotec thread 0.5-1 
-T53  P1   D+16.000000 Z+112.423124 ;GUS 16mm 2F inserts 
-T67  P2   D+6.000000 ;Thread 0.5-1.5 ali 6mm, 3.8 mm 
-T8   P4   D+4.000000 ;4mm 1f 32mm 
-T23  P2   D+6.000000 ;datron 6mm 1F 21mm 
-T1   P2   D+6.000000 ;6mm flat 
-T2   P2   D+6.000000 Z+137.023542 ;6mm 40mm lenght 1F 
-T3   P3   D+6.000000 ; 
-T4   P5   D+6.000000 ;sorotec 2mm 1F 
-T5   P5   D+6.000000 ;3f chamfer mill 
-T6   P3   Z+134.837250 ;1/8 " 17mm 
-T7   P7   ;1f 6mm sorotec 25mm 
-T9   P9   ;2mm flat 
-T11  P11  D+5.000000 ;5mm 4f china 
-T12  P12  ;sor_flat_2mm_8mm 
-T13  P13  D+6.000000 ;flat/ 6mm pro alu 26mm 
-T14  P14  ;6mm 2f china col 
-T15  P1   D+16.000000 ;face16 
-T16  P2   ;4mm 2f 
-T17  P3   D+4.000000 ;1F 4mm 15mm 
-T18  P2   ;3mm flat sorotec 
-T19  P4   D+10.000000 Z+171.036750 ;3F 10mm 
-T21  P3   ;ball end mill 6mm 
-T22  P22  ;3f 4mm 
-T24  P24  ;2f 6mm flat coated china 
-T25  P25  ;2f 10mm 
-T26  P26  D+3.175000 ;foam cutter 1/8' 
-T30  P30  ;ball 6mm 2f china 
-T32  P32  ;ball 6mm china 
-T33  P33  ;r3 ball sorotec 
-T41  P41  ;drill 5mm sorotec 
-T42  P42  ;drill 2.5 
-T50  P50  D+50.000000 ;face 50mm china 
-T51  P1   D+16.000000 Z+112.366708 ;sorotec 16mm face mill 
-T52  P52  D+35.000000 ;Face 35 wood 
-T60  P60  ;3f 90deg 6mm chamfer 
-T66  P3   D+3.800000 ;thred m5-m8 sorotec 
-T62  P4   ;chamfer 60 degree 
-T63  P63  D+4.850000 ;thread m6 4.85 china 
-T90  P90  ;thread m4-m8 sorotec 
-T91  P4   ;thread m2-m4 sorotec 
-T99  P99  D+2.000000 Z+164.967210 ;probe 
+T100 P100 D1.000 Z+0.000 ;flat end mill Tools_aliexpress L2 F3
+T101 P101 D1.000 Z+0.000 ;flat end mill AZZKOR Flat_endmill L4 F3
+T120 P120 D2.000 Z+0.000 ;flat end mill pro alu 2mm sorotec Flat_endmill L5 F1
+T121 P121 D2.000 Z+0.000 ;flat end mill pro alu sorotec Flat_endmill L8 F1
+T122 P122 D2.000 Z+0.000 ;flat end mill Tools_aliexpress L4 F3
+T123 P123 D2.000 Z+0.000 ;flat end mill Flat_endmill L6 F4
+T140 P140 D3.000 Z+0.000 ;flat end mill 3MM FLAT END MILL DATRON datron L10 F1
+T141 P141 D3.175 Z+0.000 ;flat end mill 1/8" Flat_endmill L17 F1
+T160 P160 D4.000 Z+0.000 ;flat end mill Flat_endmill L15 F1
+T161 P161 D4.000 Z+0.000 ;flat end mill Tools_aliexpress L30 F1
+T162 P162 D4.000 Z+0.000 ;flat end mill Flat_endmill L32 F1
+T163 P163 D4.000 Z+0.000 ;flat end mill 4mm 2F Flat_endmill L15 F2
+T164 P164 D4.000 Z+0.000 ;flat end mill wood L32 F2
+T180 P180 D5.000 Z+0.000 ;flat end mill AZZKOR Flat_endmill L13 F4
+T181 P181 D5.000 Z+0.000 ;flat end mill 4 flutes Tools_aliexpress L18 F4
+T200 P200 D6.000 Z+0.000 ;flat end mill pro alu sorotec Flat_endmill L16 F1
+T201 P201 D6.000 Z+0.000 ;flat end mill 6MM FLAT END MILL DATRON datron L21 F1
+T202 P202 D6.000 Z+0.000 ;flat end mill ali Flat_endmill L25 F1
+T203 P203 D6.000 Z+0.000 ;flat end mill pro alu sorotec Flat_endmill L26 F1
+T204 P204 D6.000 Z+0.000 ;flat end mill 1 flute Flat_endmill L32 F1
+T206 P206 D6.000 Z+0.000 ;flat end mill ali Flat_endmill L40 F1
+T207 P207 D6.000 Z+0.000 ;flat end mill 6mm 2F Flat_endmill L18 F2
+T208 P208 D6.000 Z+0.000 ;flat end mill 6mm 2F coated china Hongsheng Flat_endmill L25 F2
+T209 P209 D6.000 Z+0.000 ;flat end mill alu finishing sorotec Flat_endmill L22 F3
+T230 P230 D8.000 Z+0.000 ;flat end mill 8MM FLAT END MILL DATRON datron L20 F1
+T231 P231 D8.000 Z+0.000 ;flat end mill 8mm 1F rainbow china Flat_endmill L32 F1
+T232 P232 D8.000 Z+0.000 ;flat end mill 1F 8mm coated china 1F Flat_endmill L35 F1
+T250 P250 D10.000 Z+0.000 ;flat end mill 10mm 2F HN Flat_endmill L40 F2
+T251 P251 D10.000 Z+0.000 ;flat end mill Flat_endmill L41 F3
+T300 P300 D2.000 Z+0.000 ;ball end mill ball_endmill L5 F2
+T301 P301 D6.000 Z+0.000 ;ball end mill azzkor ball_endmill L17 F2
+T302 P302 D6.000 Z+0.000 ;ball end mill Tools_aliexpress L18 F2
+T350 P350 D3.000 Z+0.000 ;bull nose end mill 3MM BULL NOSE END MILL DATRON bullnose L4 F2
+T400 P400 D1.500 Z+0.000 ;radius mill chamfer L2.5 F4
+T401 P401 D2.000 Z+0.000 ;radius mill ali chamfer L2 F4
+T403 P403 D2.000 Z+0.000 ;radius mill Tools_aliexpress L0 F3
+T404 P404 D6.000 Z+0.000 ;radius mill chamfer L2 F4
+T450 P450 D6.000 Z+0.000 ;chamfer mill 60 stopni ali chamfer L5 F3
+T460 P460 D6.000 Z+0.000 ;chamfer mill 90 stopni chamfer L3.5 F3
+T461 P461 D6.000 Z+0.000 ;chamfer mill Tools_aliexpress L3 F3
+T470 P470 D4.000 Z+0.000 ;chamfer mill 120 stopni ali chamfer L1 F3
+T471 P471 D6.000 Z+0.000 ;chamfer mill 120 stopni ali chamfer L1.5 F3
+T480 P480 D3.175 Z+0.000 ;chamfer mill 1/8" V ali graver L3.302 F2
+T500 P500 D16.000 Z+0.000 ;face mill 16mm GUS face L4 F2
+T501 P501 D16.000 Z+0.000 ;face mill 16mm Sorotec face L5 F3
+T502 P502 D35.000 Z+0.000 ;face mill wood 35mm face L10 F3
+T503 P503 D50.000 Z+0.000 ;face mill china 50 face L12 F6
+T600 P600 D6.000 Z+0.000 ;spot drill 6mm spot Drill drills L10 F3
+T620 P620 D2.500 Z+0.000 ;drill drills L20 F2
+T640 P640 D4.000 Z+0.000 ;drill Tools_aliexpress L20 F3
+T650 P650 D5.000 Z+0.000 ;drill 5mm sorotec drills L30 F2
+T700 P700 D2.000 Z+0.000 ;thread mill m2-m4 sorotec thread L0.65 F3
+T701 P701 D3.150 Z+0.000 ;thread mill 0.5-1 ali coated multicolor thread L10 F4
+T702 P702 D3.850 Z+0.000 ;thread mill threadmill sorotec thread L16 F4
+T703 P703 D3.900 Z+0.000 ;thread mill 0.5-0.8 ali coated gray thread L10 F4
+T704 P704 D4.850 Z+0.000 ;thread mill M6 BB thread L1 F4
+T705 P705 D5.800 Z+0.000 ;thread mill M8 BB thread L1.5 F1
+T706 P706 D6.000 Z+0.000 ;thread mill M8 BB thread L15 F4
+T99 P99 D+2.000000 Z+164.967210 ;probe
