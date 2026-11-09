@@ -24,8 +24,8 @@ RunFromLineDialog_play_sound = True
 RunFromLineDialog_sound_type = READY
 
 [BOOK_KEEPING]
-last_loaded_directory = /home/zieluch/linuxcnc/nc_files/testy_maszyny
-last_loaded_file = /home/zieluch/linuxcnc/nc_files/testy_maszyny/1001.ngc
+last_loaded_directory = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros
+last_loaded_file = /home/zieluch/linuxcnc/configs/qthd_sorotec_cl0604/macros/setup_height.ngc
 style_QSS_Path = DEFAULT
 RecentPath_0 = /home/zieluch/linuxcnc/nc_files/testy_maszyny/1001.ngc
 

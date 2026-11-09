@@ -1,0 +1,5 @@
+loadusr -Wn sim_part python3 sim_part.py
+net Xpos => sim_part.x
+net Ypos => sim_part.y
+net Zpos => sim_part.z
+net sim-probe sim_part.probe => motion.probe-input
