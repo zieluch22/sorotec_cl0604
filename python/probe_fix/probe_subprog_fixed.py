@@ -4,6 +4,9 @@
 #   - inside corners / length / valley / rectangular pocket: stop with a clear message
 #     when Side Edge < XY Clearance (stock: invalid move "X--30")
 #   - angle routines: stop with a clear message when Side Edge is 0 (needs two touches apart)
+#   - Probe Material Top: search only down to the Z limit (stock is refused below -100)
+#   - every X/Y touch: search only up to the soft limit (stock refused near Y 0 / 380)
+#   - hole: a failed Y- touch now stops the routine (stock checked rtn == -1)
 # Lives in the config so a LinuxCNC update does not overwrite it. qtdragon_hd_handler.py
 # points VersaProbe here (init of the handler, SUBPROGRAM).
 #
@@ -236,7 +239,10 @@ def probe_xy_hole(self):
             return 'Probe_xy_hole failed: Y minus rapid positioning: {}'.format(rtn)
 
     rtn = self.probe('yminus') 
-    if rtn == -1: return 'Probe_xy_hole failed: Y minus probe: {}'.format(rtn)
+    # stock checked rtn == -1 here, but probe() returns an error text on failure, so a missed
+    # Y- touch went on with the X+ touch as the Y- result and zeroed a wrong Y center
+    if rtn != 1:
+        return 'Probe_xy_hole failed: Y minus probe: {}'.format(rtn)
     # show Y result
     a = STATUS.get_probed_position_with_offsets()
     ymres = float(a[1]) - 0.5 * self.data_probe_diam
@@ -283,6 +289,107 @@ def probe_xy_hole(self):
 # Back left inside corner
 
 
+def probe(self, name):
+    # One X/Y touch, used by all XY routines. Same as the installed probe() (which already
+    # returns to the start of the probe move), except the search distance.
+    # Stock searches Max Travel from wherever the axis is. Near a soft limit (Y travel is only
+    # 0-380, so Max Travel 100 with the part at Y < 100 or Y > 280) the G38.2 end point is past
+    # the limit and the whole move is refused. Now the search stops just inside the limit,
+    # leaving room for the slow re-touch (latch * 1.2 back after latch away).
+    if name in ('xminus', 'yminus'):
+        sign = -1.0
+    elif name in ('xplus', 'yplus'):
+        sign = 1.0
+    else:
+        return -1
+    axis = name[0].upper()
+    laxis = name[0].lower()
+
+    STATUS.stat.poll()
+    pos = STATUS.stat.position['xy'.index(laxis)]   # machine coordinates
+    margin = 0.2 * self.data_latch_return_dist + 0.05
+    if sign < 0:
+        room = pos - (float(routines.INFO.INI.find('AXIS_' + axis, 'MIN_LIMIT')) + margin)
+    else:
+        room = (float(routines.INFO.INI.find('AXIS_' + axis, 'MAX_LIMIT')) - margin) - pos
+    distance = min(float(self.data_max_travel), room)
+    if distance < 1.0:
+        return 'Probe {}: {} {:.3f} is too close to the {} limit to search'.format(name, axis, pos, axis)
+    travel = '%.3f' % (sign * distance)
+    latch = sign * self.data_latch_return_dist
+
+    # save current position so we can return to it
+    rtn = self.CALL_MDI_WAIT('#<{}>=#<_{}>'.format(laxis, laxis), self.timeout)
+    # probe toward target
+    s = """G91
+    G38.2 {}{} F{}""".format(axis, travel, self.data_search_vel)
+    rtn = self.CALL_MDI_WAIT(s, self.timeout)
+    if rtn != 1:
+        return 'Probe {} failed: {}'.format(name, rtn)
+    # retract
+    s = "G1 {}{} F{}".format(axis, -latch, self.data_rapid_vel)
+    rtn = self.CALL_MDI_WAIT(s, self.timeout)
+    if rtn != 1:
+        return 'Probe {} failed: {}'.format(name, rtn)
+    # wait and probe toward target
+    s = """G4 P0.5
+    G38.2 {}{} F{}""".format(axis, 1.2 * latch, self.data_probe_vel)
+    rtn = self.CALL_MDI_WAIT(s, self.timeout)
+    if rtn != 1:
+        return 'Probe {} failed: {}'.format(name, rtn)
+    # retract to original position
+    s = "G90 G1 {}#<{}> F{}".format(axis, laxis, self.data_rapid_vel)
+    rtn = self.CALL_MDI_WAIT(s, self.timeout)
+    if rtn != 1:
+        return 'Probe {} failed: {}'.format(name, rtn)
+    return 1
+
+
+def probe_material_z(self):
+    # Probe Material Top. Stock 2.9.7 code, except the search distance.
+    # Stock searches G91 G38.2 Z-[VERSA_TOOLSETTER]MAXPROBE from wherever Z is. Started below
+    # MIN_LIMIT + MAXPROBE (-100 here) the move crosses the Z limit and is refused, but only
+    # after G10 L20 has already set G54 Z to 0. Now the search stops just above the limit,
+    # leaving room for the slow re-touch (latch * 1.2 down after latch up), and the routine
+    # stops before changing anything when there is no room to search at all.
+    try:
+        if self.data_ts_max is None:
+            return 'Missing toolsetter setting: data_ts_max'
+
+        STATUS.stat.poll()
+        z_now = STATUS.stat.position[2]   # machine coordinates
+        z_min = float(routines.INFO.INI.find('AXIS_Z', 'MIN_LIMIT'))
+        lowest = z_min + 0.2 * self.data_latch_return_dist + 0.05
+        search = min(float(self.data_ts_max), z_now - lowest)
+        if search < 1.0:
+            return ('Probe Material Top: Z %.3f is too close to the Z limit %.3f to search. '
+                    'Move Z up and start again.' % (z_now, z_min))
+        search = '%.3f' % search
+
+        cmdList = []
+        cmdList.append('G49')
+        cmdList.append('G92.1')
+        cmdList.append('G10 L20 P0  Z[#<_abs_z>]')
+        cmdList.append('G91')
+        cmdList.append('F {}'.format(self.data_search_vel))
+        cmdList.append('G38.2 Z-{}'.format(search))
+        cmdList.append('G1 Z{} F{}'.format(self.data_latch_return_dist, self.data_rapid_vel))
+        cmdList.append('F{}'.format(self.data_probe_vel))
+        cmdList.append('G38.2 Z-{}'.format(self.data_latch_return_dist*1.2))
+        cmdList.append('G1 Z{} F{}'.format(self.data_z_clearance, self.data_rapid_vel))
+        cmdList.append('G90')
+
+        rtn = self.CALL_MDI_LIST(cmdList)
+        if rtn != 1:
+            return rtn
+        h = STATUS.get_probed_position()[2]
+        self.status_bh = h
+        self.add_history('Probe Material Top', "Z", 0, 0, 0, 0, 0, 0, 0, 0, h, 0, 0)
+        return 1
+    except Exception as e:
+        return '{}'.format(e)
+
+
 def _check(method, problem):
     @functools.wraps(method)
     def checked(self):
@@ -306,6 +413,8 @@ def _no_edge(self):
 
 routines.ProbeRoutines.probe_outside_xy_boss = probe_outside_xy_boss
 routines.ProbeRoutines.probe_xy_hole = probe_xy_hole
+routines.ProbeRoutines.probe_material_z = probe_material_z
+routines.ProbeRoutines.probe = probe
 for name in ('probe_inside_xpyp', 'probe_inside_xpym', 'probe_inside_xmyp', 'probe_inside_xmym',
              'probe_inside_length_x', 'probe_inside_length_y'):
     setattr(routines.ProbeRoutines, name, _check(getattr(routines.ProbeRoutines, name), _edge_too_small))
