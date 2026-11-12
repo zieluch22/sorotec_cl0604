@@ -21,6 +21,9 @@ from shutil import copyfile
 from math import sqrt, ceil
 
 LOG = logger.getLogger(__name__)
+
+def INI_ON(value):
+    return str(value).strip().lower() in ('1', 'yes', 'true', 'on')
 KEYBIND = Keylookup()
 AUX_PRGM = Aux_program_loader()
 STATUS = Status()
@@ -509,6 +512,45 @@ class HandlerClass:
             return
         self.w.probe_layout.addWidget(self.probe)
         self.probe.hal_init()
+        if probe == 'versaprobe' and INI_ON(INFO.get_error_safe_setting('PROBE', 'ROTATE_180', '0')):
+            self.rotate_probe_screen()
+
+    def rotate_probe_screen(self):
+        # Turn the Versa Probe corner/edge/skew buttons 180 deg: on this machine X+ points left and
+        # Y+ points down on the screen. Probe moves are unchanged, only button places and icons.
+        icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'images', 'probe_icons_rot180')
+        def icon_name(prefix, code):
+            # 'xpym' -> 'X+Y-'
+            return prefix + ''.join(a.upper() + ('+' if s == 'p' else '-') for a, s in zip(code[::2], code[1::2]))
+        groups = (
+            ('pbtn_outside_', '', ('xpyp', 'xpym', 'xmyp', 'xmym', 'xp', 'xm', 'yp', 'ym', 'center')),
+            ('pbtn_inside_', 'in', ('xpyp', 'xpym', 'xmyp', 'xmym', 'xp', 'xm', 'yp', 'ym', 'xy_hole')),
+            ('pbtn_skew_', 'angle', ('xp', 'xm', 'yp', 'ym')),
+        )
+        for btn_prefix, icon_prefix, codes in groups:
+            buttons = [self.probe.findChild(QtWidgets.QPushButton, btn_prefix + c) for c in codes]
+            if None in buttons:
+                LOG.warning('Probe screen rotate: button missing in {}*, layout left as is'.format(btn_prefix))
+                continue
+            layout = buttons[0].parentWidget().layout()
+            if not isinstance(layout, QtWidgets.QGridLayout) or any(layout.indexOf(b) < 0 for b in buttons):
+                LOG.warning('Probe screen rotate: {}* not in one grid, layout left as is'.format(btn_prefix))
+                continue
+            places = [layout.getItemPosition(layout.indexOf(b)) for b in buttons]
+            rows = sorted({p[0] for p in places})
+            cols = sorted({p[1] for p in places})
+            for b in buttons:
+                layout.removeWidget(b)
+            for b, code, (r, c, rs, cs) in zip(buttons, codes, places):
+                layout.addWidget(b, rows[len(rows) - 1 - rows.index(r)], cols[len(cols) - 1 - cols.index(c)], rs, cs)
+                if code in ('center', 'xy_hole'):
+                    continue
+                path = os.path.join(icon_dir, icon_name(icon_prefix, code) + '.png')
+                if os.path.exists(path):
+                    b.setIcon(QtGui.QIcon(path))
+                else:
+                    LOG.warning('Probe screen rotate: missing icon {}'.format(path))
+        LOG.info('Probe screen buttons turned 180 deg')
 
     def init_spindle_load(self):
         # LOAD bar under the POWER bar: output current as % of [VFD]OVERLOAD_AMPS (same limit as
