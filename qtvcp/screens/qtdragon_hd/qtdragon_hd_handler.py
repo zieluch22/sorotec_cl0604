@@ -519,6 +519,10 @@ class HandlerClass:
         # Turn the Versa Probe corner/edge/skew buttons 180 deg: on this machine X+ points left and
         # Y+ points down on the screen. Probe moves are unchanged, only button places and icons.
         icon_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'images', 'probe_icons_rot180')
+        def warn(text):
+            # shown on screen too: after a LinuxCNC update the stock probe screen may have changed
+            LOG.warning(text)
+            self.add_status(text + ' - check probe buttons before use', WARNING)
         def icon_name(prefix, code):
             # 'xpym' -> 'X+Y-'
             return prefix + ''.join(a.upper() + ('+' if s == 'p' else '-') for a, s in zip(code[::2], code[1::2]))
@@ -530,11 +534,11 @@ class HandlerClass:
         for btn_prefix, icon_prefix, codes in groups:
             buttons = [self.probe.findChild(QtWidgets.QPushButton, btn_prefix + c) for c in codes]
             if None in buttons:
-                LOG.warning('Probe screen rotate: button missing in {}*, layout left as is'.format(btn_prefix))
+                warn('Probe screen rotate: button missing in {}*, layout left as is'.format(btn_prefix))
                 continue
             layout = buttons[0].parentWidget().layout()
             if not isinstance(layout, QtWidgets.QGridLayout) or any(layout.indexOf(b) < 0 for b in buttons):
-                LOG.warning('Probe screen rotate: {}* not in one grid, layout left as is'.format(btn_prefix))
+                warn('Probe screen rotate: {}* not in one grid, layout left as is'.format(btn_prefix))
                 continue
             places = [layout.getItemPosition(layout.indexOf(b)) for b in buttons]
             rows = sorted({p[0] for p in places})
@@ -549,7 +553,7 @@ class HandlerClass:
                 if os.path.exists(path):
                     b.setIcon(QtGui.QIcon(path))
                 else:
-                    LOG.warning('Probe screen rotate: missing icon {}'.format(path))
+                    warn('Probe screen rotate: missing icon {}'.format(path))
         LOG.info('Probe screen buttons turned 180 deg')
 
     def init_spindle_load(self):
